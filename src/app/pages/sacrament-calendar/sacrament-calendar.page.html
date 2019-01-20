@@ -1,0 +1,111 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title text-capitalize>{{month}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentOptions($event)">
+        <ion-icon name="more"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card *ngFor="let sacrament of sacraments | async">
+    <ion-card-header>
+      <ion-card-title>
+        {{sacrament.date | date: 'MMMM d, y'}}
+        <ion-button float-right fill="clear" color="secondary" (click)="presentMenu($event, sacrament)">
+          <ion-icon name="more"></ion-icon>
+        </ion-button>
+      </ion-card-title>
+      <ion-card-subtitle *ngIf="!isConference(sacrament)">{{sacrament.topic}}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content *ngIf="isConference(sacrament)">
+      <strong *ngIf="sacrament.meetingOptions.isGeneralConference">General Conference</strong>
+      <strong *ngIf="sacrament.meetingOptions.isStakeConference">Stake Conference</strong>
+      <strong *ngIf="sacrament.meetingOptions.isTempleDedication">Temple Dedication</strong>
+    </ion-card-content>
+    <ion-card-content *ngIf="!isConference(sacrament)">
+      <ion-item lines="full">
+        <ion-label position="floating">
+          <strong>Opening Hymn</strong>
+        </ion-label>
+        <ion-input readonly *ngIf="sacrament.openingHymn" value="#{{sacrament.openingHymn.number}} {{sacrament.openingHymn.name}}"></ion-input>
+        <ion-buttons slot="end">
+          <ion-button (click)="presentHymn(sacrament, 'openingHymn')">
+            <ion-icon name="{{sacrament.openingHymn ? 'create' : 'add'}}"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label position="floating">
+          <strong>Invocation</strong>
+        </ion-label>
+        <ion-input readonly *ngIf="sacrament.invocation" value="{{sacrament.invocation.givenNames}} {{sacrament.invocation.familyName}}"></ion-input>
+        <ion-buttons slot="end">
+          <ion-button (click)="presentMembers(sacrament, 'invocation')">
+            <ion-icon name="{{sacrament.invocation ? 'create' : 'add'}}"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label position="floating">
+          <strong>Sacramental Hymn</strong>
+        </ion-label>
+        <ion-input readonly *ngIf="sacrament.sacramentalHymn" value="#{{sacrament.sacramentalHymn.number}} {{sacrament.sacramentalHymn.name}}"></ion-input>
+        <ion-buttons slot="end">
+          <ion-button (click)="presentHymn(sacrament, 'sacramentalHymn')">
+            <ion-icon name="{{sacrament.sacramentalHymn ? 'create' : 'add'}}"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+      <ion-item lines="full" *ngIf="sacrament.meetingOptions?.isTestimonyMeeting">
+        <strong>Testimonies</strong>
+      </ion-item>
+      <ion-list>
+        <ion-reorder-group disabled="false" (ionItemReorder)="speakerReorder($event, sacrament)">
+          <ion-item lines="full" *ngFor="let speaker of sacrament.speakers; let i = index;">
+            <ion-label position="floating">
+              <strong>Speaker</strong>
+            </ion-label>
+            <ion-input readonly *ngIf="speaker" value="{{speaker.givenNames}} {{speaker.familyName}}"></ion-input>
+            <ion-buttons slot="end">
+              <ion-button (click)="presentMembers(sacrament, 'speakers', i)">
+                <ion-icon name="{{speaker ? 'create' : 'add'}}"></ion-icon>
+              </ion-button>
+              <ion-button (click)="deleteSpeaker(sacrament, i)">
+                <ion-icon name="trash"></ion-icon>
+              </ion-button>
+              <ion-reorder></ion-reorder>
+            </ion-buttons>
+          </ion-item>
+        </ion-reorder-group>
+      </ion-list>
+      <ion-item lines="full">
+        <ion-label position="floating">
+          <strong>Closing Hymn</strong>
+        </ion-label>
+        <ion-input readonly *ngIf="sacrament.closingHymn" value="#{{sacrament.closingHymn.number}} {{sacrament.closingHymn.name}}"></ion-input>
+        <ion-buttons slot="end">
+          <ion-button (click)="presentHymn(sacrament, 'closingHymn')">
+            <ion-icon name="{{sacrament.closingHymn ? 'create' : 'add'}}"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-label position="floating">
+          <strong>Benediction</strong>
+        </ion-label>
+        <ion-input readonly *ngIf="sacrament.benediction" value="{{sacrament.benediction.givenNames}} {{sacrament.benediction.familyName}}"></ion-input>
+        <ion-buttons slot="end">
+          <ion-button (click)="presentMembers(sacrament, 'benediction')">
+            <ion-icon name="{{sacrament.benediction ? 'create' : 'add'}}"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

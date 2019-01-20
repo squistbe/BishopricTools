@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Interview Schedule
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-tabs>
+    <ion-tab-bar slot="bottom">
+      <ion-tab-button *ngFor="let item of bishopric | async | bishopric" (click)="segmentClicked(item)" tab="{{item.calling}}" [href]="'interview-schedule/' + item.uid" [class.tab-selected]="item.calling === activeTab">
+        <ion-label>{{item.displayName}}</ion-label>
+        <ion-icon name="calendar"></ion-icon>
+        <!-- <ion-badge mode="ios">6</ion-badge> -->
+      </ion-tab-button>
+    </ion-tab-bar>
+    <ion-tab tab="{{activeTab}}">
+      <ion-router-outlet></ion-router-outlet>
+    </ion-tab>
+  </ion-tabs>
+</ion-content>

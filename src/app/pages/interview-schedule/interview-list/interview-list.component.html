@@ -1,0 +1,49 @@
+<ion-content>
+  <ng-container *ngFor="let interview of list | async as items; let i = index;">
+    <ion-card color="{{getStatusColor(interview.status)}}">
+      <ion-buttons class="action-buttons" slot="end" margin>
+        <ion-button size="large" (click)="interviewDetails(interview)">
+          <ion-icon name="create"></ion-icon>
+        </ion-button>
+        <ion-button size="large" (click)="deleteInterview(interview)">
+          <ion-icon name="trash"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-card-header>
+        <ion-card-title (click)="presentMembers(interview)" class="pointer-highlight">
+          {{interview.member.givenNames}} {{interview.member.familyName}}
+        </ion-card-title>
+        <ion-card-subtitle>
+          <ion-datetime style="display:none;" #interviewDate [(ngModel)]="interview.date" (ionChange)="updateInterview(interview)" display-format="h:mm a - DDDD, MMMM D" minuteValues="0,15,30,45" [yearValues]="yearValues" valueFormat="YYYY-MM-DDTHH:mm:ssTZD" no-padding></ion-datetime>
+          <div class="pointer-highlight" (click)="openDate()">
+            <span *ngIf="interview.duration !== 'allDay'">{{interview.date | date: 'h:mm a'}}
+              <span *ngIf="interview.duration !== '0'"> - {{getDateRange(interview) | date: 'h:mm a'}}</span>
+            </span>&nbsp;
+            <span>{{interview.date | date: 'EEEE, MMMM d'}}</span>
+          </div>
+          <ion-select style="border-bottom:1px solid #999;" [(ngModel)]="interview.duration" (ionChange)="updateInterview(interview)" interface="popover" placeholder="Select duration">
+            <ion-select-option *ngFor="let duration of interviewDurations;" [value]="duration">{{getDurationString(duration)}}</ion-select-option>
+          </ion-select>
+        </ion-card-subtitle>
+        <!-- <ion-card-subtitle>{{interview.date | date: 'EEEE, MMMM d, h:mm a'}}</ion-card-subtitle> -->
+      </ion-card-header>
+      <ion-card-content>
+        <ion-textarea [(ngModel)]="interview.details" placeholder="Interview details" (ionBlur)="updateInterview(interview)"></ion-textarea>
+        <!-- {{interview.details}} -->
+        <ion-radio-group (ionChange)="updateInterview(interview)" class="interview-status" [(ngModel)]="interview.status" margin-top>
+          <ion-row>
+            <ion-col align-items-center *ngFor="let interviewStatus of interviewStatuses">
+              <ion-radio [value]="interviewStatus"></ion-radio>
+              <ion-label>{{getInterviewStatus(interviewStatus)}}</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-radio-group>
+      </ion-card-content>
+    </ion-card>
+  </ng-container>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="presentInterview()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

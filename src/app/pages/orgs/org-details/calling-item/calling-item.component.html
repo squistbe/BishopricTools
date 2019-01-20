@@ -1,0 +1,11 @@
+<ion-label text-wrap slot="start">
+  <h2>{{calling.name}} <span *ngIf="calling.className"> - {{calling.className}}</span></h2>
+  <p *ngIf="calling.member">{{calling.member.givenNames}} {{calling.member.familyName}}</p>
+  <p *ngIf="!calling.member"><i>vacant</i></p>
+</ion-label>
+<div slot="end">
+  <ion-select style="max-width: 100%;" [(ngModel)]="calling.status.name" interface="popover" placeholder="Select status" (ionChange)="statusChange(calling)">
+    <ion-select-option *ngFor="let status of callingStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
+  </ion-select>
+</div>
+<ion-badge *ngIf="calling.status.name" color="{{calling.status.name}}" slot="end">&nbsp;&nbsp;&nbsp;</ion-badge>

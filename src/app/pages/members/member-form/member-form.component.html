@@ -1,0 +1,65 @@
+<form [formGroup]="memberForm" (ngSubmit)="submitMember()">
+  <ion-item>
+      <ion-label position="floating">Given Name(s)</ion-label>
+      <ion-input formControlName="givenNames"></ion-input>
+  </ion-item>
+  <ion-item>
+      <ion-label position="floating">Family Name</ion-label>
+      <ion-input formControlName="familyName"></ion-input>
+  </ion-item>
+  <ion-radio-group formControlName="gender">
+    <ion-item>
+      <ion-label>Male</ion-label>
+      <ion-radio slot="start" value="male"></ion-radio>
+    </ion-item>
+    <ion-item>
+      <ion-label>Female</ion-label>
+      <ion-radio slot="start" value="female"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+  <ion-item>
+    <ion-label position="floating">Membership Record Number</ion-label>
+    <ion-input formControlName="mrn"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Unit Number</ion-label>
+    <ion-input type="number" formControlName="unitNumber"></ion-input>
+  </ion-item>
+  <ion-item>
+      <ion-label position="floating">Phone Number</ion-label>
+      <ion-input formControlName="phone"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input formControlName="email"></ion-input>
+    </ion-item>
+  <ion-item>
+    <ion-label position="floating">Birth Date</ion-label>
+    <ion-datetime display-format="DD MMM YYYY" picker-format="MMM DD YYYY" formControlName="birthDate"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Last Spoke</ion-label>
+    <ion-datetime display-format="DD MMM YYYY" picker-format="MMM DD YYYY" formControlName="lastSpoke"></ion-datetime>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Last Interviewed</ion-label>
+    <ion-datetime display-format="DD MMM YYYY" picker-format="MMM DD YYYY" formControlName="lastInterviewed"></ion-datetime>
+  </ion-item>
+  <ion-row nowrap justify-content-start>
+    <ion-col>
+      <ion-item>
+        <ion-label position="fixed">Last Prayed</ion-label>
+        <ion-datetime display-format="DD MMM YYYY" picker-format="MMM DD YYYY" formControlName="lastPrayed"></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col>
+      <ion-item>
+        <ion-label>Will Pray</ion-label>
+        <ion-checkbox slot="end" formControlName="willPray"></ion-checkbox>
+      </ion-item>
+    </ion-col>
+  </ion-row>
+  <ion-button type="submit" [disabled]="memberForm.invalid" margin-top>{{!member.id ? 'Add' : 'Update'}}</ion-button>
+  <ion-button *ngIf="member.id" color="danger" (click)="removeMember()" margin-top>Remove Member</ion-button>
+  <ion-button fill="clear" (click)="cancel()" margin-top>Cancel</ion-button>
+</form>

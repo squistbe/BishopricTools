@@ -1,0 +1,14 @@
+<ion-list>
+  <ion-item lines="full" class="pointer-highlight" (click)="presentMembers('speakers')" *ngIf="!sacrament.meetingOptions?.isTestimonyMeeting && !isConference()">
+    <ion-label>Add Speaker</ion-label>
+    <ion-icon name="sad" slot="start"></ion-icon>
+  </ion-item> 
+  <ion-item lines="full" class="pointer-highlight" (click)="presentMeetingOptions()">
+    <ion-label>Meeting Type</ion-label>
+    <ion-icon name="settings" slot="start"></ion-icon>
+  </ion-item>
+  <ion-item class="pointer-highlight">
+    <ion-label color="danger">Remove</ion-label>
+    <ion-icon color="danger" name="trash" slot="start"></ion-icon>
+  </ion-item>
+</ion-list>

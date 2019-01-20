@@ -1,0 +1,21 @@
+.interview-status {
+    display: flex;
+
+    ion-row {
+        display: flex;
+        width: 100%;
+    }
+
+    ion-col {
+        display: flex;
+    }
+
+    ion-label {
+        margin-left: .5em;
+    }
+}
+
+.action-buttons {
+    position: absolute;
+    right: 0;
+}

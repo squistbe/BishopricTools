@@ -1,0 +1,6 @@
+{
+  "appId": "io.spencerquistberg.bishoprictools",
+  "appName": "BishopricTools",
+  "bundledWebRuntime": false,
+  "webDir": "www"
+}

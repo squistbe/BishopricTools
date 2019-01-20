@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="modal.dismiss()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-searchbar debounce="500" slot="end" (ionInput)="onKeyup($event)" animated placeholder="Search members"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let member of members | async" detail (click)="selectMember(member)" class="pointer-highlight">
+      <ion-label>
+          <span [innerHtml]="member.familyName | highlight : getSearchText()"></span>, 
+          <span [innerHtml]="member.givenNames | highlight : getSearchText()"></span>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

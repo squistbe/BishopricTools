@@ -1,0 +1,45 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+      <ion-title>Calling</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content padding>
+    <form [formGroup]="callingForm" (ngSubmit)="submitMember()">
+      <ion-item>
+        <ion-label>Name</ion-label>
+        <ion-select formControlName="name" interface="popover" placeholder="Select calling">
+          <ion-select-option *ngFor="let calling of callingList" [value]="calling">{{calling.name}} <span *ngIf="calling.hasClass"> - {{calling.className}}</span></ion-select-option>
+          <ion-select-option value="other">Other</ion-select-option>
+        </ion-select>
+        
+      </ion-item>
+      <ion-item *ngIf="callingName.value?.hasClass">
+        <ion-label position="floating">Class Name</ion-label>
+        <ion-input formControlName="className" [value]="callingName.value.className"></ion-input>
+      </ion-item>
+      <ion-item lines="full" *ngIf="callingName.value === 'other'">
+        <ion-label position="floating">Other</ion-label>
+        <ion-input formControlName="other"></ion-input>
+      </ion-item>
+      <ion-item lines="full">
+        <ion-button (click)="presentMembers()" fill="clear">
+          <span *ngIf="!member.value">Select Member</span>
+          <ion-icon *ngIf="member.value" name="create"></ion-icon>
+        </ion-button>
+        <ion-label *ngIf="member.value">{{member.value.givenNames}} {{member.value.familyName}}</ion-label>
+      </ion-item>
+      <ion-item>
+        <ion-label>Status</ion-label>
+        <ion-select formControlName="status" interface="popover" placeholder="Select status">
+            <ion-select-option *ngFor="let status of callingStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-input type="number" style="display: none;" formControlName="sortIndex"></ion-input>
+      <ion-button type="submit" margin-top [disabled]="callingForm.invalid">{{callingId ? 'Update' : 'Add'}}</ion-button>
+      <ion-button margin-top fill="clear" (click)="cancel()">Cancel</ion-button>
+    </form>
+  </ion-content>

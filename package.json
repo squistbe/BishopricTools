@@ -1,8 +1,8 @@
 {
   "name": "BishopricTools",
   "version": "0.0.1",
-  "author": "Ionic Framework",
-  "homepage": "http://ionicframework.com/",
+  "author": "Spencer Quistberg",
+  "homepage": "http://ldsbishoprictools.com/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -15,17 +15,45 @@
   "dependencies": {
     "@angular/common": "~6.1.1",
     "@angular/core": "~6.1.1",
+    "@angular/fire": "^5.1.0",
     "@angular/forms": "~6.1.1",
     "@angular/http": "~6.1.1",
     "@angular/platform-browser": "~6.1.1",
     "@angular/platform-browser-dynamic": "~6.1.1",
     "@angular/router": "~6.1.1",
+    "@auth0/angular-jwt": "^2.0.0",
+    "@capacitor/cli": "1.0.0-beta.11",
+    "@capacitor/core": "1.0.0-beta.11",
     "@ionic-native/core": "5.0.0-beta.21",
+    "@ionic-native/firebase": "^5.0.0-beta.21",
+    "@ionic-native/google-plus": "^5.0.0-beta.21",
     "@ionic-native/splash-screen": "5.0.0-beta.21",
     "@ionic-native/status-bar": "5.0.0-beta.21",
     "@ionic/angular": "4.0.0-beta.15",
     "@ionic/pro": "2.0.3",
+    "@ionic/storage": "^2.2.0",
+    "@types/lodash": "^4.14.119",
+    "cordova-android": "7.1.2",
+    "cordova-ios": "4.5.5",
+    "cordova-plugin-device": "^2.0.2",
+    "cordova-plugin-firebase": "2.0.5",
+    "cordova-plugin-googleplus": "5.3.2",
+    "cordova-plugin-ionic": "^5.2.7",
+    "cordova-plugin-ionic-keyboard": "^2.1.3",
+    "cordova-plugin-ionic-webview": "^2.2.3",
+    "cordova-plugin-splashscreen": "^5.0.2",
+    "cordova-plugin-statusbar": "^2.4.2",
+    "cordova-plugin-whitelist": "^1.3.3",
+    "cordova-sqlite-storage": "2.5.2",
+    "cordova-support-google-services": "1.1.0",
+    "cordova-windows": "6.0.1",
     "core-js": "^2.5.3",
+    "firebase": "^5.5.9",
+    "lodash": "^4.17.11",
+    "moment": "^2.23.0",
+    "phonegap-plugin-multidex": "1.0.0",
+    "phonegap-plugin-push": "2.2.3",
+    "promise-polyfill": "^8.1.0",
     "rxjs": "6.2.2",
     "zone.js": "^0.8.26"
   },
@@ -39,6 +67,7 @@
     "@angular/compiler-cli": "~6.1.1",
     "@angular/language-service": "~6.1.1",
     "@ionic/angular-toolkit": "^1.0.0",
+    "@ionic/lab": "1.0.13",
     "@types/jasmine": "~2.8.6",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "~10.12.0",
@@ -55,5 +84,26 @@
     "tslint": "~5.11.0",
     "typescript": "~2.9.2"
   },
-  "description": "An Ionic project"
+  "description": "Bishopric Tools",
+  "cordova": {
+    "plugins": {
+      "cordova-plugin-whitelist": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-ionic-webview": {},
+      "cordova-plugin-ionic-keyboard": {},
+      "cordova-plugin-googleplus": {
+        "REVERSED_CLIENT_ID": "com.googleusercontent.apps.176789930554-eaigkbci112p22ui8kk6vatlsgsrf91u",
+        "WEB_APPLICATION_CLIENT_ID": "186755161522-kkbn8ferumo7rpbl14nh2iksvakn0nld.apps.googleusercontent.com"
+      },
+      "cordova-plugin-firebase": {},
+      "cordova-sqlite-storage": {}
+    },
+    "platforms": [
+      "windows",
+      "ios",
+      "android"
+    ]
+  }
 }

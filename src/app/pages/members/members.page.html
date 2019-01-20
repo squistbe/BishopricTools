@@ -1,0 +1,56 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-searchbar debounce="500" (ionInput)="onKeyup($event)" animated placeholder="Search members"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentFilters()">
+        <ion-icon name="funnel"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-button (click)="addHymns()"></ion-button>
+  <ion-list>
+    <ion-item *ngFor="let member of members | async">
+      
+      <ion-label class="pointer-highlight" (click)="memberDetails(member.id)">
+        <span [innerHtml]="member.familyName | highlight : getSearchText()"></span>, 
+        <span [innerHtml]="member.givenNames | highlight : getSearchText()"></span>&nbsp;
+        <i *ngIf="showFilterAttr('lastPrayed', member)" class="last-prayed">Last prayed: {{member.lastPrayed | date : 'M/d/yy'}}</i>
+        <i *ngIf="showFilterAttr('lastSpoke', member)" class="last-prayed">Last spoke: {{member.lastSpoke | date : 'M/d/yy'}}</i>
+      </ion-label>
+
+      <!-- <ion-button (click)="textMember($event)" *ngIf="member.phone" size="small" fill="clear" float-right>
+        <ion-icon name="text"></ion-icon>
+      </ion-button>
+      
+      <ion-button (click)="callMember($event)" *ngIf="member.phone" size="small" fill="clear" float-right>
+        <ion-icon name="call"></ion-icon>
+      </ion-button> -->
+      
+      <ion-button (click)="confirmDelete($event, member)" size="small" fill="clear" float-right>
+        <ion-icon name="trash"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+  
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="showMultipleUpload()">
+        <ion-icon name="people"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="addMember()">
+        <ion-icon name="person"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
+
+  <input #memberUpload type="file" accept=".csv" style="display:none;" (change)="onUploadMembers($event)">
+</ion-content>

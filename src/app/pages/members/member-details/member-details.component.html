@@ -1,0 +1,14 @@
+<ng-container *ngIf="member$ | async as member">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title *ngIf="!member.id">Add New Member</ion-title>
+      <ion-title *ngIf="member.id">Update {{member.givenNames}} {{member.familyName}}</ion-title>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content padding>
+    <member-form [member]="member"></member-form>
+  </ion-content>
+</ng-container>

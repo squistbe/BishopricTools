@@ -1,0 +1,18 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Callings
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let org of orgs | async; trackBy: trackById" (click)="goToOrg(org)" detail class="pointer-highlight">
+      <ion-label>{{org.name}}</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

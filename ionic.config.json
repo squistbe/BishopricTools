@@ -1,5 +1,14 @@
 {
   "name": "BishopricTools",
-  "integrations": {},
-  "type": "angular"
+  "integrations": {
+    "cordova": {},
+    "capacitor": {}
+  },
+  "type": "angular",
+  "proxies": [
+    {
+      "path": "/",
+      "proxyUrl": "http://localhost:5000"
+    }
+  ]
 }
