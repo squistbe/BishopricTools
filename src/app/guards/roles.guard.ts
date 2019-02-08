@@ -15,8 +15,9 @@ export class RolesGuard implements CanActivate {
         const roles = await this.auth.roles();
         const expectedRoles = next.data.expectedRoles;
 
-        if (!Object.keys(expectedRoles).some(role => roles[role])) {
+        if (!roles || !Object.keys(expectedRoles).some(role => roles[role])) {
             console.log('access denied');
+            this.router.navigate(['access-denied']);
             return false;
         }
 

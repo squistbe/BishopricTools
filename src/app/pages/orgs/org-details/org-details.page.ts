@@ -6,7 +6,6 @@ import { ModalController, Platform, PopoverController } from '@ionic/angular';
 import { SelectMemberComponent } from '../../../components/select-member/select-member.component';
 import { OrgOptionsComponent } from './org-options/org-options.component';
 import { Calling } from '../../../interfaces/calling';
-import { e } from '@angular/core/src/render3';
 
 @Component({
   selector: 'app-org-details',
@@ -16,8 +15,6 @@ import { e } from '@angular/core/src/render3';
 export class OrgDetailsPage implements OnInit {
   callings: Observable<any[]>;
   orgId: string;
-  orgTitle: string;
-  titleSub;
   callingLength;
   toggleReorder = false;
   private selection: Calling[] = [];
@@ -33,10 +30,6 @@ export class OrgDetailsPage implements OnInit {
   ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('id');
     this.callings = this.callingService.getCallings(this.orgId);
-    this.orgTitle = this.callingService.getOrgTitle();
-    if (!this.orgTitle) {
-      this.titleSub = this.getOrgById();
-    }
   }
 
   trackById(idx, calling) {
@@ -108,6 +101,14 @@ export class OrgDetailsPage implements OnInit {
 
   getDeleteMode() {
     return this.callingService.getDeleteMode();
+  }
+
+  setReorder(val) {
+    this.callingService.setReorderMode(val);
+  }
+
+  getReorder() {
+    return this.callingService.getReorderMode();
   }
 
   setSelection(event, calling, i) {

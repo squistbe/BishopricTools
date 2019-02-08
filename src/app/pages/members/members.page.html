@@ -11,17 +11,17 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
-  <ion-button (click)="addHymns()"></ion-button>
   <ion-list>
     <ion-item *ngFor="let member of members | async">
-      
       <ion-label class="pointer-highlight" (click)="memberDetails(member.id)">
-        <span [innerHtml]="member.familyName | highlight : getSearchText()"></span>, 
-        <span [innerHtml]="member.givenNames | highlight : getSearchText()"></span>&nbsp;
-        <i *ngIf="showFilterAttr('lastPrayed', member)" class="last-prayed">Last prayed: {{member.lastPrayed | date : 'M/d/yy'}}</i>
-        <i *ngIf="showFilterAttr('lastSpoke', member)" class="last-prayed">Last spoke: {{member.lastSpoke | date : 'M/d/yy'}}</i>
+        <h2>
+          <span [innerHtml]="member.familyName | highlight : getSearchText()"></span>, 
+          <span [innerHtml]="member.givenNames | highlight : getSearchText()"></span>&nbsp;
+        </h2>
+        <p *ngIf="member.lastPrayed" class="last-prayed">Last prayed: {{member.lastPrayed | date : 'M/d/yy'}}</p>
+        <p *ngIf="member.lastSpoke" class="last-prayed">Last spoke: {{member.lastSpoke | date : 'M/d/yy'}}</p>
+        <p *ngIf="member.lastInterviewed" class="last-prayed">Last Interviewed: {{member.lastInterviewed | date : 'M/d/yy'}}</p>
       </ion-label>
 
       <!-- <ion-button (click)="textMember($event)" *ngIf="member.phone" size="small" fill="clear" float-right>
@@ -31,13 +31,12 @@
       <ion-button (click)="callMember($event)" *ngIf="member.phone" size="small" fill="clear" float-right>
         <ion-icon name="call"></ion-icon>
       </ion-button> -->
-      
-      <ion-button (click)="confirmDelete($event, member)" size="small" fill="clear" float-right>
-        <ion-icon name="trash"></ion-icon>
+      <ion-button (click)="confirmDelete($event, member)" fill="clear" slot="end" color="medium">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
       </ion-button>
     </ion-item>
   </ion-list>
-  
+</ion-content>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
     <ion-fab-button>
       <ion-icon name="add"></ion-icon>
@@ -53,4 +52,3 @@
   </ion-fab>
 
   <input #memberUpload type="file" accept=".csv" style="display:none;" (change)="onUploadMembers($event)">
-</ion-content>

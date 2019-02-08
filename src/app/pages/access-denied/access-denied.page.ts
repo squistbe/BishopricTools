@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-access-denied',
@@ -7,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AccessDeniedPage implements OnInit {
 
-  constructor() { }
+  constructor(
+    private auth: AuthService,
+    private router: Router
+  ) { }
 
   ngOnInit() {
+    if (this.hasRoles) {
+      this.router.navigate(['/']);
+    }
+  }
+
+  async hasRoles() {
+    const uid = await this.auth.uid();
+    return !!uid.roles;
   }
 
 }

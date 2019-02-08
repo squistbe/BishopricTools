@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
 import { SacramentService } from '../../services/sacrament.service';
-import { ActivatedRoute, Router, ActivatedRouteSnapshot } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SacramentSettings, Sacrament } from '../../interfaces/sacrament';
 import { ModalController, PopoverController } from '@ionic/angular';
 import { SelectMemberComponent } from '../../components/select-member/select-member.component';
@@ -15,11 +15,14 @@ import { SacramentMenuComponent } from './sacrament-menu/sacrament-menu.componen
   templateUrl: './sacrament-calendar.page.html',
   styleUrls: ['./sacrament-calendar.page.scss'],
 })
-export class SacramentCalendarPage implements OnInit {
+export class SacramentCalendarPage implements OnInit, OnDestroy {
   sacraments: Observable<any[]>;
+  conducting$: Observable<any>;
   months = SacramentSettings.SACRAMENT_MONTHS;
   year;
   month;
+  yearSub: Subscription;
+  monthSub: Subscription;
 
   constructor(
     private sacramentService: SacramentService,
@@ -40,21 +43,42 @@ export class SacramentCalendarPage implements OnInit {
 
   ngOnInit() {
     const now = new Date();
+    const selectedDay = this.route.snapshot.paramMap.get('day');
     const selectedYear = this.route.snapshot.paramMap.get('year') || now.getFullYear().toString();
     const selectedMonth = this.route.snapshot.paramMap.get('month') || SacramentSettings.SACRAMENT_MONTHS[now.getMonth()].toLowerCase();
     this.sacramentService.updateMonth(selectedMonth);
     this.sacramentService.updateYear(selectedYear);
-    this.sacramentService.selectedYear.subscribe(year => this.year = year);
-    this.sacramentService.selectedMonth.subscribe(month => {
+    this.yearSub = this.sacramentService.selectedYear.subscribe(year => this.year = year);
+    this.monthSub = this.sacramentService.selectedMonth.subscribe(month => {
       this.month = month;
       this.location.go(`sacrament-calendar/${this.year}/${this.month}`);
-      this.getSacraments();
+      this.getSacraments(`${this.year}-${this.month}`);
+      this.conducting$ = this.sacramentService.getConducting(this.month);
       this.changeRef.detectChanges();
     });
   }
 
-  getSacraments() {
-    this.sacraments = this.sacramentService.getSacraments(`${this.year}-${this.month}`);
+  ngOnDestroy() {
+    this.yearSub.unsubscribe();
+    this.monthSub.unsubscribe();
+  }
+
+
+  trackById(idx, sacrament) {
+    return sacrament.id;
+  }
+
+  getSacraments(dateTag) {
+    this.sacraments = this.sacramentService.getSacraments(dateTag);
+  }
+
+  getNextSunday() {
+    const now = new Date();
+    const resultDate = new Date(new Date().setHours(0, 0, 0, 0));
+
+    resultDate.setDate(now.getDate() + (7 + 6 - now.getDay()) % 7);
+
+    return resultDate;
   }
 
   async presentMembers(sacrament: Sacrament, key: string, i?) {
@@ -67,6 +91,9 @@ export class SacramentCalendarPage implements OnInit {
   }
 
   selectMember(sacrament: Sacrament, key, i, e) {
+    if (!e.data) {
+      return;
+    }
     if (key === 'speakers') {
       sacrament.speakers[i] = e.data;
     } else {

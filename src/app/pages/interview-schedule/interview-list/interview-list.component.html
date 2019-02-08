@@ -1,49 +1,88 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentFilter()">
+        <ion-icon name="funnel"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 <ion-content>
-  <ng-container *ngFor="let interview of list | async as items; let i = index;">
-    <ion-card color="{{getStatusColor(interview.status)}}">
-      <ion-buttons class="action-buttons" slot="end" margin>
-        <ion-button size="large" (click)="interviewDetails(interview)">
-          <ion-icon name="create"></ion-icon>
-        </ion-button>
-        <ion-button size="large" (click)="deleteInterview(interview)">
-          <ion-icon name="trash"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-      <ion-card-header>
-        <ion-card-title (click)="presentMembers(interview)" class="pointer-highlight">
-          {{interview.member.givenNames}} {{interview.member.familyName}}
-        </ion-card-title>
-        <ion-card-subtitle>
-          <ion-datetime style="display:none;" #interviewDate [(ngModel)]="interview.date" (ionChange)="updateInterview(interview)" display-format="h:mm a - DDDD, MMMM D" minuteValues="0,15,30,45" [yearValues]="yearValues" valueFormat="YYYY-MM-DDTHH:mm:ssTZD" no-padding></ion-datetime>
-          <div class="pointer-highlight" (click)="openDate()">
-            <span *ngIf="interview.duration !== 'allDay'">{{interview.date | date: 'h:mm a'}}
-              <span *ngIf="interview.duration !== '0'"> - {{getDateRange(interview) | date: 'h:mm a'}}</span>
-            </span>&nbsp;
-            <span>{{interview.date | date: 'EEEE, MMMM d'}}</span>
-          </div>
-          <ion-select style="border-bottom:1px solid #999;" [(ngModel)]="interview.duration" (ionChange)="updateInterview(interview)" interface="popover" placeholder="Select duration">
-            <ion-select-option *ngFor="let duration of interviewDurations;" [value]="duration">{{getDurationString(duration)}}</ion-select-option>
-          </ion-select>
-        </ion-card-subtitle>
-        <!-- <ion-card-subtitle>{{interview.date | date: 'EEEE, MMMM d, h:mm a'}}</ion-card-subtitle> -->
-      </ion-card-header>
-      <ion-card-content>
-        <ion-textarea [(ngModel)]="interview.details" placeholder="Interview details" (ionBlur)="updateInterview(interview)"></ion-textarea>
-        <!-- {{interview.details}} -->
-        <ion-radio-group (ionChange)="updateInterview(interview)" class="interview-status" [(ngModel)]="interview.status" margin-top>
-          <ion-row>
-            <ion-col align-items-center *ngFor="let interviewStatus of interviewStatuses">
-              <ion-radio [value]="interviewStatus"></ion-radio>
-              <ion-label>{{getInterviewStatus(interviewStatus)}}</ion-label>
-            </ion-col>
-          </ion-row>
-        </ion-radio-group>
-      </ion-card-content>
-    </ion-card>
-  </ng-container>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="presentInterview()">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  <ion-list>
+    <ng-container *ngFor="let interview of list | async; trackBy: trackById; let i = index;">
+      <ion-item-divider sticky *ngIf='i === 0 || (list[i - 1] && !sameDay(interview.date, list[i - 1].date))'>
+        <ion-label><h2>{{interview.date | date: 'EEEE, MMMM d'}}</h2></ion-label>
+      </ion-item-divider>
+      <ion-item-sliding [disabled]="platform.is('desktop')">
+        <ion-item lines="full" color="{{getStatusColor(interview.status)}}" class="pointer-highlight" (click)="interviewDetails(interview)">
+          <ion-label>
+            <h1>{{interview.member.givenNames}} {{interview.member.familyName}}</h1>
+            <h3>
+              <span *ngIf="interview.duration !== 'allDay'">
+                {{interview.date | date: 'h:mm a'}}
+                <span *ngIf="interview.duration !== '0'"> - {{getDateRange(interview) | date: 'h:mm a'}}</span>
+              </span>&nbsp;
+              <span>{{interview.date | date: 'EEEE, MMMM d'}}</span>
+            </h3>
+            <p>{{interview.details}}</p>
+          </ion-label>  
+          <ion-button *ngIf="platform.is('desktop')" slot="end" fill="clear" color="medium" (click)="deleteInterview($event, interview)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <ion-item-options *ngIf="!platform.is('desktop')">
+          <ion-item-option color="danger" (click)="deleteInterview($event, interview)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ng-container>
+  </ion-list>
 </ion-content>
+        <!-- <ion-card *ngFor="let interview of hits as items; let i = index;" color="{{getStatusColor(interview.status)}}">
+          <ion-buttons class="action-buttons" slot="end" margin>
+            <ion-button size="large" (click)="interviewDetails(interview)">
+              
+            </ion-button>
+            <ion-button size="large" (click)="deleteInterview(interview)">
+              <ion-icon name="trash"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-card-header>
+            <ion-card-title (click)="presentMembers(interview)" class="pointer-highlight">
+              {{interview.member.givenNames}} {{interview.member.familyName}}
+            </ion-card-title>
+            <ion-card-subtitle>
+              <ion-datetime style="display:none;" #interviewDate [(ngModel)]="interview.date" (ionChange)="updateInterview(interview)" display-format="h:mm a - DDDD, MMMM D" minuteValues="0,15,30,45" [yearValues]="yearValues" valueFormat="YYYY-MM-DDTHH:mm:ssTZD" no-padding></ion-datetime>
+              <div class="pointer-highlight" (click)="openDate()">
+                <span *ngIf="interview.duration !== 'allDay'">{{interview.date | date: 'h:mm a'}}
+                  <span *ngIf="interview.duration !== '0'"> - {{getDateRange(interview) | date: 'h:mm a'}}</span>
+                </span>&nbsp;
+                <span>{{interview.date | date: 'EEEE, MMMM d'}}</span>
+              </div>
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="status-and-duration">
+              <ion-select no-padding padding-vertical padding-end [(ngModel)]="interview.duration" (ionChange)="updateInterview(interview)" interface="popover" placeholder="Select duration">
+                <ion-select-option *ngFor="let duration of interviewDurations;" [value]="duration">{{getDurationString(duration)}}</ion-select-option>
+              </ion-select>
+              <ion-select padding [(ngModel)]="interview.status" (ionChange)="updateInterview(interview)" interface="popover" placeholder="Select status">
+                <ion-select-option *ngFor="let interviewStatus of interviewStatuses;" [value]="interviewStatus">{{getInterviewStatus(interviewStatus)}}</ion-select-option>
+              </ion-select>
+            </div>
+            <ion-textarea [(ngModel)]="interview.details" placeholder="Interview details" (ionBlur)="updateInterview(interview)"></ion-textarea>
+          </ion-card-content>
+        </ion-card> -->
+      <!-- </ng-template> -->
+    <!-- </ais-hits>
+  </ais-instantsearch>
+</ion-content> -->
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="presentInterview()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

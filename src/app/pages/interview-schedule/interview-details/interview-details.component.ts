@@ -45,7 +45,7 @@ export class InterviewDetailsComponent implements OnInit {
       date: new FormControl(this.interview.date),
       details: new FormControl(this.interview.details),
       status: this.status,
-      duration: new FormControl(this.interview.duration)
+      duration: new FormControl(this.interview.duration || '0')
     });
   }
 

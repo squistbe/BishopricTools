@@ -9,7 +9,8 @@ export enum CallingStatusType {
     go          = <any>'go', // ready to extend the calling
     recommended = <any>'recommended', // name presented by or president
     pendRelease = <any>'pendRelease', // being considered for release
-    pending     = <any>'pending' // being considered for calling
+    pending     = <any>'pending', // being considered for calling
+    vacant      = <any>'vacant' // empty calling
 }
 
 export interface CallingStatusMap {
@@ -31,6 +32,7 @@ export class CallingStatus {
             case CallingStatusType.recommended: return 'Recommended';
             case CallingStatusType.pendRelease: return 'Pending Release';
             case CallingStatusType.pending:     return 'Pending';
+            case CallingStatusType.vacant:      return 'Vacant';
         }
     }
 
@@ -46,7 +48,8 @@ export class CallingStatus {
             CallingStatusType.go,
             CallingStatusType.recommended,
             CallingStatusType.pendRelease,
-            CallingStatusType.pending
+            CallingStatusType.pending,
+            CallingStatusType.vacant
         ];
     }
 }

@@ -1,5 +1,8 @@
-<ion-label text-wrap slot="start">
-  <h2>{{calling.name}} <span *ngIf="calling.className"> - {{calling.className}}</span></h2>
+<ion-label text-wrap slot="start" [color]="calling.status.name || 'medium'">
+  <h2 [style.fontStyle]="!calling.member ? 'italic' : 'normal'" [style.fontWeight]="!calling.member ? 'normal' : 'bold'">
+    {{calling.name}}
+    <span *ngIf="calling.className"> - {{calling.className}}</span>
+  </h2>
   <p *ngIf="calling.member">{{calling.member.givenNames}} {{calling.member.familyName}}</p>
   <p *ngIf="!calling.member"><i>vacant</i></p>
 </ion-label>
@@ -8,4 +11,4 @@
     <ion-select-option *ngFor="let status of callingStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
   </ion-select>
 </div>
-<ion-badge *ngIf="calling.status.name" color="{{calling.status.name}}" slot="end">&nbsp;&nbsp;&nbsp;</ion-badge>
+<!-- <ion-badge *ngIf="calling.status.name" [color]="calling.status.name" slot="end">&nbsp;&nbsp;&nbsp;</ion-badge> -->

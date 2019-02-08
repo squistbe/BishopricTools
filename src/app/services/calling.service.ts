@@ -10,7 +10,8 @@ import { Calling } from '../interfaces/calling';
 })
 export class CallingService {
   private orgTitle = new BehaviorSubject('');
-  private deleteMode = new BehaviorSubject<boolean>(false);
+  private deleteMode = new BehaviorSubject(false);
+  private reorder = new BehaviorSubject(false);
 
   constructor(
     private db: DbService,
@@ -49,6 +50,14 @@ export class CallingService {
 
   getDeleteMode() {
     return this.deleteMode.getValue();
+  }
+
+  setReorderMode(val: boolean) {
+    this.reorder.next(val);
+  }
+
+  getReorderMode() {
+    return this.reorder.getValue();
   }
 
   getOrgById(id) {

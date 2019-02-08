@@ -2,7 +2,7 @@
   "name": "BishopricTools",
   "version": "0.0.1",
   "author": "Spencer Quistberg",
-  "homepage": "http://ldsbishoprictools.com/",
+  "homepage": "http://bishoprictools.org/",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

@@ -3,8 +3,6 @@ import { Observable } from 'rxjs';
 import { AlertController, ToastController } from '@ionic/angular';
 import { MemberService } from '../../services/member.service';
 import { Router } from '@angular/router';
-import { SacramentSettings } from '../../interfaces/sacrament';
-import { DbService } from '../../services/db.service';
 
 @Component({
   selector: 'app-members',
@@ -21,8 +19,7 @@ export class MembersPage implements OnInit, AfterViewInit {
       private memberService: MemberService,
       private router: Router,
       private alert: AlertController,
-      private toast: ToastController,
-      private db: DbService
+      private toast: ToastController
   ) { }
 
   ngOnInit() {
@@ -31,12 +28,6 @@ export class MembersPage implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.memberService.offset.next('');
-  }
-
-  addHymns() {
-    SacramentSettings.HYMNS.forEach(hymn => {
-      setTimeout(() => this.db.updateAt(`hymns`, hymn), 500);
-    });
   }
 
   onKeyup(e) {

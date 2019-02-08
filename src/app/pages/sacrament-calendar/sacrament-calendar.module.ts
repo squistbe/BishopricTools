@@ -24,6 +24,10 @@ const routes: Routes = [
     component: SacramentCalendarPage
   },
   {
+    path: ':year/:month/:id',
+    component: SacramentCalendarPage
+  },
+  {
     path: 'create'
   }
 ];

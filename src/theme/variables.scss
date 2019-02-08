@@ -185,11 +185,26 @@
   --ion-color-tint: #fff51d;
 }
 
+.ion-color-vacant {
+  --ion-color-base: #989aa2;
+  --ion-color-base-rgb: 152,154,162;
+  --ion-color-contrast: #ffffff;
+  --ion-color-contrast-rgb: 255,255,255;
+  --ion-color-shade: #86888f;
+  --ion-color-tint: #a2a4ab;
+}
+
 .pointer-highlight:hover {
   cursor: pointer;
 }
 
 mark {
   color: var(--ion-color-primary);
-  background-color: white;
+  background-color: white !important;
+}
+
+.ais-SearchBox-input:focus {
+  outline: none;
+  border-color: #3880ff;
+  border-width: 2px;
 }

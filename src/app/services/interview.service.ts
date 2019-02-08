@@ -1,23 +1,43 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
 import { DbService } from './db.service';
-import { switchMap, shareReplay } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InterviewService {
+  selectedFilter = new BehaviorSubject<string>('last7Days');
 
   constructor(
     private db: DbService
   ) { }
 
   getInterviews(id) {
-    return this.db.collection$('interviews', ref =>
-      ref
-        .where('interviewerId', '==', id)
-        .where('date', '>=', new Date(new Date().setHours(0, 0, 0, 0)))
-        .orderBy('date', 'asc')
+    return this.selectedFilter.pipe(
+      switchMap(filter => {
+        return this.db.collection$('interviews', ref => {
+          const now = Date.now();
+          if (filter === 'future' || !filter) {
+            return ref
+              .where('interviewerId', '==', id)
+              .where('dateTimestamp', '>=', now)
+              .orderBy('dateTimestamp', 'asc');
+          } else if (filter === 'last7Days') {
+            return ref
+              .where('interviewerId', '==', id)
+              .where('dateTimestamp', '<=', now)
+              .where('dateTimestamp', '>=', new Date().setDate(new Date().getDate() - 7))
+              .orderBy('dateTimestamp', 'asc');
+          } else if (filter === 'last30Days') {
+            return ref
+              .where('interviewerId', '==', id)
+              .where('dateTimestamp', '<=', now)
+              .where('dateTimestamp', '>=', new Date().setDate(new Date().getDate() - 30))
+              .orderBy('dateTimestamp', 'asc');
+          }
+        });
+      })
     );
   }
 
@@ -26,7 +46,7 @@ export class InterviewService {
   }
 
   updateInterview(interview) {
-    this.db.updateAt(`interviews/${interview.id || ''}`, interview);
+    return this.db.updateAt(`interviews/${interview.id || ''}`, interview);
   }
 
   deleteInterview(interview) {

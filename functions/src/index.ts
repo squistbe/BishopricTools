@@ -2,14 +2,14 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 admin.initializeApp();
 
-exports.updateIndex = functions.firestore
+exports.createMemberIndex = functions.firestore
 .document('members/{memberId}')
 .onCreate((snap, context) => {
     const memberId = context.params.memberId;
     const member = snap.data();
     const familyNameIndex = createIndex(member.familyName);
     const givenNamesIndex = createIndex(member.givenNames);
-    const indexedMember = {...member, givenNamesIndex, familyNameIndex};
+    const indexedMember = {...member, familyNameIndex, givenNamesIndex};
     const db = admin.firestore();
     return db.collection('members').doc(memberId).set(indexedMember, {merge: true});
 });
@@ -71,15 +71,25 @@ exports.updateInterview = functions.firestore
 .onUpdate((snap, context) => {
     const after = snap.after.data();
     const before = snap.before.data();
+    if (after.date.valueOf !== before.date.valueOf()) {
+        addTimeStamp(after, context.params.interviewerId);
+    }
     if(!Object.is(after, before)) {
-        updateMemberInterview(after);
+        if (after.status === 'arrived' && after.member && after.member.id) {
+            updateMemberInterview(after);
+        }
     }
 });
 
 exports.createInterview = functions.firestore
 .document('interviews/{interviewerId}')
-.onCreate((snap) => {
-    updateMemberInterview(snap.data());
+.onCreate((snap, context) => {
+    const data = snap.data();
+    addTimeStamp(data, context.params.interviewerId);
+    if (data.status === 'arrived' && data.member && data.member.id) {
+        updateMemberInterview(data);
+    }
+    
 });
 
 function updateMemberInterview(data) {
@@ -87,4 +97,9 @@ function updateMemberInterview(data) {
     if (data.member) {
         db.collection('members').doc(data.member.id).set({lastInterviewed: data.date}, {merge: true}).catch(error => console.log(error));
     }
+}
+
+function addTimeStamp(data, id) {
+    const db = admin.firestore();
+    db.collection('interviews').doc(id).set({dateTimestamp: new Date(data.date).valueOf()}, {merge: true}).catch(error => console.log(error));
 }

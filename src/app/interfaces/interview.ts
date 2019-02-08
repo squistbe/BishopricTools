@@ -19,6 +19,7 @@ export enum InterviewStatus {
 }
 
 export enum InterviewDuration {
+    min0    = <any>'0',
     min15   = <any>'15',
     min30   = <any>'30',
     min45   = <any>'45',
@@ -28,6 +29,12 @@ export enum InterviewDuration {
     min105  = <any>'105',
     min120  = <any>'120',
     allDay  = <any>'allDay'
+}
+
+export interface InterviewFilter {
+    status: InterviewStatus;
+    date: Date;
+    member: Member;
 }
 
 export class Interview {
@@ -56,13 +63,14 @@ export class Interview {
             case InterviewStatus.arrived:   return 'success';
             case InterviewStatus.missed:    return 'danger';
             case InterviewStatus.pending:   return 'warning';
-            case InterviewStatus.confirmed: return 'light';
-            case InterviewStatus.blocked:   return 'medium';
+            case InterviewStatus.confirmed: return '';
+            case InterviewStatus.blocked:   return 'light';
         }
     }
 
     static durationAsString(duration): string {
         switch (duration) {
+            case InterviewDuration.min0:   return '0 minutes';
             case InterviewDuration.min15:   return '15 minutes';
             case InterviewDuration.min30:   return '30 minutes';
             case InterviewDuration.min45:   return '45 minutes';
@@ -77,6 +85,7 @@ export class Interview {
 
     static exposedDurationValues(): InterviewDuration[] {
         return [
+            InterviewDuration.min0,
             InterviewDuration.min15,
             InterviewDuration.min30,
             InterviewDuration.min45,

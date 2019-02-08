@@ -2,14 +2,17 @@ import { Injectable } from '@angular/core';
 import { DbService } from './db.service';
 import { Sacrament } from '../interfaces/sacrament';
 import { BehaviorSubject } from 'rxjs';
+import { shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SacramentService {
+  private daySource = new BehaviorSubject('');
   private monthSource = new BehaviorSubject('');
-  selectedMonth = this.monthSource.asObservable();
   private yearSource = new BehaviorSubject('');
+  selectedDay = this.daySource.asObservable();
+  selectedMonth = this.monthSource.asObservable();
   selectedYear = this.yearSource.asObservable();
 
   constructor(
@@ -28,6 +31,10 @@ export class SacramentService {
     this.db.updateAt(`sacrament/${sacrament.id || ''}`, sacrament);
   }
 
+  updateDay(day) {
+    this.daySource.next(day);
+  }
+
   updateMonth(month: string) {
     this.monthSource.next(month);
   }
@@ -41,5 +48,17 @@ export class SacramentService {
     (sacrament.meetingOptions.isGeneralConference ||
       sacrament.meetingOptions.isStakeConference ||
       sacrament.meetingOptions.isTempleDedication);
+  }
+
+  getConducting(month?) {
+    const path = month ? `conducting/${month}` : 'conducting';
+    if (month) {
+      return this.db.doc$(path);
+    }
+    return this.db.collection$(path, ref => ref.orderBy('sortIndex'));
+  }
+
+  updateConducting(id, data) {
+    this.db.updateAt(`conducting/${id}`, data);
   }
 }

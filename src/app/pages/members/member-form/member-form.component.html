@@ -60,6 +60,6 @@
     </ion-col>
   </ion-row>
   <ion-button type="submit" [disabled]="memberForm.invalid" margin-top>{{!member.id ? 'Add' : 'Update'}}</ion-button>
-  <ion-button *ngIf="member.id" color="danger" (click)="removeMember()" margin-top>Remove Member</ion-button>
+  <ion-button *ngIf="member.id" color="danger" (click)="removeMember()" margin-top>Remove</ion-button>
   <ion-button fill="clear" (click)="cancel()" margin-top>Cancel</ion-button>
 </form>

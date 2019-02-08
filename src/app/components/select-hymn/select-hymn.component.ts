@@ -1,32 +1,39 @@
-import { Component, OnInit } from '@angular/core';
-import { Hymn, SacramentSettings } from '../../interfaces/sacrament';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
+import { Hymn } from '../../interfaces/sacrament';
 import { ModalController } from '@ionic/angular';
-import { FormGroup, FormControl } from '@angular/forms';
+import { HymnService } from '../../services/hymn.service';
 
 @Component({
   selector: 'app-select-hymn',
   templateUrl: './select-hymn.component.html',
   styleUrls: ['./select-hymn.component.scss']
 })
-export class SelectHymnComponent implements OnInit {
-  hymns = SacramentSettings.HYMNS;
-  form: FormGroup;
-  searchText: FormControl;
+export class SelectHymnComponent implements OnInit, AfterViewInit {
+  @ViewChild('hymnSearch') hymnSearch;
+  hymns;
+  searchText;
 
   constructor(
-    public modal: ModalController
-  ) {
-    this.searchText = new FormControl();
-    this.form = new FormGroup({
-      searchText: this.searchText
-    });
-  }
+    public modal: ModalController,
+    private hymnService: HymnService
+  ) { }
 
   ngOnInit() {
+    this.hymns = this.hymnService.search();
+  }
+
+  ngAfterViewInit() {
+    this.hymnService.offset.next('');
+    setTimeout(() => this.hymnSearch.setFocus(), 100);
+  }
+
+  onKeyup(e) {
+    this.searchText = e.target.value;
+    this.hymnService.offset.next(this.searchText);
   }
 
   async selectHymn(hymn: Hymn) {
-    return await this.modal.dismiss(hymn);
+    return await this.modal.dismiss({name: hymn.name, number: hymn.number});
   }
 
 }

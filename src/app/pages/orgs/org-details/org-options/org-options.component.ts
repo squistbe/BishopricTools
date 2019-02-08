@@ -30,4 +30,9 @@ export class OrgOptionsComponent implements OnInit {
     this.callingService.toggleDeleteMode(true);
   }
 
+  reorderCallings() {
+    this.popover.dismiss();
+    this.callingService.setReorderMode(true);
+  }
+
 }

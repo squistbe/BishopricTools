@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { MemberService } from '../../services/member.service';
 import { Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
@@ -11,13 +11,14 @@ import { database } from 'firebase';
   styleUrls: ['./select-member.component.scss']
 })
 export class SelectMemberComponent implements OnInit, AfterViewInit {
+  @ViewChild('memberSearch') memberSearch;
   members: Observable<any[]>;
   data;
   searchText;
 
   constructor(
     private memberService: MemberService,
-    public modal: ModalController
+    private modal: ModalController
   ) { }
 
   ngOnInit() {
@@ -30,6 +31,7 @@ export class SelectMemberComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.memberService.offset.next('');
+    setTimeout(() => this.memberSearch.setFocus(), 100);
   }
 
   onKeyup(e) {
@@ -50,7 +52,7 @@ export class SelectMemberComponent implements OnInit, AfterViewInit {
       familyName: member.familyName,
       id: member.id
     };
-    return await this.modal.dismiss(this.data);
+    this.close();
   }
 
   getSearchText() {
@@ -58,6 +60,10 @@ export class SelectMemberComponent implements OnInit, AfterViewInit {
       return this.memberService.offset.getValue();
     }
     return '';
+  }
+
+  async close() {
+    return await this.modal.dismiss(this.data);
   }
 
 }

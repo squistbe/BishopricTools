@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="end">
-      <ion-button (click)="modal.dismiss()">
+      <ion-button (click)="close()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-searchbar debounce="500" slot="end" (ionInput)="onKeyup($event)" animated placeholder="Search members"></ion-searchbar>
+    <ion-searchbar #memberSearch debounce="500" slot="end" (ionInput)="onKeyup($event)" animated placeholder="Search members"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 

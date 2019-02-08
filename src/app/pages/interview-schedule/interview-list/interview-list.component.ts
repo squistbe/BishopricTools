@@ -1,9 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { InterviewService } from '../../../services/interview.service';
 import { Observable } from 'rxjs';
 import { Interview, InterviewStatus, InterviewDuration } from '../../../interfaces/interview';
-import { ModalController } from '@ionic/angular';
+import { ModalController, Platform, AlertController } from '@ionic/angular';
 import { InterviewDetailsComponent } from '../interview-details/interview-details.component';
 import * as moment from 'moment';
 import { SelectMemberComponent } from '../../../components/select-member/select-member.component';
@@ -14,7 +14,7 @@ import { SelectMemberComponent } from '../../../components/select-member/select-
   styleUrls: ['./interview-list.component.scss']
 })
 export class InterviewListComponent implements OnInit {
-  @ViewChild('interviewDate') interviewDate;
+  @ViewChild('aisConfig') search;
   activeId: string;
   list: Observable<any[]>;
   interviewStatuses: InterviewStatus[] = Interview.exposedValues();
@@ -24,12 +24,20 @@ export class InterviewListComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private modal: ModalController,
-    private interviewService: InterviewService
+    private alert: AlertController,
+    private interviewService: InterviewService,
+    public platform: Platform
   ) { }
 
   ngOnInit() {
+    const t = new Date();
+    const yesterday = t.setDate(t.getDate() - 1);
     this.activeId = this.route.snapshot.paramMap.get('interviewerId');
     this.list = this.interviewService.getInterviews(this.activeId);
+  }
+
+  trackById(idx, interview) {
+    return interview.id;
   }
 
   getStatusColor(status) {
@@ -49,7 +57,8 @@ export class InterviewListComponent implements OnInit {
     this.interviewService.updateInterview(interview);
   }
 
-  deleteInterview(interview) {
+  deleteInterview(e, interview) {
+    e.stopPropagation();
     this.interviewService.deleteInterview(interview);
   }
 
@@ -59,7 +68,7 @@ export class InterviewListComponent implements OnInit {
   }
 
   openDate() {
-    this.interviewDate.open();
+    // this.interviewDate.open();
   }
 
   async interviewDetails(interview) {
@@ -108,9 +117,46 @@ export class InterviewListComponent implements OnInit {
   }
 
   sameDay(d1, d2) {
-    return d1.getFullYear() === d2.getFullYear() &&
-      d1.getMonth() === d2.getMonth() &&
-      d1.getDate() === d2.getDate();
+    return d1 && d2 && moment(d1).isSame(moment(d2), 'day');
+  }
+
+  async presentFilter() {
+    const alert = await this.alert.create({
+      inputs: [
+        {
+          type: 'radio',
+          label: 'Last 7 Days',
+          value: 'last7Days',
+          checked: this.interviewService.selectedFilter.getValue() === 'last7Days'
+        },
+        {
+          type: 'radio',
+          label: 'Last 30 Days',
+          value: 'last30Days',
+          checked: this.interviewService.selectedFilter.getValue() === 'last30Days'
+        },
+        {
+          type: 'radio',
+          label: 'Future',
+          value: 'future',
+          checked: this.interviewService.selectedFilter.getValue() === 'future'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        }, {
+          text: 'Ok',
+          handler: (data) => {
+           this.interviewService.selectedFilter.next(data);
+          }
+        }
+      ]
+    });
+
+    return await alert.present();
   }
 
 }

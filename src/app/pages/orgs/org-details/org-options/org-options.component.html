@@ -5,7 +5,10 @@
   <ion-item lines="full" class="pointer-highlight">
     <ion-label>Filter<sup style="color: blue;">coming soon!</sup></ion-label>
   </ion-item>
-  <ion-item>
-    <ion-label color="danger" class="pointer-highlight" (click)="toggleDelete()">Remove Calling(s)</ion-label>
+  <ion-item lines="full" class="pointer-highlight" (click)="reorderCallings()">
+    <ion-label>Reorder</ion-label>
+  </ion-item>
+  <ion-item (click)="toggleDelete()">
+    <ion-label color="danger" class="pointer-highlight">Remove Calling(s)</ion-label>
   </ion-item>
 </ion-list>

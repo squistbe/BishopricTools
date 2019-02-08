@@ -117,16 +117,12 @@ export class AuthService {
         if ((await this.isRedirect()) !== true) {
             return null;
         }
-        const loading = await this.loadingController.create();
-        await loading.present();
 
         const result = await this.afAuth.auth.getRedirectResult();
 
         if (result.user) {
             await this.updateUserData(result.user);
         }
-
-        await loading.dismiss();
 
         await this.setRedirect(false);
 

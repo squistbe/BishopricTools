@@ -3,43 +3,41 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>{{orgTitle || (titleSub | async)?.name}}</ion-title>
-    <ion-buttons slot="end" *ngIf="!getDeleteMode()">
-      Reorder
-      <ion-toggle [(ngModel)]="toggleReorder"></ion-toggle>
-      <ion-button (click)="presentOptions($event)">
+    <ion-buttons slot="end">
+      <ion-button (click)="presentOptions($event)" *ngIf="!getDeleteMode() && !getReorder()">
         <ion-icon name="more"></ion-icon>
       </ion-button>
+      <ion-button color="primary" *ngIf="getReorder()" (click)="setReorder(false)">Done</ion-button>
+      <ion-button color="primary" *ngIf="getDeleteMode()" (click)="setDeleteMode(false)">Cancel</ion-button>
+      <ion-button color="danger" *ngIf="getDeleteMode()" (click)="removeCallings()" [disabled]="!getSelection().length">Remove</ion-button>
     </ion-buttons>
-    <ion-buttons slot="end" *ngIf="getDeleteMode()">
-      <ion-button color="primary" (click)="setDeleteMode(false)">Done</ion-button>
-      <ion-button color="danger" (click)="removeCallings()">Remove</ion-button>
+    <ion-buttons slot="end">
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ion-list *ngIf="platform.is('desktop')">
-    <ion-reorder-group [disabled]="!toggleReorder" *ngIf="callings | async as items" (ionItemReorder)="callingReorder($event, items)">
-      <ion-item *ngFor="let calling of items; trackBy: trackById; let i = index;" [color]="calling.$$checked ? 'light' : ''">
+    <ion-reorder-group [disabled]="!getReorder()" *ngIf="callings | async as items" (ionItemReorder)="callingReorder($event, items)">
+      <ion-item *ngFor="let calling of items; trackBy: trackById; let i = index;" [color]="calling.$$checked ? 'light' : null">
         <ion-reorder slot="start"></ion-reorder>
         <ion-checkbox *ngIf="getDeleteMode()" [(ngModel)]="calling.$$checked" (ionChange)="setSelection($event, calling, i)"></ion-checkbox>
         <calling-item [calling]="calling" margin-end></calling-item>
         <ion-button slot="end" (click)="presentMembers(calling)">
-            <ion-icon name="{{calling.member ? 'create' : 'add'}}"></ion-icon>
+          <ion-icon name="{{calling.member ? 'create' : 'add'}}"></ion-icon>
         </ion-button>
         <ion-button slot="end" (click)="deleteMemberFromCalling(calling)" color="danger" [attr.disabled]="!calling.member ? '' : null">
-            <ion-icon name="trash"></ion-icon>
+          <ion-icon name="trash"></ion-icon>
         </ion-button>
       </ion-item>
     </ion-reorder-group>
   </ion-list>
   <ion-list *ngIf="!platform.is('desktop')">
-    <ion-reorder-group [disabled]="!toggleReorder" *ngIf="callings | async as items" (ionItemReorder)="callingReorder($event, items)">
+    <ion-reorder-group [disabled]="!getReorder()" *ngIf="callings | async as items" (ionItemReorder)="callingReorder($event, items)">
       <ion-item-sliding #slidingItem *ngFor="let calling of items; trackBy: trackById">
         <ion-item [color]="calling.$$checked ? 'light' : ''">
           <ion-reorder slot="start"></ion-reorder>
-          <ion-checkbox [(ngModel)]="calling.$$checked"></ion-checkbox>
+          <ion-checkbox *ngIf="getDeleteMode()" [(ngModel)]="calling.$$checked" (ionChange)="setSelection($event, calling, i)"></ion-checkbox>
           <calling-item [calling]="calling" margin-end></calling-item>
         </ion-item>
         <ion-item-options side="end">

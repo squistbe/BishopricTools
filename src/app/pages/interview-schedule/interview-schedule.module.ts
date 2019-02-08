@@ -1,7 +1,8 @@
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
+import { NgAisModule } from 'angular-instantsearch';
 
 import { IonicModule } from '@ionic/angular';
 
@@ -45,10 +46,12 @@ const routes: Routes = [
     IonicModule,
     ReactiveFormsModule,
     ComponentsModule,
+    NgAisModule,
     RouterModule.forChild(routes)
   ],
   declarations: [InterviewSchedulePage, BishopricPipe, InterviewListComponent, InterviewDetailsComponent],
   entryComponents: [InterviewDetailsComponent],
-  providers: [UserService, InterviewService]
+  providers: [UserService, InterviewService],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class InterviewSchedulePageModule {}

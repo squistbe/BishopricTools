@@ -67,8 +67,33 @@ const routes: Routes = [
     }
   },
   {
+    path: 'conducting',
+    loadChildren: './pages/conducting/conducting.module#ConductingPageModule',
+    canActivate: [AuthGuard, RolesGuard],
+    data: {
+      expectedRoles: {
+        admin: true
+      }
+    }
+  },
+  {
     path: 'access-denied',
-    loadChildren: './pages/access-denied/access-denied.module#AccessDeniedPageModule'
+    loadChildren: './pages/access-denied/access-denied.module#AccessDeniedPageModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'privacy-policy',
+    loadChildren: './pages/privacy-policy/privacy-policy.module#PrivacyPolicyPageModule'
+  },
+  {
+    path: 'profile',
+    loadChildren: './pages/profile/profile.module#ProfilePageModule',
+    canActivate: [AuthGuard, RolesGuard],
+    data: {
+      expectedRoles: {
+        admin: true
+      }
+    }
   }
 ];
 

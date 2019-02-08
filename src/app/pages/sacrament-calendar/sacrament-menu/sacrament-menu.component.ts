@@ -36,6 +36,9 @@ export class SacramentMenuComponent implements OnInit {
   }
 
   selectMember(e) {
+    if (!e.data) {
+      return;
+    }
     if (!this.sacrament.speakers) {
       this.sacrament.speakers = [e.data];
     } else {

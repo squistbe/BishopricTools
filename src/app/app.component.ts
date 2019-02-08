@@ -56,6 +56,14 @@ export class AppComponent implements OnDestroy {
       }
     },
     {
+      title: 'Conducting Assignments',
+      url: '/conducting',
+      icon: 'book',
+      role: {
+        admin: true
+      }
+    },
+    {
       title: 'Sacrament Attendance',
       url: '/sacrament-attendance',
       icon: 'stats',
