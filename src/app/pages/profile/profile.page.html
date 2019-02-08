@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar *ngIf="user | async as me">
+    <ion-avatar slot="start" [style.width.px]="40" [style.height.px]="40" margin-start>
+      <img [src]="me.photoURL">
+    </ion-avatar>
+    <ion-title>{{me.displayName}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ng-container *ngIf="user | async as me">
+    <p><ion-text color="dark">Role: {{me.roles.admin ? 'Admin' : 'Guest'}}</ion-text></p>
+    <p><ion-text color="dark">Unit Number: {{me.unitNumber}}</ion-text></p>
+  </ng-container>
+</ion-content>

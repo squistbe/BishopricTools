@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Conducting</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ng-container *ngFor="let month of conducting | async; trackBy: trackById;">
+      <ion-item-divider padding-top>
+        <ion-label text-capitalize>
+          {{month.id}}
+        </ion-label>
+      </ion-item-divider>
+      <ion-item (click)="presentOptions(month)" class="pointer-highlight">
+        <ion-avatar *ngIf="month.member?.photoURL" slot="start" [style.width.px]="30" [style.height.px]="30">
+          <img [src]="month.member?.photoURL">
+        </ion-avatar>
+        <ion-icon *ngIf="!month.member?.photoURL" slot="start" color="primary" name="contact"></ion-icon>
+        <ion-label>
+          <span *ngIf="month.member as member">{{member.displayName}}</span>
+          <ion-note *ngIf="!month.member"><i>Add Member...</i></ion-note>
+        </ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+</ion-content>
