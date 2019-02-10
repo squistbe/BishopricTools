@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { Interview, InterviewStatus, InterviewDuration } from '../../../interfaces/interview';
 import { ModalController, Platform, AlertController } from '@ionic/angular';
 import { InterviewDetailsComponent } from '../interview-details/interview-details.component';
-import * as moment from 'moment';
+import moment from 'moment';
 import { SelectMemberComponent } from '../../../components/select-member/select-member.component';
 
 @Component({

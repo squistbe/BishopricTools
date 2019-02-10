@@ -10,5 +10,6 @@
       "path": "/",
       "proxyUrl": "http://localhost:5000"
     }
-  ]
+  ],
+  "id": "b03a618d"
 }

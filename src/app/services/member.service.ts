@@ -3,7 +3,8 @@ import { AuthService } from './auth.service';
 import { DbService } from './db.service';
 import { switchMap, shareReplay, map } from 'rxjs/operators';
 import { combineLatest, BehaviorSubject } from 'rxjs';
-import { uniqBy, flattenDeep } from 'lodash';
+import uniqBy from 'lodash/uniqBy';
+import flattenDeep from 'lodash/flattenDeep';
 import { Gender } from '../interfaces/member';
 
 @Injectable({
@@ -26,7 +27,6 @@ export class MemberService {
           ref
             .where('unitNumber', '==', user.unitNumber)
             .orderBy('familyName', 'asc')
-            .limit(5)
         )
       ),
       shareReplay(1)

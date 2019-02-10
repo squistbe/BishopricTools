@@ -7,7 +7,7 @@ import { switchMap } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class InterviewService {
-  selectedFilter = new BehaviorSubject<string>('last7Days');
+  selectedFilter = new BehaviorSubject<string>('future');
 
   constructor(
     private db: DbService

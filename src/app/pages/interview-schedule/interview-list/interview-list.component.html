@@ -12,12 +12,12 @@
 </ion-header>
 <ion-content>
   <ion-list>
-    <ng-container *ngFor="let interview of list | async; trackBy: trackById; let i = index;">
-      <ion-item-divider sticky *ngIf='i === 0 || (list[i - 1] && !sameDay(interview.date, list[i - 1].date))'>
+    <ng-container *ngFor="let interview of list | async as items; trackBy: trackById; let i = index;">
+      <ion-item-divider sticky *ngIf='i === 0 || (items[i - 1] && !sameDay(interview.date, items[i - 1].date))'>
         <ion-label><h2>{{interview.date | date: 'EEEE, MMMM d'}}</h2></ion-label>
       </ion-item-divider>
       <ion-item-sliding [disabled]="platform.is('desktop')">
-        <ion-item lines="full" color="{{getStatusColor(interview.status)}}" class="pointer-highlight" (click)="interviewDetails(interview)">
+        <ion-item color="{{getStatusColor(interview.status)}}" lines="full" class="pointer-highlight" (click)="interviewDetails(interview)">
           <ion-label>
             <h1>{{interview.member.givenNames}} {{interview.member.familyName}}</h1>
             <h3>

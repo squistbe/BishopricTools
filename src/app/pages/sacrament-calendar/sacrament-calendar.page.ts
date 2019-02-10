@@ -21,7 +21,6 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
   months = SacramentSettings.SACRAMENT_MONTHS;
   year;
   month;
-  yearSub: Subscription;
   monthSub: Subscription;
 
   constructor(
@@ -29,7 +28,6 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private modal: ModalController,
     private popover: PopoverController,
-    private changeRef: ChangeDetectorRef,
     private location: Location,
     private router: Router
   ) {
@@ -43,33 +41,24 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     const now = new Date();
-    const selectedDay = this.route.snapshot.paramMap.get('day');
     const selectedYear = this.route.snapshot.paramMap.get('year') || now.getFullYear().toString();
     const selectedMonth = this.route.snapshot.paramMap.get('month') || SacramentSettings.SACRAMENT_MONTHS[now.getMonth()].toLowerCase();
-    this.sacramentService.updateMonth(selectedMonth);
-    this.sacramentService.updateYear(selectedYear);
-    this.yearSub = this.sacramentService.selectedYear.subscribe(year => this.year = year);
+    this.sacramentService.selectedMonth.next(selectedMonth);
+    this.sacramentService.selectedYear.next(selectedYear);
     this.monthSub = this.sacramentService.selectedMonth.subscribe(month => {
-      this.month = month;
-      this.location.go(`sacrament-calendar/${this.year}/${this.month}`);
-      this.getSacraments(`${this.year}-${this.month}`);
-      this.conducting$ = this.sacramentService.getConducting(this.month);
-      this.changeRef.detectChanges();
+      this.location.go(`sacrament-calendar/${this.sacramentService.selectedYear.getValue()}/${month}`);
+      this.conducting$ = this.sacramentService.getConducting(month);
     });
+    this.sacraments = this.sacramentService.getSacraments();
   }
 
   ngOnDestroy() {
-    this.yearSub.unsubscribe();
     this.monthSub.unsubscribe();
   }
 
 
   trackById(idx, sacrament) {
     return sacrament.id;
-  }
-
-  getSacraments(dateTag) {
-    this.sacraments = this.sacramentService.getSacraments(dateTag);
   }
 
   getNextSunday() {

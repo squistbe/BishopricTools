@@ -6,7 +6,6 @@ import { SelectHymnComponent } from './select-hymn/select-hymn.component';
 import { FilterHymnsPipe } from '../pipes/filter-hymns.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HighlightPipe } from '../pipes/highlight.pipe';
-import { NgAisModule } from 'angular-instantsearch';
 import { HymnService } from '../services/hymn.service';
 
 @NgModule({
@@ -14,8 +13,7 @@ import { HymnService } from '../services/hymn.service';
     CommonModule,
     IonicModule,
     FormsModule,
-    ReactiveFormsModule,
-    NgAisModule
+    ReactiveFormsModule
   ],
   exports: [SelectMemberComponent, SelectHymnComponent, HighlightPipe],
   declarations: [SelectMemberComponent, SelectHymnComponent, FilterHymnsPipe, HighlightPipe],

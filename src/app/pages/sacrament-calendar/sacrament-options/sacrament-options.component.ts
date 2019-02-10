@@ -46,7 +46,7 @@ export class SacramentOptionsComponent implements OnInit {
         {
           text: 'Done',
           handler: (data) => {
-            this.sacramentService.updateMonth(data);
+            this.sacramentService.selectedMonth.next(data);
           }
         }
       ]

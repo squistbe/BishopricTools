@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { AlertController, ToastController } from '@ionic/angular';
 import { MemberService } from '../../services/member.service';
 import { Router } from '@angular/router';
+// import * as differenceBy from 'lodash/differenceBy';
 
 @Component({
   selector: 'app-members',
@@ -53,6 +54,7 @@ export class MembersPage implements OnInit, AfterViewInit {
   async presentFilters() {
     const filter = this.memberService.offset.getValue();
     const alert = await this.alert.create({
+      header: 'Sort by',
       inputs: [
         {
           type: 'radio',
@@ -77,6 +79,11 @@ export class MembersPage implements OnInit, AfterViewInit {
           label: 'Will Pray',
           value: 'willPray',
           checked: filter === 'willPray'
+        },
+        {
+          type: 'radio',
+          label: 'Reset',
+          value: ''
         }
       ],
       buttons: [
@@ -85,10 +92,8 @@ export class MembersPage implements OnInit, AfterViewInit {
           role: 'cancel'
         },
         {
-          text: 'Apply',
-          handler: (data) => {
-            this.memberService.offset.next(data);
-          }
+          text: 'OK',
+          handler: (data) => this.memberService.offset.next(data)
         }
       ]
     });
@@ -162,10 +167,10 @@ export class MembersPage implements OnInit, AfterViewInit {
     const csv = reader.result.replace(/['"]+/g, '');
     const allTextLines = csv.split(/\r|\n|\r/).filter(Boolean);
     const header = allTextLines.shift().split(',');
-    allTextLines.forEach(row => {
+    const members = allTextLines.map(row => {
       const record = row.split(',');
-      const newRecord = {
-        givenNames: record[1],
+      return {
+        givenNames: record[1].trim(),
         familyName: record[0],
         mrn: record[2],
         birthDate: new Date(record[3]),
@@ -175,8 +180,10 @@ export class MembersPage implements OnInit, AfterViewInit {
         unitNumber: 477400,
         updatedAt: new Date()
       };
-      this.memberService.updateMember(newRecord);
+      // this.memberService.updateMember(newRecord);
     });
+    // const toDelete = differenceBy(members, this.dudes, 'mrn');
+    // const toAdd = differenceBy(this.dudes, members, 'mrn');
   }
 
   uploadError(error) {
