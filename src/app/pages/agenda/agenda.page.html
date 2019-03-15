@@ -1,0 +1,49 @@
+<ng-container *ngIf="users | async as items">
+  <ion-header>
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button autoHide></ion-menu-button>
+        </ion-buttons>
+        <ion-select float-right [value]="userSub.getValue()" interface="popover" placeholder="Select User" (ionChange)="updateUser($event.detail.value)">
+          <!-- <ion-select-option value="" [attr.selected]="!userSub.getValue()">Everyone</ion-select-option>   -->
+          <ion-select-option *ngFor="let user of items" [value]="user.uid">
+            {{user.displayName}}
+          </ion-select-option>
+        </ion-select>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content *ngIf="statusFiltered | async as all">
+    <div [attr.padding]="platform.is('desktop') ? null : ''">
+      <ion-segment (ionChange)="updateFilter($event.detail.value)">
+        <ion-segment-button value="" checked>All</ion-segment-button>
+        <ion-segment-button value="complete">Complete</ion-segment-button>
+        <ion-segment-button value="pending">Pending</ion-segment-button>
+      </ion-segment>
+    </div>
+    <ion-list lines="full">
+      <ion-reorder-group disabled="false" (ionItemReorder)="reorderTodos($event, all)">
+        <ion-item *ngFor="let todo of all; trackBy: trackById; let i = index;" class="ion-justify-content-between" (click)="focusTodo(todo, $event)">
+          <ion-reorder slot="start"></ion-reorder>
+          <ion-label style="max-width: none; flex: auto; font-size: 14px;" [class.complete]="todo.status === 'complete'" [hidden]="todo.$$focused" text-wrap [color]="todo.color || 'dark'">
+            {{todo.content}}
+          </ion-label>
+          <ion-textarea [color]="todo.color || 'dark'" class="todo" [hidden]="!todo.$$focused" [class.complete]="todo.status === 'complete'" rows="1" [(ngModel)]="todo.content" (ionBlur)="blurTodo(todo, $event)"></ion-textarea>
+          <ion-checkbox slot="end" *ngIf="platform.is('desktop')" style="position: relative; margin-right: 5px;" margin-start (click)="toggleStatus(todo)" [checked]="todo.status === 'complete'" color="success"></ion-checkbox>
+          <ion-button slot="end" fill="clear" color="dark" (click)="presentTodoOptions($event, todo)" no-margin>
+            <ion-icon slot="icon-only" name="more"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-reorder-group>
+      <ion-item *ngIf="!getFilter() || getFilter() === 'pending'">
+        <ion-icon name="add" color="medium" slot="start" size="large"></ion-icon>
+        <ion-textarea rows="1" (ionBlur)="blurTodo({}, $event, all.length)"></ion-textarea>
+      </ion-item>
+    </ion-list>
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="presentTodoForm(all.length)">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </ion-content>
+</ng-container>

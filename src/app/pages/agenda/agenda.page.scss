@@ -1,0 +1,12 @@
+.complete {
+    text-decoration: line-through;
+    color: var(--ion-color-medium);
+}
+
+
+ion-textarea.todo {
+    line-height: 1.5;
+    font-size: 14px;
+    font-family: var(--ion-font-family);
+    color: var(--ion-color-base);
+  }

@@ -1,0 +1,14 @@
+<ion-list lines="full">
+  <ion-item (click)="colorTodo()" class="pointer-highlight">
+    <ion-icon name="color-palette" slot="start"></ion-icon>
+    Type
+  </ion-item>
+  <ion-item (click)="toggleTodo()" *ngIf="!platform.is('desktop')">
+    <ion-icon slot="start" [name]="todo.status === 'pending' ? 'checkbox-outline' : 'infinite'"></ion-icon>
+    {{todo.status === 'complete' ? 'Pending' : 'Complete'}}
+  </ion-item>
+  <ion-item (click)="deleteTodo()" class="pointer-highlight">
+    <ion-icon name="trash" slot="start"></ion-icon>
+    Delete
+  </ion-item>
+</ion-list>

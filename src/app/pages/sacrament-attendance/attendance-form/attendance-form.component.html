@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Attendance</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="attendanceForm" (ngSubmit)="submitAttendance()">
+    <ion-item>
+      <label>Date</label>
+      <ion-datetime formControlName="date" display-format="MMM DD, YYYY"></ion-datetime>
+    </ion-item>
+    <ion-item>
+      <ion-input type="number" formControlName="total" placeholder="Count"></ion-input>
+    </ion-item>
+    <ion-button type="submit" [disabled]="attendanceForm.invalid" margin-top>Submit</ion-button>
+  </form>
+</ion-content>
