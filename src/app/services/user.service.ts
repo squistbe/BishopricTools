@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { DbService } from './db.service';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +19,9 @@ export class UserService {
         this.db.collection$('users', ref =>
           ref
               .where('unitNumber', '==', user.unitNumber)
-              .limit(5)
         )
-      )
+      ),
+      shareReplay(1)
     );
   }
 }

@@ -33,6 +33,7 @@ export class InterviewListComponent implements OnInit {
     const t = new Date();
     const yesterday = t.setDate(t.getDate() - 1);
     this.activeId = this.route.snapshot.paramMap.get('interviewerId');
+    this.interviewService.activeId.next(this.activeId);
     this.list = this.interviewService.getInterviews(this.activeId);
   }
 

@@ -4,11 +4,57 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Sacrament Attendance
+      {{getTitle()}}
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentYears()">
+        <ion-icon name="more"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  Coming Soon!
+<ion-content>
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title style="overflow:hidden" align-items-center>
+        Chart
+        <ion-button color="medium" fill="clear" (click)="toggleChart()" float-right>
+          <ion-icon slot="icon-only" [name]="!showChart ? 'arrow-dropdown' : 'arrow-dropup'"></ion-icon>
+        </ion-button>
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content [hidden]="showChart">
+      <canvas #lineCanvas></canvas>
+    </ion-card-content>
+  </ion-card>
+  <ion-list lines="full" style="border-top: 1px solid #DEDEDE">
+    <ion-item-sliding [disabled]="platform.is('desktop')" *ngFor="let item of list | async; trackBy: trackById;">
+      <ion-item (click)="addAttendance(item)" class="pointer-highlight">
+        <ion-label>
+          <h2>Count: {{item.total}}</h2>
+          <p>{{item.date | date: 'MMMM d'}}</p>
+        </ion-label>
+        <!-- <ion-button *ngIf="platform.is('desktop')" (click)="addAttendance(item)" color="medium" fill="clear">
+          <ion-icon name="create" slot="icon-only"></ion-icon>
+        </ion-button> -->
+        <ion-button *ngIf="platform.is('desktop')" (click)="deleteAttendance(item.id)" color="medium" fill="clear">
+          <ion-icon name="trash" slot="icon-only"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item-options side="end">
+        <!-- <ion-item-option (click)="addAttendance(item)">
+          <ion-icon name="create" slot="icon-only"></ion-icon>
+        </ion-item-option> -->
+        <ion-item-option (click)="deleteAttendance(item.id)" color="danger">
+          <ion-icon name="trash" slot="icon-only"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+      <ion-fab-button (click)="addAttendance()">
+        <ion-icon name="add"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
 </ion-content>

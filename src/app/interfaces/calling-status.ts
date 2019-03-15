@@ -52,4 +52,8 @@ export class CallingStatus {
             CallingStatusType.vacant
         ];
     }
+
+    static isInstanceOf(type): boolean {
+        return Object.values(CallingStatusType).includes(type);
+    }
 }

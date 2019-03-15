@@ -3,15 +3,16 @@ import { AuthService } from './auth.service';
 import { DbService } from './db.service';
 import { switchMap, shareReplay, map } from 'rxjs/operators';
 import { combineLatest, BehaviorSubject } from 'rxjs';
+import { Gender } from '../interfaces/member';
 import uniqBy from 'lodash/uniqBy';
 import flattenDeep from 'lodash/flattenDeep';
-import { Gender } from '../interfaces/member';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemberService {
   offset = new BehaviorSubject<any>('');
+  cursor = new BehaviorSubject<any>(0);
   private ageLimit = new BehaviorSubject<number>(null);
   private genderReq = new BehaviorSubject<Gender>(null);
 
@@ -57,20 +58,21 @@ export class MemberService {
     return this.genderReq.getValue();
   }
 
-  search() {
+  search(cursor?) {
+    const limit = cursor + 25;
     return this.offset.pipe(
       switchMap(offset => {
         if (offset === 'lastSpoke' || offset === 'lastPrayed' || offset === 'lastInterviewed' || offset === 'willPray') {
           if (offset === 'willPray') {
-            return this.db.collection$('members', ref => ref.where('willPray', '==', true));
-          } else if (offset === 'lastSpoke' || offset === 'lastPrayed') {
-            return this.db.collection$('members', ref => ref.orderBy(offset, 'asc'));
+            return this.db.collection$('members', ref => ref.where('willPray', '==', true).orderBy('lastPrayed', 'asc').limit(limit).startAfter(cursor));
+          } else {
+            return this.db.collection$('members', ref => ref.orderBy(offset, 'asc').limit(limit).startAfter(cursor));
           }
         } else if (offset === '') {
-          return this.db.collection$('members', ref => ref.orderBy('familyName', 'asc').limit(25));
+          return this.db.collection$('members', ref => ref.orderBy('familyName', 'asc').limit(limit).startAfter(cursor));
         } else {
-          const givenNamesRef = this.db.collection$('members', ref => ref.orderBy(`givenNamesIndex.${offset}`));
-          const familyNamesRef = this.db.collection$('members', ref => ref.orderBy(`familyNameIndex.${offset}`));
+          const givenNamesRef = this.db.collection$('members', ref => ref.orderBy(`givenNamesIndex.${offset}`).limit(25));
+          const familyNamesRef = this.db.collection$('members', ref => ref.orderBy(`familyNameIndex.${offset}`).limit(25));
           return combineLatest(givenNamesRef, familyNamesRef)
           .pipe(
             map((results) => {

@@ -3,6 +3,11 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
+    <ion-segment>
+      <ion-segment-button value="complete">Bishop</ion-segment-button>
+      <ion-segment-button value="pending">1st</ion-segment-button>
+      <ion-segment-button>2nd</ion-segment-button>
+    </ion-segment>
     <ion-buttons slot="end">
       <ion-button (click)="presentFilter()">
         <ion-icon name="funnel"></ion-icon>
@@ -10,9 +15,9 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content *ngIf="list | async as items;">
   <ion-list>
-    <ng-container *ngFor="let interview of list | async as items; trackBy: trackById; let i = index;">
+    <ng-container *ngFor="let interview of items; trackBy: trackById; let i = index;">
       <ion-item-divider sticky *ngIf='i === 0 || (items[i - 1] && !sameDay(interview.date, items[i - 1].date))'>
         <ion-label><h2>{{interview.date | date: 'EEEE, MMMM d'}}</h2></ion-label>
       </ion-item-divider>
@@ -41,48 +46,9 @@
       </ion-item-sliding>
     </ng-container>
   </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="presentInterview()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
-        <!-- <ion-card *ngFor="let interview of hits as items; let i = index;" color="{{getStatusColor(interview.status)}}">
-          <ion-buttons class="action-buttons" slot="end" margin>
-            <ion-button size="large" (click)="interviewDetails(interview)">
-              
-            </ion-button>
-            <ion-button size="large" (click)="deleteInterview(interview)">
-              <ion-icon name="trash"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-          <ion-card-header>
-            <ion-card-title (click)="presentMembers(interview)" class="pointer-highlight">
-              {{interview.member.givenNames}} {{interview.member.familyName}}
-            </ion-card-title>
-            <ion-card-subtitle>
-              <ion-datetime style="display:none;" #interviewDate [(ngModel)]="interview.date" (ionChange)="updateInterview(interview)" display-format="h:mm a - DDDD, MMMM D" minuteValues="0,15,30,45" [yearValues]="yearValues" valueFormat="YYYY-MM-DDTHH:mm:ssTZD" no-padding></ion-datetime>
-              <div class="pointer-highlight" (click)="openDate()">
-                <span *ngIf="interview.duration !== 'allDay'">{{interview.date | date: 'h:mm a'}}
-                  <span *ngIf="interview.duration !== '0'"> - {{getDateRange(interview) | date: 'h:mm a'}}</span>
-                </span>&nbsp;
-                <span>{{interview.date | date: 'EEEE, MMMM d'}}</span>
-              </div>
-            </ion-card-subtitle>
-          </ion-card-header>
-          <ion-card-content>
-            <div class="status-and-duration">
-              <ion-select no-padding padding-vertical padding-end [(ngModel)]="interview.duration" (ionChange)="updateInterview(interview)" interface="popover" placeholder="Select duration">
-                <ion-select-option *ngFor="let duration of interviewDurations;" [value]="duration">{{getDurationString(duration)}}</ion-select-option>
-              </ion-select>
-              <ion-select padding [(ngModel)]="interview.status" (ionChange)="updateInterview(interview)" interface="popover" placeholder="Select status">
-                <ion-select-option *ngFor="let interviewStatus of interviewStatuses;" [value]="interviewStatus">{{getInterviewStatus(interviewStatus)}}</ion-select-option>
-              </ion-select>
-            </div>
-            <ion-textarea [(ngModel)]="interview.details" placeholder="Interview details" (ionBlur)="updateInterview(interview)"></ion-textarea>
-          </ion-card-content>
-        </ion-card> -->
-      <!-- </ng-template> -->
-    <!-- </ais-hits>
-  </ais-instantsearch>
-</ion-content> -->
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
-  <ion-fab-button (click)="presentInterview()">
-    <ion-icon name="add"></ion-icon>
-  </ion-fab-button>
-</ion-fab>

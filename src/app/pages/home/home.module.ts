@@ -5,7 +5,6 @@ import { IonicModule } from '@ionic/angular';
 import { RouterModule } from '@angular/router';
 
 import { HomePage } from './home.page';
-import { AuthService } from '../../services/auth.service';
 
 @NgModule({
   imports: [
@@ -19,7 +18,6 @@ import { AuthService } from '../../services/auth.service';
       }
     ])
   ],
-  declarations: [HomePage],
-  providers: [AuthService]
+  declarations: [HomePage]
 })
 export class HomePageModule {}

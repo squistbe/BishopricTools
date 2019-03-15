@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PopoverController, AlertController } from '@ionic/angular';
 import { CallingService } from '../../../../services/calling.service';
-import { CallingStatus } from '../../../../interfaces/calling-status';
-import { AlertInput } from '@ionic/core';
+import { CallingStatus, CallingStatusType } from '../../../../interfaces/calling-status';
 
 @Component({
   selector: 'app-org-options',
@@ -42,11 +41,13 @@ export class OrgOptionsComponent implements OnInit {
     this.popover.dismiss();
     const inputs: any = CallingStatus.exposedValues().map(input => {
       return {
-        type: 'checkbox',
+        type: 'radio',
         label: CallingStatus.asString(input),
-        value: input
+        value: input,
+        checked: input === this.callingService.status.getValue()
       };
     });
+    inputs.unshift({type: 'radio', label: 'None', value: ''});
     const alert = await this.alert.create({
       header: 'Filter by',
       inputs: inputs,
@@ -59,7 +60,7 @@ export class OrgOptionsComponent implements OnInit {
         {
           text: 'OK',
           handler: (data) => {
-            console.log(data);
+            this.callingService.status.next(data);
           }
         }
       ]

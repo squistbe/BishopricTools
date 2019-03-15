@@ -17,6 +17,10 @@ const routes: Routes = [
   {
     path: ':id',
     loadChildren: './org-details/org-details.module#OrgDetailsPageModule'
+  },
+  {
+    path: ':status',
+    loadChildren: './org-details/org-details.module#OrgDetailsPageModule'
   }
 ];
 

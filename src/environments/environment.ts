@@ -10,8 +10,7 @@ export const environment = {
     databaseURL: 'https://bishoprictools-1542660052039.firebaseio.com',
     projectId: 'bishoprictools-1542660052039',
     storageBucket: 'bishoprictools-1542660052039.appspot.com',
-    messagingSenderId: '176789930554',
-    timestampsInSnapshots: true
+    messagingSenderId: '176789930554'
   }
 };
 

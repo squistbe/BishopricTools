@@ -4,13 +4,20 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>
-      Callings
+      Organizations
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
+  <ion-list lines="full" no-padding>
+    <ion-item>
+      <ion-icon name="pulse" slot="start" color="primary" no-margin></ion-icon>
+      <ion-label color="primary" margin-start>View by status</ion-label>
+      <ion-select interface="popover" (ionChange)="statusChange($event)">
+        <ion-select-option *ngFor="let status of callingStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
+      </ion-select>
+    </ion-item>
     <ion-item *ngFor="let org of orgs | async; trackBy: trackById" (click)="goToOrg(org)" detail class="pointer-highlight">
       <ion-label>{{org.name}}</ion-label>
     </ion-item>

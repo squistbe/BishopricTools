@@ -45,21 +45,26 @@
     <ion-label position="floating">Last Interviewed</ion-label>
     <ion-datetime display-format="DD MMM YYYY" picker-format="MMM DD YYYY" formControlName="lastInterviewed"></ion-datetime>
   </ion-item>
-  <ion-row nowrap justify-content-start>
-    <ion-col>
+  <ion-row nowrap justify-content-start margin-top>
+    <ion-col no-padding>
       <ion-item>
         <ion-label position="fixed">Last Prayed</ion-label>
         <ion-datetime display-format="DD MMM YYYY" picker-format="MMM DD YYYY" formControlName="lastPrayed"></ion-datetime>
       </ion-item>
     </ion-col>
-    <ion-col>
+    <ion-col no-padding>
       <ion-item>
         <ion-label>Will Pray</ion-label>
-        <ion-checkbox slot="end" formControlName="willPray"></ion-checkbox>
+        <ion-checkbox slot="end" formControlName="willPray" no-margin></ion-checkbox>
       </ion-item>
     </ion-col>
   </ion-row>
-  <ion-button type="submit" [disabled]="memberForm.invalid" margin-top>{{!member.id ? 'Add' : 'Update'}}</ion-button>
-  <ion-button *ngIf="member.id" color="danger" (click)="removeMember()" margin-top>Remove</ion-button>
-  <ion-button fill="clear" (click)="cancel()" margin-top>Cancel</ion-button>
+  <div margin-vertical>
+    <ion-button type="submit" [disabled]="memberForm.invalid">{{!member.id ? 'Add' : 'Update'}}</ion-button>
+    <ion-button fill="clear" (click)="cancel()">Cancel</ion-button>
+    <ion-button *ngIf="member.id" color="danger" (click)="removeMember()" float-right>
+      <ion-icon name="warning" slot="start"></ion-icon>
+      Remove
+    </ion-button>
+  </div>
 </form>

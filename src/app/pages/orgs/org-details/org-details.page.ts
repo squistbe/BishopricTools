@@ -1,39 +1,65 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CallingService } from '../../../services/calling.service';
 import { ModalController, Platform, PopoverController } from '@ionic/angular';
 import { SelectMemberComponent } from '../../../components/select-member/select-member.component';
 import { OrgOptionsComponent } from './org-options/org-options.component';
 import { Calling } from '../../../interfaces/calling';
+import { CallingStatus, CallingStatusType } from '../../../interfaces/calling-status';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-org-details',
   templateUrl: './org-details.page.html',
   styleUrls: ['./org-details.page.scss'],
 })
-export class OrgDetailsPage implements OnInit {
+export class OrgDetailsPage implements OnInit, OnDestroy {
   callings: Observable<any[]>;
   orgId: string;
   callingLength;
   toggleReorder = false;
   private selection: Calling[] = [];
+  status;
+  callingStatuses: CallingStatusType[] = CallingStatus.exposedValues();
 
   constructor(
     private route: ActivatedRoute,
     private callingService: CallingService,
     private modalCtrl: ModalController,
     public platform: Platform,
-    private popover: PopoverController
+    private popover: PopoverController,
+    private location: Location
   ) { }
 
   ngOnInit() {
     this.orgId = this.route.snapshot.paramMap.get('id');
+    if (CallingStatus.isInstanceOf(this.orgId)) {
+      this.callingService.status.next(this.orgId);
+      this.orgId = null;
+    }
     this.callings = this.callingService.getCallings(this.orgId);
+  }
+
+  ngOnDestroy() {
+    this.callingService.status.next(null);
   }
 
   trackById(idx, calling) {
     return calling.id;
+  }
+
+  statusChange(e) {
+    this.callingService.status.next(e.detail.value);
+    this.location.go(`/orgs/${e.detail.value}`);
+  }
+
+  getStatus(type: CallingStatusType): string {
+    return CallingStatus.asString(type);
+  }
+
+  getCallingStatus() {
+    return this.callingService.status.getValue();
   }
 
   getOrgById(): Observable<any> {

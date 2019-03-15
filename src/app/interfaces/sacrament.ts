@@ -27,6 +27,8 @@ export interface Sacrament {
     meetingOptions: MeetingOptions;
     conducting?: Member;
     music?: string;
+    organist?: Member;
+    chorister?: Member;
 }
 
 export class SacramentSettings {

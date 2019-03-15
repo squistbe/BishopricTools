@@ -2,7 +2,7 @@
 <widget id="io.spencerquistberg.bishoprictools" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Bishopric Tools</name>
     <description>An awesome Ionic/Cordova app for Bishoprics of The Church of Jesus Christ of Latter-Day Saints.</description>
-    <author email="squistbe@gmail.com" href="http://ldsbishoprictools.com/">Spencer Quistberg</author>
+    <author email="squistbe@gmail.com" href="http://bishoprictools.org/">Spencer Quistberg</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
@@ -21,6 +21,7 @@
     <preference name="SplashScreenDelay" value="3000" />
     <platform name="android">
         <allow-intent href="market:*" />
+        <resource-file src="google-services.json" target="google-services.json" />
         <icon density="ldpi" src="resources/android/icon/drawable-ldpi-icon.png" />
         <icon density="mdpi" src="resources/android/icon/drawable-mdpi-icon.png" />
         <icon density="hdpi" src="resources/android/icon/drawable-hdpi-icon.png" />
@@ -82,13 +83,20 @@
     <plugin name="cordova-plugin-splashscreen" spec="5.0.2" />
     <plugin name="cordova-plugin-ionic-webview" spec="^2.0.0" />
     <plugin name="cordova-plugin-ionic-keyboard" spec="^2.0.5" />
+    <plugin name="cordova-sqlite-storage" spec="2.5.2" />
+    <plugin name="cordova-plugin-ionic" spec="5.3.0">
+        <variable name="APP_ID" value="b03a618d" />
+        <variable name="CHANNEL_NAME" value="Production" />
+        <variable name="UPDATE_METHOD" value="background" />
+        <variable name="UPDATE_API" value="https://api.ionicjs.com" />
+        <variable name="MAX_STORE" value="2" />
+        <variable name="MIN_BACKGROUND_DURATION" value="30" />
+    </plugin>
+    <engine name="windows" spec="6.0.1" />
+    <plugin name="cordova-plugin-firebase" spec="2.0.5" />
+    <engine name="android" spec="~7.1.4" />
     <plugin name="cordova-plugin-googleplus" spec="5.3.2">
         <variable name="REVERSED_CLIENT_ID" value="com.googleusercontent.apps.176789930554-eaigkbci112p22ui8kk6vatlsgsrf91u" />
         <variable name="WEB_APPLICATION_CLIENT_ID" value="186755161522-kkbn8ferumo7rpbl14nh2iksvakn0nld.apps.googleusercontent.com" />
     </plugin>
-    <plugin name="cordova-plugin-firebase" spec="2.0.5" />
-    <plugin name="cordova-sqlite-storage" spec="2.5.2" />
-    <engine name="windows" spec="6.0.1" />
-    <engine name="ios" spec="4.5.5" />
-    <engine name="android" spec="7.1.2" />
 </widget>

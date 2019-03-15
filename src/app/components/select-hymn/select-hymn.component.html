@@ -1,11 +1,11 @@
 <ion-header>
   <ion-toolbar>
+    <ion-searchbar #hymnSearch debounce="500" (ionInput)="onKeyup($event)" placeholder="Search hymns"></ion-searchbar>
     <ion-buttons slot="end">
       <ion-button (click)="modal.dismiss()">
         <ion-icon slot="icon-only" name="close"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-searchbar #hymnSearch debounce="500" slot="end" (ionInput)="onKeyup($event)" animated placeholder="Search hymns"></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 

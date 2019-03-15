@@ -4,13 +4,12 @@ import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { Observable, of } from 'rxjs';
-import { switchMap, take, map } from 'rxjs/operators';
+import { switchMap, take, map, shareReplay } from 'rxjs/operators';
 import { DbService } from './db.service';
 
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
 import { Platform } from '@ionic/angular';
 
-import { LoadingController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { User } from '../interfaces/user';
 
@@ -26,11 +25,11 @@ export class AuthService {
         private router: Router,
         private gplus: GooglePlus,
         private platform: Platform,
-        private loadingController: LoadingController,
         private storage: Storage
     ) {
         this.user$ = this.afAuth.authState.pipe(
-            switchMap(user => (user ? db.doc$(`users/${user.uid}`) : of(null)))
+            switchMap(user => (user ? db.doc$(`users/${user.uid}`) : of(null))),
+            shareReplay(1)
         );
 
         this.handleRedirect();
@@ -131,7 +130,7 @@ export class AuthService {
 
     async nativeGoogleLogin(): Promise<any> {
         const gplusUser = await this.gplus.login({
-            webClientId: '186755161522-kkbn8ferumo7rpbl14nh2iksvakn0nld.apps.googleusercontent.com',
+            webClientId: '176789930554-71bt9hab407s58dhos8gd3rc2at27qtq.apps.googleusercontent.com',
             offline: true,
             scopes: 'profile email'
         });

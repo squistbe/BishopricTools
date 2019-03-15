@@ -6,7 +6,8 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './services/auth.service';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
+import { ValueTransformer } from '@angular/compiler/src/util';
 
 @Component({
   selector: 'app-root',
@@ -39,6 +40,14 @@ export class AppComponent implements OnDestroy {
       }
     },
     {
+      title: 'Agenda/Todo',
+      url: '/agenda',
+      icon: 'checkmark-circle-outline',
+      role: {
+        admin: true
+      }
+    },
+    {
       title: 'Interview Schedule',
       url: '/interview-schedule',
       icon: 'calendar',
@@ -56,17 +65,17 @@ export class AppComponent implements OnDestroy {
       }
     },
     {
-      title: 'Conducting Assignments',
-      url: '/conducting',
-      icon: 'book',
+      title: 'Sacrament Attendance',
+      url: '/sacrament-attendance',
+      icon: 'stats',
       role: {
         admin: true
       }
     },
     {
-      title: 'Sacrament Attendance',
-      url: '/sacrament-attendance',
-      icon: 'stats',
+      title: 'Conducting Assignments',
+      url: '/conducting',
+      icon: 'book',
       role: {
         admin: true
       }
@@ -81,9 +90,20 @@ export class AppComponent implements OnDestroy {
     private router: Router
   ) {
     this.initializeApp();
-      router.events.subscribe((val) => {
+    router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
-        localStorage.setItem('lastRoute', val.url);
+        if (val.url === '/') {
+          const lastRoute = localStorage.getItem('lastRoute');
+          if (!lastRoute) {
+            this.router.navigate(['members']);
+          } else {
+            this.router.navigateByUrl(localStorage.getItem('lastRoute'));
+          }
+        } else if (val.url === '/login' || val.url === '/access-denied') {
+          localStorage.setItem('lastRoute', '/members');
+        } else {
+          localStorage.setItem('lastRoute', val.url);
+        }
       }
     });
   }
@@ -92,11 +112,7 @@ export class AppComponent implements OnDestroy {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
-      this.userSub = this.auth.user$
-        .pipe(
-          take(1)
-        )
-        .subscribe(user => this.profile = user);
+      this.userSub = this.auth.user$.pipe(take(1)).subscribe(user => this.profile = user);
     });
   }
 
@@ -106,5 +122,9 @@ export class AppComponent implements OnDestroy {
 
   showRoute(page) {
     return this.profile.roles && Object.keys(page.role).some(role => this.profile.roles[role]);
+  }
+
+  signout() {
+    this.auth.signOut();
   }
 }

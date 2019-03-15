@@ -3,33 +3,44 @@
     <ion-menu [hidden]="!profile?.uid">
       <ion-header>
         <ion-toolbar>
-          <ion-title>
-            Bishopric Tools
-          </ion-title>
+          <ion-thumbnail slot="start" class="ion-align-items-center ion-justify-content-center app-icon">
+            <ion-img src="../assets/icon/android-chrome-192x192.png"></ion-img>
+          </ion-thumbnail>
+          <!-- Bishopric Tools -->
         </ion-toolbar>
       </ion-header>
       <ion-content>
         <ion-list *ngIf="profile?.uid">
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" *ngIf="showRoute(p)">
-              <ion-icon slot="start" [name]="p.icon"></ion-icon>
-              <ion-label>
+            <ion-item lines="full" [routerDirection]="'root'" [routerLink]="[p.url]" *ngIf="showRoute(p)">
+              <ion-icon slot="start" [name]="p.icon" no-margin></ion-icon>
+              <ion-label margin-start>
                 {{p.title}}
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
-        <ion-item  *ngIf="profile?.uid" margin-top lines="none" router-direction="root" [routerLink]="['/profile', profile.uid]">
-          <ion-avatar slot="start" [style.width.px]="30" [style.height.px]="30">
-            <img [src]="profile?.photoURL">
-          </ion-avatar>
-          <ion-label color="medium">
+        <ion-menu-toggle auto-hide="false" *ngIf="profile?.uid">
+          <ion-item margin-top lines="none" [routerDirection]="'root'" [routerLink]="['/profile', profile.uid]" detail="false">
+            <ion-avatar slot="start" [style.width.px]="30" [style.height.px]="30">
+              <img [src]="profile?.photoURL">
+            </ion-avatar>
+            <ion-label color="medium">
               My Profile
-          </ion-label>
-        </ion-item>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="none" detail="false" (click)="signout()" class="pointer-highlight">
+            <ion-icon name="log-out" slot="start" no-margin></ion-icon>
+            <ion-label color="medium" margin-start>
+              Signout
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
       </ion-content>
       <ion-footer padding>
-        <a routerDirection="root" [routerLink]="'/privacy-policy'" style="text-decoration: none;">Privacy Policy</a>
+        <ion-menu-toggle auto-hide="false">
+          <a [routerDirection]="'root'" [routerLink]="'/privacy-policy'" style="text-decoration: none;">Privacy Policy</a>
+        </ion-menu-toggle>
       </ion-footer>
     </ion-menu>
     <ion-router-outlet main></ion-router-outlet>

@@ -44,7 +44,7 @@ export class MemberFormComponent implements OnInit {
   submitMember() {
     const id = this.member.id || '';
     const data = {
-      updateAt: new Date(),
+      updatedAt: new Date(),
       ...this.member,
       ...this.memberForm.value
     };

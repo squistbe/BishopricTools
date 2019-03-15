@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { switchMap, shareReplay } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { Calling } from '../interfaces/calling';
+import { CallingStatusType } from '../interfaces/calling-status';
 
 @Injectable({
   providedIn: 'root'
@@ -12,22 +13,37 @@ export class CallingService {
   private orgTitle = new BehaviorSubject('');
   private deleteMode = new BehaviorSubject(false);
   private reorder = new BehaviorSubject(false);
+  status = new BehaviorSubject<CallingStatusType | string>('');
 
   constructor(
-    private db: DbService,
-    private auth: AuthService
+    private db: DbService
   ) { }
 
-  getCallings(orgId) {
-    return this.auth.user$.pipe(
-      switchMap(user =>
-        this.db.collection$(`callings`, ref =>
+  getCallings(orgId?) {
+    return this.status.pipe(
+      switchMap(status => {
+        if (status) {
+          if (orgId) {
+            return this.db.collection$(`callings`, ref =>
+              ref
+                .where('status.name', '==', status)
+                .where('orgId', '==', orgId)
+                .orderBy('sortIndex', 'asc')
+            );
+          }
+          return this.db.collection$(`callings`, ref =>
+            ref
+              .where('status.name', '==', status)
+              .orderBy('orgId', 'asc')
+              .orderBy('sortIndex', 'asc')
+          );
+        }
+        return this.db.collection$(`callings`, ref =>
           ref
-          .where('unitNumber', '==', user.unitNumber)
-          .where('orgId', '==', orgId)
-          .orderBy('sortIndex', 'asc')
-        )
-      ),
+            .where('orgId', '==', orgId)
+            .orderBy('sortIndex', 'asc')
+        );
+      }),
       shareReplay(1)
     );
   }

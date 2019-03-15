@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AlertController, ToastController } from '@ionic/angular';
+import { AlertController, ToastController, Platform } from '@ionic/angular';
 import { MemberService } from '../../services/member.service';
 import { Router } from '@angular/router';
-// import * as differenceBy from 'lodash/differenceBy';
+import { switchMap, shareReplay } from 'rxjs/operators';
+// import differenceBy from 'lodash/differenceBy';
 
 @Component({
   selector: 'app-members',
@@ -20,19 +21,28 @@ export class MembersPage implements OnInit, AfterViewInit {
       private memberService: MemberService,
       private router: Router,
       private alert: AlertController,
-      private toast: ToastController
+      private toast: ToastController,
+      public platform: Platform
   ) { }
 
   ngOnInit() {
-    this.members = this.memberService.search();
+    this.members = this.memberService.cursor.pipe(
+      switchMap(cursor => this.memberService.search(cursor)),
+      shareReplay(1)
+    );
   }
 
   ngAfterViewInit() {
     this.memberService.offset.next('');
   }
 
+  trackById(idx, member) {
+    return member.id;
+  }
+
   onKeyup(e) {
     this.searchText = e.target.value.toLowerCase();
+    this.memberService.cursor.next(0);
     this.memberService.offset.next(this.searchText);
   }
 
@@ -41,6 +51,15 @@ export class MembersPage implements OnInit, AfterViewInit {
       return this.memberService.offset.getValue();
     }
     return '';
+  }
+
+  getOffset() {
+    return this.memberService.offset.getValue();
+  }
+
+  async loadMoreMembers(e, startAfter) {
+    await this.memberService.cursor.next(startAfter);
+    await e.target.complete();
   }
 
   async showMultipleUpload() {
@@ -109,11 +128,11 @@ export class MembersPage implements OnInit, AfterViewInit {
   }
 
   textMember(e) {
-    e.stopPropagation();
+
   }
 
   callMember(e) {
-    e.stopPropagation();
+
   }
 
   deleteMember(member) {
@@ -169,21 +188,33 @@ export class MembersPage implements OnInit, AfterViewInit {
     const header = allTextLines.shift().split(',');
     const members = allTextLines.map(row => {
       const record = row.split(',');
+      const preferredNameIndex = header.indexOf('Preferred Name');
       return {
-        givenNames: record[1].trim(),
-        familyName: record[0],
-        mrn: record[2],
-        birthDate: new Date(record[3]),
-        email: record[4],
-        phone: record[5],
-        gender: record[6],
+        givenNames: record[preferredNameIndex + 1].trim(),
+        familyName: record[preferredNameIndex],
+        mrn: record[header.indexOf('Record Number')],
+        birthDate: new Date(record[header.indexOf('Birth Date')]),
+        email: record[header.indexOf('Individual E-mail')],
+        phone: record[header.indexOf('Individual Phone Number')],
+        gender: record[header.indexOf('Sex')],
         unitNumber: 477400,
         updatedAt: new Date()
       };
-      // this.memberService.updateMember(newRecord);
     });
-    // const toDelete = differenceBy(members, this.dudes, 'mrn');
-    // const toAdd = differenceBy(this.dudes, members, 'mrn');
+
+    // const toAdd = differenceBy(members, this.dudes, 'mrn');
+    // const toDelete = differenceBy(this.dudes, members, 'mrn');
+
+    // toAdd.forEach(member => {
+    //   setTimeout(() => {
+    //     this.memberService.updateMember(member);
+    //   }, 500);
+    // });
+    // toDelete.forEach(member => {
+    //   setTimeout(() => {
+    //     this.memberService.deleteMember(member.id);
+    //   }, 500);
+    // });
   }
 
   uploadError(error) {

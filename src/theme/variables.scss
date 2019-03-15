@@ -75,6 +75,13 @@
   --ion-color-light-contrast-rgb: 0,0,0;
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
+
+  /** toolbar **/
+  --ion-toolbar-background: #f8f8f8;
+}
+
+.toolbar-background {
+  background: var(--ion-toolbar-background, #f8f8f8);
 }
 
 .ion-color-sky {
@@ -203,8 +210,19 @@ mark {
   background-color: white !important;
 }
 
-.ais-SearchBox-input:focus {
-  outline: none;
-  border-color: #3880ff;
-  border-width: 2px;
+.agenda-options .popover-content {
+  width: 150px;
+}
+
+.app-icon {
+  display: flex; 
+  margin-right: 5px;
+
+  ion-img {
+    margin: 0 5px; 
+    border-radius: 5px; 
+    width: 35px; 
+    height: 35px;
+    box-shadow: 0 0 4px 0 #333;
+  }
 }

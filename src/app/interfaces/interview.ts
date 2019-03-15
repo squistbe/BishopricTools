@@ -15,7 +15,8 @@ export enum InterviewStatus {
     missed      = <any>'missed',
     pending     = <any>'pending',
     confirmed   = <any>'confirmed',
-    blocked     = <any>'blocked'
+    blocked     = <any>'blocked',
+    contacted   = <any>'contacted'
 }
 
 export enum InterviewDuration {
@@ -45,6 +46,7 @@ export class Interview {
             case InterviewStatus.pending:   return 'Pending';
             case InterviewStatus.confirmed: return 'Confirmed';
             case InterviewStatus.blocked:   return 'Unavailable';
+            case InterviewStatus.contacted: return 'Contacted';
         }
     }
 
@@ -54,7 +56,8 @@ export class Interview {
             InterviewStatus.missed,
             InterviewStatus.pending,
             InterviewStatus.confirmed,
-            InterviewStatus.blocked
+            InterviewStatus.blocked,
+            InterviewStatus.contacted
         ];
     }
 
@@ -64,7 +67,8 @@ export class Interview {
             case InterviewStatus.missed:    return 'danger';
             case InterviewStatus.pending:   return 'warning';
             case InterviewStatus.confirmed: return '';
-            case InterviewStatus.blocked:   return 'light';
+            case InterviewStatus.blocked:   return 'medium';
+            case InterviewStatus.contacted: return 'secondary';
         }
     }
 
@@ -96,5 +100,13 @@ export class Interview {
             InterviewDuration.min120,
             InterviewDuration.allDay
         ];
+    }
+
+    static filtered(val): string {
+        switch (val) {
+            case 'future': return 'Future';
+            case 'last30Days': return 'Last 30 Days';
+            case 'last7Days': return 'Last 7 Days';
+        }
     }
 }

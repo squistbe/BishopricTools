@@ -11,44 +11,67 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
-  <ion-list>
-    <ion-item *ngFor="let member of members | async">
-      <ion-label class="pointer-highlight" (click)="memberDetails(member.id)">
-        <h2>
-          <span [innerHtml]="member.familyName | highlight : getSearchText()"></span>, 
-          <span [innerHtml]="member.givenNames | highlight : getSearchText()"></span>&nbsp;
-        </h2>
-        <p *ngIf="member.lastPrayed" class="last-prayed">Last prayed: {{member.lastPrayed | date : 'M/d/yy'}}</p>
-        <p *ngIf="member.lastSpoke" class="last-prayed">Last spoke: {{member.lastSpoke | date : 'M/d/yy'}}</p>
-        <p *ngIf="member.lastInterviewed" class="last-prayed">Last Interviewed: {{member.lastInterviewed | date : 'M/d/yy'}}</p>
-      </ion-label>
+<ion-content *ngIf="members | async as items">
+  <ion-list lines="full">
+    <ion-item-sliding [disabled]="platform.is('desktop')" *ngFor="let member of items; trackBy: trackById;">
+      <ion-item>
+        <ion-label class="pointer-highlight" (click)="memberDetails(member.id)">
+          <h2>
+            <span [innerHtml]="member.familyName | highlight : getSearchText()"></span>, 
+            <span [innerHtml]="member.givenNames | highlight : getSearchText()"></span>&nbsp;
+          </h2>
+          <p>
+            <ion-text *ngIf="member.lastPrayed" [color]="getOffset() === 'lastPrayed' || getOffset() === 'willPray' ? 'primary' : 'medium'">
+              Last prayed: {{member.lastPrayed | date : 'M/d/yy'}}
+            </ion-text>
+          </p>
+          <p>
+            <ion-text *ngIf="member.lastSpoke" [color]="getOffset() === 'lastSpoke' ? 'primary' : 'medium'">
+              Last spoke: {{member.lastSpoke | date : 'M/d/yy'}}
+            </ion-text>
+          </p>
+          <p>
+            <ion-text *ngIf="member.lastInterviewed" [color]="getOffset() === 'lastInterviewed' ? 'primary' : 'medium'">
+              Last Interviewed: {{member.lastInterviewed | date : 'M/d/yy'}}
+            </ion-text>
+          </p>
+        </ion-label>
 
-      <!-- <ion-button (click)="textMember($event)" *ngIf="member.phone" size="small" fill="clear" float-right>
-        <ion-icon name="text"></ion-icon>
-      </ion-button>
-      
-      <ion-button (click)="callMember($event)" *ngIf="member.phone" size="small" fill="clear" float-right>
-        <ion-icon name="call"></ion-icon>
-      </ion-button> -->
-      <ion-button (click)="confirmDelete($event, member)" fill="clear" slot="end" color="medium">
-        <ion-icon slot="icon-only" name="trash"></ion-icon>
-      </ion-button>
-    </ion-item>
+        <!-- <ion-button (click)="textMember($event)" *ngIf="member.phone" size="small" fill="clear" float-right>
+          <ion-icon name="text"></ion-icon>
+        </ion-button>
+        
+        <ion-button (click)="callMember($event)" *ngIf="member.phone" size="small" fill="clear" float-right>
+          <ion-icon name="call"></ion-icon>
+        </ion-button> -->
+        <ion-button *ngIf="platform.is('desktop')" (click)="confirmDelete($event, member)" fill="clear" slot="end" color="medium">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option (click)="confirmDelete($event, member)" color="danger">
+          <ion-icon name="trash" slot="icon-only"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
   </ion-list>
+  <ion-item lines="none">Count: {{items.length}}</ion-item>
+  <ion-infinite-scroll (ionInfinite)="loadMoreMembers($event, items.length)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles"></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="addMember()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+  <!-- <ion-fab-list side="top">
+    <ion-fab-button (click)="showMultipleUpload()">
+      <ion-icon name="people"></ion-icon>
     </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button (click)="showMultipleUpload()">
-        <ion-icon name="people"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button (click)="addMember()">
-        <ion-icon name="person"></ion-icon>
-      </ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
+    <ion-fab-button (click)="addMember()">
+      <ion-icon name="person"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list> -->
+</ion-fab>
 
   <input #memberUpload type="file" accept=".csv" style="display:none;" (change)="onUploadMembers($event)">

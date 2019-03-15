@@ -56,7 +56,6 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
     this.monthSub.unsubscribe();
   }
 
-
   trackById(idx, sacrament) {
     return sacrament.id;
   }

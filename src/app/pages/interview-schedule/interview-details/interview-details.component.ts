@@ -68,7 +68,7 @@ export class InterviewDetailsComponent implements OnInit {
   }
 
   selectMember(e) {
-    if (e.data) {
+    if (e.data && e.data.member.id) {
       this.interview.member = {
         ...e.data.member
       };

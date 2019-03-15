@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 import { DbService } from './db.service';
 import { BehaviorSubject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, shareReplay } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InterviewService {
-  selectedFilter = new BehaviorSubject<string>('future');
+  selectedFilter = new BehaviorSubject<string>('');
+  activeId = new BehaviorSubject<string>('');
 
   constructor(
     private db: DbService
@@ -17,7 +18,8 @@ export class InterviewService {
     return this.selectedFilter.pipe(
       switchMap(filter => {
         return this.db.collection$('interviews', ref => {
-          const now = Date.now();
+          const now = new Date().setHours(0, 0, 0, 0);
+          localStorage.setItem('interviewFilter', filter);
           if (filter === 'future' || !filter) {
             return ref
               .where('interviewerId', '==', id)
@@ -37,7 +39,8 @@ export class InterviewService {
               .orderBy('dateTimestamp', 'asc');
           }
         });
-      })
+      }),
+      shareReplay(1)
     );
   }
 

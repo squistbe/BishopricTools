@@ -3,7 +3,7 @@ import { MemberService } from '../../services/member.service';
 import { Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { Member } from '../../interfaces/member';
-import { database } from 'firebase';
+import { switchMap, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-select-member',
@@ -26,7 +26,10 @@ export class SelectMemberComponent implements OnInit, AfterViewInit {
       this.memberService.setAgeLimit(this.data.ageReq || null);
       this.memberService.setGenderReq(this.data.genderReq || null);
     }
-    this.members = this.memberService.search();
+    this.members = this.memberService.cursor.pipe(
+      switchMap(cursor => this.memberService.search(cursor)),
+      shareReplay(1)
+    );
   }
 
   ngAfterViewInit() {
@@ -34,8 +37,13 @@ export class SelectMemberComponent implements OnInit, AfterViewInit {
     setTimeout(() => this.memberSearch.setFocus(), 100);
   }
 
+  trackById(idx, member) {
+    return member.id;
+  }
+
   onKeyup(e) {
-    this.searchText = e.target.value;
+    this.searchText = e.target.value.toLowerCase();
+    this.memberService.cursor.next(0);
     this.memberService.offset.next(this.searchText);
   }
 

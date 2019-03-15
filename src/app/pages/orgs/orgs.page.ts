@@ -5,6 +5,7 @@ import { switchMap, shareReplay } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { CallingService } from '../../services/calling.service';
+import { CallingStatusType, CallingStatus } from '../../interfaces/calling-status';
 
 @Component({
   selector: 'app-orgs',
@@ -13,6 +14,7 @@ import { CallingService } from '../../services/calling.service';
 })
 export class OrgsPage implements OnInit {
   orgs: Observable<any[]>;
+  callingStatuses: CallingStatusType[] = CallingStatus.exposedValues();
 
   constructor(
     private db: DbService,
@@ -30,6 +32,17 @@ export class OrgsPage implements OnInit {
       ),
       shareReplay(1)
     );
+  }
+
+  statusChange(e) {
+    if (e.detail.value) {
+      this.router.navigate(['orgs', e.detail.value]);
+      e.target.value = null;
+    }
+  }
+
+  getStatus(type: CallingStatusType): string {
+    return CallingStatus.asString(type);
   }
 
   trackById(idx, org) {

@@ -3,13 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 
-const lastRoute = localStorage.getItem('lastRoute');
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: lastRoute === '/' ? 'members' : lastRoute,
-    pathMatch: 'full'
-  },
   {
     path: 'login',
     loadChildren: './pages/login/login.module#LoginPageModule'
@@ -88,6 +82,11 @@ const routes: Routes = [
   {
     path: 'profile',
     loadChildren: './pages/profile/profile.module#ProfilePageModule',
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'agenda',
+    loadChildren: './pages/agenda/agenda.module#AgendaPageModule',
     canActivate: [AuthGuard, RolesGuard],
     data: {
       expectedRoles: {

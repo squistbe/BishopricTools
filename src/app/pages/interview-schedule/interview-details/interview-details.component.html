@@ -12,32 +12,34 @@
 
 <ion-content padding>
   <form [formGroup]="interviewForm" (ngSubmit)="submitInterview()">
-    <ion-title *ngIf="!showInput" justify-content-start>
-      <span *ngIf="hasMember()">{{givenNames.value}} {{familyName.value}}</span>
-      <ion-buttons float-start>
-        <ion-button (click)="presentMembers(interview)">
-          <ion-icon name="{{hasMember() ? 'create' : 'add'}}"></ion-icon>
-          <span *ngIf="!hasMember()">add member</span>
-        </ion-button>
-      </ion-buttons>
-    </ion-title>
-    <ion-item>
+    <ion-item lines="full">
+      <ion-text *ngIf="!showInput" justify-content-start align-items-center style="display: flex;">
+        <span *ngIf="hasMember()">{{givenNames.value}} {{familyName.value}}</span>
+        <ion-buttons float-start>
+          <ion-button (click)="presentMembers(interview)">
+            <ion-icon name="{{hasMember() ? 'create' : 'add'}}"></ion-icon>
+            <span *ngIf="!hasMember()">add member</span>
+          </ion-button>
+        </ion-buttons>
+      </ion-text>
+    </ion-item>
+    <ion-item lines="full">
       <ion-label>Date</ion-label>
       <ion-datetime formControlName="date" display-format="MMM DD, YYYY hh:mm a" picker-format="MMM DD, YYYY hh:mm a" minuteValues="0,15,30,45" [yearValues]="yearValues"></ion-datetime>
     </ion-item>
-    <ion-item>
+    <ion-item lines="full">
       <ion-label>Status</ion-label>
       <ion-select formControlName="status" interface="popover" placeholder="Select status">
         <ion-select-option *ngFor="let status of interviewStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item>
+    <ion-item lines="full">
       <ion-label>Duration</ion-label>
       <ion-select formControlName="duration" interface="popover" placeholder="Select duration">
           <ion-select-option *ngFor="let duration of interviewDurations;" [value]="duration">{{getDurationString(duration)}}</ion-select-option>
       </ion-select>
     </ion-item>
-    <ion-item>
+    <ion-item lines="full">
       <ion-textarea formControlName="details" placeholder="Interview details..."></ion-textarea>
     </ion-item>
     <ion-button type="submit" margin-vertical>{{interview.id ? 'Update' : 'Create'}}</ion-button>

@@ -25,8 +25,8 @@ export class LoginPage implements OnInit {
     return !!uid;
   }
 
-  login() {
-    this.auth.googleLogin();
+  async login() {
+    return await this.auth.googleLogin();
   }
 
 }
