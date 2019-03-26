@@ -1,0 +1,39 @@
+:host {
+    ion-content {
+        --background: none;
+        background-color: rgba(255, 255, 255, .7);
+        background-blend-mode: lighten;
+        background-repeat: no-repeat;
+        background-position: 50%  0;
+        background-size: 135%;
+    }
+    ion-content.mobile {
+        background-image: url('../../../assets/images/slc_temple.jpg'), linear-gradient(#000, transparent);
+    }
+    ion-content.desktop {
+        background-image: url('../../../assets/images/slc_temple_desktop.jpg'), linear-gradient(#000, transparent);
+        background-position: 50%;
+    }
+
+    h1 {
+        font-family: "Lucida Console", Monaco, monospace;
+        color: white;
+
+        .bishopric {
+            font-size: 28px;
+            font-weight: bold;
+        }
+    }
+
+    ion-button.desktop {
+        min-width: 25%;
+    }
+
+    .login-container {
+        img {
+            border-radius: 20%;
+            box-shadow: 0 0 50px #000;
+            width: 100px;
+        }
+    }
+}

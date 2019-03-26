@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { CallingService } from '../../../services/calling.service';
-import { ModalController, Platform, PopoverController } from '@ionic/angular';
+import { ModalController, Platform, PopoverController, AlertController } from '@ionic/angular';
 import { SelectMemberComponent } from '../../../components/select-member/select-member.component';
 import { OrgOptionsComponent } from './org-options/org-options.component';
 import { Calling } from '../../../interfaces/calling';
@@ -22,6 +22,7 @@ export class OrgDetailsPage implements OnInit, OnDestroy {
   private selection: Calling[] = [];
   status;
   callingStatuses: CallingStatusType[] = CallingStatus.exposedValues();
+  searchText;
 
   constructor(
     private route: ActivatedRoute,
@@ -29,7 +30,8 @@ export class OrgDetailsPage implements OnInit, OnDestroy {
     private modalCtrl: ModalController,
     public platform: Platform,
     private popover: PopoverController,
-    private location: Location
+    private location: Location,
+    private alert: AlertController
   ) { }
 
   ngOnInit() {
@@ -106,6 +108,7 @@ export class OrgDetailsPage implements OnInit, OnDestroy {
         orgId: this.orgId
       }
     });
+    popover.onDidDismiss().then(() => this.searchText = '');
     return await popover.present();
   }
 
@@ -114,11 +117,10 @@ export class OrgDetailsPage implements OnInit, OnDestroy {
     const start = event.detail.from < event.detail.to ? event.detail.from : event.detail.to;
     const itemToMove = callings.splice(event.detail.from, 1)[0];
     callings.splice(event.detail.to, 0, itemToMove);
-    event.currentTarget.complete();
-    for (let i = start; i <= stop; i++) {
-      callings[i].sortIndex = i;
-      this.callingService.updateCalling(callings[i], true);
+    if (event.currentTarget) {
+      event.currentTarget.complete();
     }
+    this.updateSortIndex(start, callings);
   }
 
   setDeleteMode(val) {
@@ -147,5 +149,58 @@ export class OrgDetailsPage implements OnInit, OnDestroy {
 
   getSelection() {
     return this.selection;
+  }
+
+  async copyCalling(calling, callings, i, slidingItem) {
+    const copy = {...calling};
+    const pos = i + 1;
+    delete copy.member;
+    delete copy.id;
+    copy.status = {};
+    copy.sortIndex = pos;
+    calling.$$adding = true;
+    await this.callingService.updateCalling(copy, true);
+    delete calling.$$adding;
+    callings.splice(pos, 0, copy);
+    this.updateSortIndex(pos + 1, callings);
+    if (slidingItem) {
+      slidingItem.close();
+    }
+  }
+
+  updateSortIndex(start, callings) {
+    for (let i = start; i < callings.length; i++) {
+      callings[i].sortIndex = i;
+      this.callingService.updateCalling(callings[i], true);
+    }
+  }
+
+  async presentNotes(calling) {
+    const title = `${calling ? 'Edit' : 'Add'} Notes`;
+    const alert = await this.alert.create({
+      header: title,
+      inputs: [
+        {
+          type: 'text',
+          name: 'notes',
+          value: calling.notes
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Done',
+          handler: (res) => {
+            const data = {...calling, ...res};
+            this.callingService.updateCalling(data, true);
+          }
+        }
+      ]
+    });
+    return await alert.present();
   }
 }

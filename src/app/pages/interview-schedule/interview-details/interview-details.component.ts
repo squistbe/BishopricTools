@@ -5,6 +5,7 @@ import { InterviewService } from '../../../services/interview.service';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { SelectMemberComponent } from '../../../components/select-member/select-member.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-interview-details',
@@ -83,7 +84,8 @@ export class InterviewDetailsComponent implements OnInit {
       ...this.interviewForm.value
     };
     // data.date = new Date(data.date.replace('Z', ''));
-    this.interviewService.updateInterview(data);
+    this.interviewService.adding.next(true);
+    this.interviewService.updateInterview(data).then(() => this.interviewService.adding.next(false));
     this.modalCtrl.dismiss();
   }
 

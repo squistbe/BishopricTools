@@ -93,6 +93,10 @@ const routes: Routes = [
         admin: true
       }
     }
+  },
+  {
+    path: 'announcements',
+    loadChildren: './pages/announcements/announcements.module#AnnouncementsPageModule'
   }
 ];
 

@@ -8,7 +8,7 @@ import { switchMap, take, map, shareReplay } from 'rxjs/operators';
 import { DbService } from './db.service';
 
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
-import { Platform } from '@ionic/angular';
+import { Platform, LoadingController } from '@ionic/angular';
 
 import { Storage } from '@ionic/storage';
 import { User } from '../interfaces/user';
@@ -18,6 +18,7 @@ import { User } from '../interfaces/user';
 })
 export class AuthService {
     user$: Observable<any>;
+    loading;
 
     constructor(
         private afAuth: AngularFireAuth,
@@ -25,10 +26,12 @@ export class AuthService {
         private router: Router,
         private gplus: GooglePlus,
         private platform: Platform,
-        private storage: Storage
+        private storage: Storage,
+        private loadingController: LoadingController
     ) {
         this.user$ = this.afAuth.authState.pipe(
             switchMap(user => (user ? db.doc$(`users/${user.uid}`) : of(null))),
+            take(1),
             shareReplay(1)
         );
 
@@ -80,17 +83,19 @@ export class AuthService {
 
     async signOut() {
         await this.afAuth.auth.signOut();
-        return this.router.navigate(['/login']);
+        await this.storage.remove('user');
+        await this.router.navigate(['/login']);
+        window.location.reload();
     }
 
     //// GOOGLE AUTH
 
     setRedirect(val) {
-        this.storage.set('authRedirect', val);
+        localStorage.setItem('authRedirect', val);
     }
 
-    async isRedirect() {
-        return await this.storage.get('authRedirect');
+    isRedirect() {
+        return localStorage.getItem('authRedirect') === 'true';
     }
 
     async googleLogin() {
@@ -100,7 +105,7 @@ export class AuthService {
             if (this.platform.is('cordova')) {
                 user = await this.nativeGoogleLogin();
             } else {
-                await this.setRedirect(true);
+                this.setRedirect(true);
                 const provider = new auth.GoogleAuthProvider();
                 user = await this.afAuth.auth.signInWithRedirect(provider);
             }
@@ -112,20 +117,31 @@ export class AuthService {
     }
 
     // Handle login with redirect for web Google auth
-    private async handleRedirect() {
-        if ((await this.isRedirect()) !== true) {
+    private handleRedirect() {
+        if (this.isRedirect() !== true) {
             return null;
         }
 
-        const result = await this.afAuth.auth.getRedirectResult();
+        this.showLoading();
+        this.afAuth.auth.getRedirectResult()
+            .then(result => {
+                if (result.user && result.additionalUserInfo.isNewUser) {
+                    this.updateUserData(result.user);
+                }
+                this.setRedirect(false);
+                this.dismissLoading();
+            })
+            .catch(err => console.log(err));
 
-        if (result.user) {
-            await this.updateUserData(result.user);
-        }
+    }
 
-        await this.setRedirect(false);
+    async showLoading() {
+        this.loading = await this.loadingController.create();
+        return await this.loading.present();
+    }
 
-        return result;
+    async dismissLoading() {
+        return await this.loading.dismiss();
     }
 
     async nativeGoogleLogin(): Promise<any> {

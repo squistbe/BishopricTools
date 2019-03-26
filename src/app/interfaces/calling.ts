@@ -838,11 +838,24 @@ export const CALLINGS = [
         ageReq: 18
     },
     {
-        name: 'Primary Activity Days Leader',
-        hasClass: true,
+        name: 'Primary Activity Days Coordinator',
         sortIndex: 16,
         orgTag: OrgTag.primary,
+    },
+    {
+        name: 'Primary Activity Days Leader',
+        hasClass: true,
+        sortIndex: 17,
+        className: '8/9',
+        orgTag: OrgTag.primary,
         ageReq: 18
+    },
+    {
+        name: 'Primary Activity Days Leader',
+        hasClass: true,
+        sortIndex: 18,
+        className: '10/11',
+        orgTag: OrgTag.primary,
     },
     {
         name: 'Cub Scout Committee Chairman',

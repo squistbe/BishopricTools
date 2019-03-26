@@ -6,6 +6,7 @@ import { CALLINGS } from '../../../../interfaces/calling';
 import { CallingStatus, CallingStatusType } from '../../../../interfaces/calling-status';
 import { ModalController } from '@ionic/angular';
 import { SelectMemberComponent } from '../../../../components/select-member/select-member.component';
+import { PopoverOptions } from '@ionic/core';
 
 @Component({
   selector: 'calling-form',
@@ -26,6 +27,8 @@ export class CallingFormComponent implements OnInit, OnDestroy {
   sortIndex: FormControl;
   other: FormControl;
   className: FormControl;
+  notes: FormControl;
+  options;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,6 +48,7 @@ export class CallingFormComponent implements OnInit, OnDestroy {
     this.sortIndex = new FormControl();
     this.other = new FormControl();
     this.className = new FormControl();
+    this.notes = new FormControl();
     this.callings = this.callingService.getCallings(this.orgId).subscribe(all => {
       this.sortIndex.setValue(all.length);
     });
@@ -54,8 +58,12 @@ export class CallingFormComponent implements OnInit, OnDestroy {
       status: this.status,
       sortIndex: this.sortIndex,
       other: this.other,
-      className: this.className
+      className: this.className,
+      notes: this.notes
     });
+    this.options = {
+      cssClass: 'calling-names'
+    };
   }
 
   ngOnDestroy() {

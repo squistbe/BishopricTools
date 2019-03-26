@@ -1,0 +1,23 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-thumbnail slot="start" class="ion-align-items-center ion-justify-content-center app-icon">
+        <ion-img src="../assets/icon/android-chrome-192x192.png"></ion-img>
+      </ion-thumbnail>
+      <ion-title>Announcements</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="signOut()">
+          <ion-icon name="log-out"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-progress-bar type="indeterminate" *ngIf="loading"></ion-progress-bar>
+    
+  <ion-content>
+    <router-outlet></router-outlet>
+  </ion-content>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="presentAnnouncement()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>

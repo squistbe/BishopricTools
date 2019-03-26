@@ -9,6 +9,7 @@ import { switchMap, shareReplay } from 'rxjs/operators';
 export class InterviewService {
   selectedFilter = new BehaviorSubject<string>('');
   activeId = new BehaviorSubject<string>('');
+  adding = new BehaviorSubject<boolean>(false);
 
   constructor(
     private db: DbService

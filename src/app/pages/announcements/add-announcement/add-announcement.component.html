@@ -1,0 +1,12 @@
+<h2 margin-horizontal>{{(unit | async)?.name}}</h2>
+<form [formGroup]="form" padding-horizontal (ngSubmit)="submit()">
+  <ion-item lines="full">
+    <ion-label position="floating">Title</ion-label>
+    <ion-input formControlName="title"></ion-input>
+  </ion-item>
+  <ion-item lines="full">
+    <ion-label position="floating">Details</ion-label>
+    <ion-textarea rows="5" formControlName="details"></ion-textarea>
+  </ion-item>
+  <ion-button type="submit" margin-top [disabled]="form.invalid || loading">Done</ion-button>
+</form>

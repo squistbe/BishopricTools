@@ -3,6 +3,8 @@ import { SacramentSettings, Sacrament } from '../../../interfaces/sacrament';
 import { AlertInput } from '@ionic/core';
 import { AlertController, PopoverController } from '@ionic/angular';
 import { SacramentService } from '../../../services/sacrament.service';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sacrament-options',

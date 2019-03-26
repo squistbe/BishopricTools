@@ -1,8 +1,10 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
       <ion-back-button></ion-back-button>
     </ion-buttons>
+    <ion-searchbar [(ngModel)]="searchText" placeholder="Search" *ngIf="!getReorder() && !getDeleteMode()"></ion-searchbar>
     <ion-select interface="popover" (ionChange)="statusChange($event)" *ngIf="!orgId" slot="end" [value]="getCallingStatus()">
       <ion-select-option *ngFor="let status of callingStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
     </ion-select>
@@ -11,7 +13,7 @@
         <ion-icon name="more"></ion-icon>
       </ion-button>
       <ion-button color="primary" *ngIf="getReorder()" (click)="setReorder(false)">Done</ion-button>
-      <ion-button color="primary" *ngIf="getDeleteMode()" (click)="setDeleteMode(false)">Cancel</ion-button>
+      <ion-button color="primary" *ngIf="getDeleteMode()" (click)="setDeleteMode(false)">Done</ion-button>
       <ion-button color="danger" *ngIf="getDeleteMode()" (click)="removeCallings()" [disabled]="!getSelection().length">Remove</ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
@@ -48,25 +50,45 @@
     </ng-template>
   </ion-list> -->
   <ion-list lines="full" no-padding>
-    <ng-container *ngIf="callings | async as items; else loading;">
-      <ion-reorder-group [disabled]="!getReorder()" *ngIf="callings | async as items" (ionItemReorder)="callingReorder($event, items)">
-        <ion-item-sliding [disabled]="platform.is('desktop')" #slidingItem *ngFor="let calling of items; trackBy: trackById">
+    <ng-container *ngIf="(callings | async | calling : searchText) as items; else loading;">
+      <ion-reorder-group [disabled]="!getReorder()" (ionItemReorder)="callingReorder($event, items)">
+        <ion-item-sliding [disabled]="platform.is('desktop')" #slidingItem *ngFor="let calling of items; trackBy: trackById; let i = index;">
           <ion-item [color]="calling.$$checked ? 'light' : ''">
             <ion-reorder slot="start"></ion-reorder>
-            <ion-checkbox *ngIf="getDeleteMode()" [(ngModel)]="calling.$$checked" (ionChange)="setSelection($event, calling, i)"></ion-checkbox>
-            <calling-item [calling]="calling" margin-end></calling-item>
+            <ion-checkbox slot="start" *ngIf="getDeleteMode()" [(ngModel)]="calling.$$checked" (ionChange)="setSelection($event, calling, i)"></ion-checkbox>
+            <calling-item [calling]="calling" [search]="searchText"></calling-item>
             <ion-buttons *ngIf="platform.is('desktop')">
-              <ion-button slot="end" (click)="presentMembers(calling)" color="medium">
+              <ion-button (click)="presentMembers(calling)" color="medium">
                 <ion-icon name="{{calling.member ? 'create' : 'person-add'}}"></ion-icon>
               </ion-button>
-              <ion-button slot="end" (click)="deleteMemberFromCalling(calling)" color="medium" [attr.disabled]="!calling.member ? '' : null">
+              <ion-button color="medium" (click)="presentNotes(calling)">
+                <ion-icon name="clipboard"></ion-icon>
+              </ion-button>
+              <ion-button (click)="copyCalling(calling, items, i, null)" color="medium">
+                <ion-icon name="copy"></ion-icon>
+              </ion-button>
+              <ion-button (click)="deleteMemberFromCalling(calling)" color="medium" [attr.disabled]="!calling.member ? '' : null">
                 <ion-icon name="trash"></ion-icon>
               </ion-button>
             </ion-buttons>
           </ion-item>
+          <ion-item *ngIf="calling.$adding">
+            <ion-label>
+              <ion-skeleton-text animated style="width: 50%; height: 20px;"></ion-skeleton-text>
+              <ion-skeleton-text animated style="width: 40%"></ion-skeleton-text>
+            </ion-label>
+          </ion-item>
+          <ion-item-options side="start">
+            <ion-item-option color="warning" (click)="presentNotes(calling)">
+              <ion-icon slot="icon-only" size="large" name="clipboard"></ion-icon>
+            </ion-item-option>
+          </ion-item-options>
           <ion-item-options side="end">
             <ion-item-option (click)="presentMembers(calling, slidingItem)">
               <ion-icon slot="icon-only" size="large" name="{{calling.member ? 'create' : 'person-add'}}"></ion-icon>
+            </ion-item-option>
+            <ion-item-option color="success" (click)="copyCalling(calling, items, i, slidingItem)">
+              <ion-icon slot="icon-only" size="large" name="copy"></ion-icon>
             </ion-item-option>
             <ion-item-option *ngIf="calling.member" (click)="deleteMemberFromCalling(calling, slidingItem)" color="danger" [attr.disabled]="!calling.member ? '' : null">
               <ion-icon slot="icon-only" size="large" name="trash"></ion-icon>
@@ -74,7 +96,7 @@
           </ion-item-options>
         </ion-item-sliding>
       </ion-reorder-group>
-      <ion-item lines="none" *ngIf="!items.length">
+      <ion-item lines="none" *ngIf="!items.length && !orgId">
         No&nbsp;
         <ion-text [color]="getCallingStatus()"><i><strong>&quot;{{getStatus(getCallingStatus())}}&quot;</strong></i></ion-text>
         &nbsp;callings&hellip;

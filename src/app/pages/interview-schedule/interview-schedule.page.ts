@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { InterviewService } from '../../services/interview.service';
-import { AlertController, Platform, ModalController } from '@ionic/angular';
+import { Platform, ModalController } from '@ionic/angular';
 import { switchMap, shareReplay } from 'rxjs/operators';
 import { Interview } from '../../interfaces/interview';
 import moment from 'moment';
@@ -19,15 +18,11 @@ export class InterviewSchedulePage implements OnInit {
   users;
   userSub = new BehaviorSubject('');
   list;
-  // bishopric: Observable<any[]>;
-  // interviewTab: string;
-  // interviewerId: string;
-  // activeTab;
+  dateRanges = Interview.exposedDateRanges();
 
   constructor(
     private userService: UserService,
     private interviewService: InterviewService,
-    private alert: AlertController,
     private modal: ModalController,
     public platform: Platform
   ) { }
@@ -40,12 +35,6 @@ export class InterviewSchedulePage implements OnInit {
       switchMap(user => this.interviewService.getInterviews(user)),
       shareReplay(1)
     );
-    // this.bishopric = this.userService.getUsers();
-    // this.interviewTab = localStorage.getItem('interviewTab');
-    // this.activeTab = this.interviewService.activeId;
-    // if (this.interviewTab) {
-    //   this.router.navigate(['interview-schedule', this.interviewTab]);
-    // }
   }
 
   trackById(idx, interview) {
@@ -86,44 +75,6 @@ export class InterviewSchedulePage implements OnInit {
 
   sameDay(d1, d2) {
     return d1 && d2 && moment(d1).isSame(moment(d2), 'day');
-  }
-
-  async presentFilter() {
-    const alert = await this.alert.create({
-      inputs: [
-        {
-          type: 'radio',
-          label: 'Last 7 Days',
-          value: 'last7Days',
-          checked: this.interviewService.selectedFilter.getValue() === 'last7Days'
-        },
-        {
-          type: 'radio',
-          label: 'Last 30 Days',
-          value: 'last30Days',
-          checked: this.interviewService.selectedFilter.getValue() === 'last30Days'
-        },
-        {
-          type: 'radio',
-          label: 'Future',
-          value: 'future',
-          checked: this.interviewService.selectedFilter.getValue() === 'future'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary'
-        }, {
-          text: 'Ok',
-          handler: (data) => {
-           this.interviewService.selectedFilter.next(data);
-          }
-        }
-      ]
-    });
-    return await alert.present();
   }
 
   async interviewDetails(interview) {
@@ -171,8 +122,20 @@ export class InterviewSchedulePage implements OnInit {
     }
   }
 
-  getInterviewFilterValue() {
-    return Interview.filtered(this.interviewService.selectedFilter.getValue());
+  updateDateRange(range) {
+    this.interviewService.selectedFilter.next(range);
+  }
+
+  getDateRangeValue() {
+    return this.interviewService.selectedFilter.getValue();
+  }
+
+  getInterviewFilterValue(value?) {
+    return Interview.filtered(value || this.interviewService.selectedFilter.getValue());
+  }
+
+  getAdding() {
+    return this.interviewService.adding.getValue();
   }
 
   // segmentClicked(item) {

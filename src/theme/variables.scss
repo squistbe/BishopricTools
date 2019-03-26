@@ -226,3 +226,15 @@ mark {
     box-shadow: 0 0 4px 0 #333;
   }
 }
+
+.calling-names .popover-content {
+  width: 300px;
+  
+  ion-label {
+    white-space: normal;
+  }
+}
+
+.can-go-back ion-menu-button {
+  display: none;
+}

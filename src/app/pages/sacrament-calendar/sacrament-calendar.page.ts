@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Observable, Subscription, of, BehaviorSubject, Subject } from 'rxjs';
 import { SacramentService } from '../../services/sacrament.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SacramentSettings, Sacrament } from '../../interfaces/sacrament';
@@ -9,6 +9,7 @@ import { SelectHymnComponent } from '../../components/select-hymn/select-hymn.co
 import { SacramentOptionsComponent } from './sacrament-options/sacrament-options.component';
 import { Location } from '@angular/common';
 import { SacramentMenuComponent } from './sacrament-menu/sacrament-menu.component';
+import { delay, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sacrament-calendar',
@@ -19,9 +20,8 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
   sacraments: Observable<any[]>;
   conducting$: Observable<any>;
   months = SacramentSettings.SACRAMENT_MONTHS;
-  year;
-  month;
   monthSub: Subscription;
+  updated;
 
   constructor(
     private sacramentService: SacramentService,
@@ -56,6 +56,10 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
     this.monthSub.unsubscribe();
   }
 
+  get month() {
+    return this.sacramentService.selectedMonth.getValue();
+  }
+
   trackById(idx, sacrament) {
     return sacrament.id;
   }
@@ -78,7 +82,7 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
     return await modal.present();
   }
 
-  selectMember(sacrament: Sacrament, key, i, e) {
+  async selectMember(sacrament: Sacrament | any, key, i, e) {
     if (!e.data) {
       return;
     }
@@ -87,7 +91,7 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
     } else {
       sacrament[key] = e.data;
     }
-    this.sacramentService.updateSacrament(sacrament);
+    await this.sacramentService.updateSacrament(sacrament);
   }
 
   isConference(sacrament: Sacrament) {

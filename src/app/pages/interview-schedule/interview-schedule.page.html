@@ -5,15 +5,15 @@
         <ion-menu-button autoHide></ion-menu-button>
       </ion-buttons>
       <ion-select float-right [value]="userSub.getValue()" interface="popover" placeholder="Select User" (ionChange)="updateUser($event.detail.value)">
-        <ion-select-option *ngFor="let user of items" [value]="user.uid">
+        <ion-select-option lines="full" *ngFor="let user of items" [value]="user.uid">
           {{user.displayName}}
         </ion-select-option>
       </ion-select>
-      <ion-buttons slot="end">
-        <ion-button (click)="presentFilter()">
-          <ion-icon name="funnel"></ion-icon>
-        </ion-button>
-      </ion-buttons>
+      <ion-select float-right [value]="getDateRangeValue()" interface="popover" placeholder="Date Range" (ionChange)="updateDateRange($event.detail.value)">
+        <ion-select-option *ngFor="let range of dateRanges" [value]="range">
+          {{getInterviewFilterValue(range)}}
+        </ion-select-option>
+      </ion-select>
     </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -50,31 +50,24 @@
           </ion-item-options>
         </ion-item-sliding>
       </ng-container>
+      <ion-item lines="full" *ngIf="getAdding()">
+        <ion-label>
+          <ion-skeleton-text animated style="width: 40%; height: 40px;"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 70%"></ion-skeleton-text>
+          <ion-skeleton-text animated style="width: 50%"></ion-skeleton-text>
+        </ion-label>
+        <ion-thumbnail slot="end">
+            <ion-skeleton-text animated></ion-skeleton-text>
+          </ion-thumbnail>
+      </ion-item>
     </ion-list>
     <ng-template #loading>
       <ion-progress-bar type="indeterminate"></ion-progress-bar>
     </ng-template>
     <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-      <ion-fab-button (click)="presentInterview()">
+      <ion-fab-button (click)="presentInterview()" [disabled]="!userSub.getValue()">
         <ion-icon name="add"></ion-icon>
       </ion-fab-button>
     </ion-fab>
   </ion-content>
 </ng-container>
-
-<!-- <ion-tabs>
-  <ion-tab-bar slot="bottom">
-    <ion-tab-button 
-      *ngFor="let item of bishopric | async | bishopric" 
-      (click)="segmentClicked(item)" 
-      tab="{{item.uid}}" 
-      [href]="'interview-schedule/' + item.uid" 
-      [class.tab-selected]="item.uid === (activeTab | async)">
-      <ion-label>{{item.displayName}}</ion-label>
-      <ion-icon name="calendar"></ion-icon>
-    </ion-tab-button>
-  </ion-tab-bar>
-  <ion-tab tab="{{activeTab}}">
-    <ion-router-outlet></ion-router-outlet>
-  </ion-tab>
-</ion-tabs> -->

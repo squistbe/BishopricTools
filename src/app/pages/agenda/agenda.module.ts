@@ -8,7 +8,6 @@ import { IonicModule } from '@ionic/angular';
 import { AgendaPage } from './agenda.page';
 import { AgendaService } from '../../services/agenda.service';
 import { AgendaFormComponent } from './agenda-form/agenda-form.component';
-import { FilterPipe } from '../../pipes/filter.pipe';
 import { AgendaOptionsComponent } from './agenda-options/agenda-options.component';
 import { InitialsPipe } from '../../pipes/initials.pipe';
 
@@ -31,7 +30,7 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AgendaPage, AgendaFormComponent, FilterPipe, AgendaOptionsComponent, InitialsPipe],
+  declarations: [AgendaPage, AgendaFormComponent, AgendaOptionsComponent, InitialsPipe],
   entryComponents: [AgendaFormComponent, AgendaOptionsComponent],
   providers: [AgendaService]
 })

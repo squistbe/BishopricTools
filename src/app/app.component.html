@@ -1,12 +1,12 @@
 <ion-app>
   <ion-split-pane>
-    <ion-menu [hidden]="!profile?.uid">
+    <ion-menu [hidden]="!profile?.uid || profile?.isAnonymous">
       <ion-header>
         <ion-toolbar>
           <ion-thumbnail slot="start" class="ion-align-items-center ion-justify-content-center app-icon">
             <ion-img src="../assets/icon/android-chrome-192x192.png"></ion-img>
           </ion-thumbnail>
-          <!-- Bishopric Tools -->
+          Bishopric Tools
         </ion-toolbar>
       </ion-header>
       <ion-content>
@@ -22,10 +22,11 @@
         </ion-list>
         <ion-menu-toggle auto-hide="false" *ngIf="profile?.uid">
           <ion-item margin-top lines="none" [routerDirection]="'root'" [routerLink]="['/profile', profile.uid]" detail="false">
-            <ion-avatar slot="start" [style.width.px]="30" [style.height.px]="30">
-              <img [src]="profile?.photoURL">
+            <ion-avatar no-margin *ngIf="profile?.photoURL" slot="start" [style.width.px]="24" [style.height.px]="24">
+              <img [src]="profile.photoURL">
             </ion-avatar>
-            <ion-label color="medium">
+            <ion-icon *ngIf="!profile?.photoURL" name="contact" slot="start" no-margin color="primary"></ion-icon>
+            <ion-label color="medium" margin-start>
               My Profile
             </ion-label>
           </ion-item>

@@ -38,6 +38,12 @@ export interface InterviewFilter {
     member: Member;
 }
 
+export enum InterviewDateRange {
+    future      = <any>'future',
+    last7Days   = <any>'last7Days',
+    last30Days  = <any>'last30Days'
+}
+
 export class Interview {
     static asString(type): string {
         switch (type) {
@@ -74,7 +80,7 @@ export class Interview {
 
     static durationAsString(duration): string {
         switch (duration) {
-            case InterviewDuration.min0:   return '0 minutes';
+            case InterviewDuration.min0:    return '0 minutes';
             case InterviewDuration.min15:   return '15 minutes';
             case InterviewDuration.min30:   return '30 minutes';
             case InterviewDuration.min45:   return '45 minutes';
@@ -102,11 +108,19 @@ export class Interview {
         ];
     }
 
+    static exposedDateRanges(): InterviewDateRange[] {
+        return [
+            InterviewDateRange.future,
+            InterviewDateRange.last7Days,
+            InterviewDateRange.last30Days
+        ];
+    }
+
     static filtered(val): string {
         switch (val) {
-            case 'future': return 'Future';
-            case 'last30Days': return 'Last 30 Days';
-            case 'last7Days': return 'Last 7 Days';
+            case InterviewDateRange.future:     return 'Future';
+            case InterviewDateRange.last30Days: return 'Last 30 Days';
+            case InterviewDateRange.last7Days:  return 'Last 7 Days';
         }
     }
 }

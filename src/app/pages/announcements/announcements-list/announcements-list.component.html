@@ -1,0 +1,30 @@
+<ng-template #loading>
+  <ion-progress-bar type="indeterminate"></ion-progress-bar>
+</ng-template>
+<ng-container *ngIf="list$ | async as list; else loading">
+  <ion-list lines="full" *ngIf="list.length; else noItems">
+    <ion-item-sliding [disabled]="platform.is('desktop')" *ngFor="let item of list">
+      <ion-item>
+        <ion-label class="ion-text-wrap">
+          <h2>{{item.title}}</h2>
+          <p>{{item.details}}</p>
+        </ion-label>
+        <ion-button *ngIf="platform.is('desktop') && (user$ | async)?.isAnonymous" [disabled]="(user$ | async)?.uid !== item.uid" slot="end" fill="clear" color="medium" (click)="deleteAnnouncement($event, item)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+        <ion-button *ngIf="platform.is('desktop') && (user$ | async)?.roles?.admin" slot="end" fill="clear" color="medium" (click)="deleteAnnouncement($event, item)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-button>
+      </ion-item>
+      <ion-item-options *ngIf="!platform.is('desktop')">
+        <ion-item-option *ngIf="(user$ | async)?.isAnonymous" [disabled]="(user$ | async)?.uid !== item.uid" color="danger" (click)="deleteAnnouncement($event, item)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+        <ion-item-option *ngIf="(user$ | async)?.roles?.admin" color="danger" (click)="deleteAnnouncement($event, item)">
+          <ion-icon slot="icon-only" name="trash"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ng-template #noItems>No announcements!</ng-template>
+</ng-container>

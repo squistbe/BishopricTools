@@ -6,8 +6,7 @@ import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { AuthService } from './services/auth.service';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs/internal/Subscription';
-import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
-import { ValueTransformer } from '@angular/compiler/src/util';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -99,7 +98,7 @@ export class AppComponent implements OnDestroy {
           } else {
             this.router.navigateByUrl(localStorage.getItem('lastRoute'));
           }
-        } else if (val.url === '/login' || val.url === '/access-denied') {
+        } else if (val.url === '/login' || val.url === '/access-denied' || val.url.includes('announcements')) {
           localStorage.setItem('lastRoute', '/members');
         } else {
           localStorage.setItem('lastRoute', val.url);

@@ -1,0 +1,17 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-thumbnail slot="start" class="ion-align-items-center ion-justify-content-center app-icon">
+      <ion-img src="../assets/icon/android-chrome-192x192.png"></ion-img>
+    </ion-thumbnail>
+    <ion-title>Announcements</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-progress-bar type="indeterminate" *ngIf="loading"></ion-progress-bar>
+
+<ion-content padding>
+  <ion-item>
+    <ion-label position="floating">What is your unit number?</ion-label>
+    <ion-input [(ngModel)]="unitNumber" [disabled]="loading"></ion-input>
+  </ion-item>
+  <ion-button margin-top (click)="next()" [disabled]="!unitNumber || loading">Next</ion-button>
+</ion-content>

@@ -102,7 +102,7 @@ exports.writeAttendance = functions.firestore
         .get()
         .then(querySnapshot => {
             return db.collection('attendance').doc(id).set({members: querySnapshot.size}, {merge: true}).catch(error => console.error(error));
-        }).catch(error => console.error(error));;
+        }).catch(error => console.error(error));
 });
 
 function updateMemberInterview(data) {
@@ -114,3 +114,19 @@ function addTimeStamp(data, id) {
     const db = admin.firestore();
     return db.collection('interviews').doc(id).set({dateTimestamp: new Date(data.date).valueOf()}, {merge: true}).catch(error => console.error(error));
 }
+
+exports.updateCallingSortIndex = functions.firestore
+.document('callings/{callingId}')
+.onDelete(snap => {
+    const db = admin.firestore();
+    return db.collection('callings')
+        .where('orgId', '==', snap.data().orgId)
+        .orderBy('sortIndex', 'asc')
+        .get()
+        .then(querySnapshot => {
+            querySnapshot.docs.forEach((calling, i) => {
+                calling.ref.set({sortIndex: i}, {merge: true}).catch(error => console.error(error));
+            });
+        })
+        .catch(error => console.log(error));
+});

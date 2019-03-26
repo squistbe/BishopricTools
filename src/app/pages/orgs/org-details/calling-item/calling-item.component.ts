@@ -9,6 +9,7 @@ import { CallingService } from '../../../../services/calling.service';
 })
 export class CallingItemComponent implements OnInit {
   @Input() calling;
+  @Input() search;
   callingStatuses: CallingStatusType[] = CallingStatus.exposedValues();
 
   constructor(
@@ -25,6 +26,10 @@ export class CallingItemComponent implements OnInit {
   statusChange(calling) {
     calling.status.updatedAt = new Date();
     this.callingService.statusChange(calling);
+  }
+
+  getSearchText() {
+    return this.search;
   }
 
 }

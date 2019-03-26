@@ -11,11 +11,10 @@
     <form [formGroup]="callingForm" (ngSubmit)="submitMember()">
       <ion-item>
         <ion-label>Name</ion-label>
-        <ion-select formControlName="name" interface="popover" placeholder="Select calling">
+        <ion-select formControlName="name" interface="popover" placeholder="Select calling" [interfaceOptions]="options" style="max-width: 80%;">
           <ion-select-option *ngFor="let calling of callingList" [value]="calling">{{calling.name}} <span *ngIf="calling.hasClass"> - {{calling.className}}</span></ion-select-option>
           <ion-select-option value="other">Other</ion-select-option>
         </ion-select>
-        
       </ion-item>
       <ion-item *ngIf="callingName.value?.hasClass">
         <ion-label position="floating">Class Name</ion-label>
@@ -37,6 +36,10 @@
         <ion-select formControlName="status" interface="popover" placeholder="Select status">
             <ion-select-option *ngFor="let status of callingStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
         </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Notes</ion-label>
+        <ion-textarea formControlName="notes" rows="2"></ion-textarea>
       </ion-item>
       <ion-input type="number" style="display: none;" formControlName="sortIndex"></ion-input>
       <ion-button type="submit" margin-top [disabled]="callingForm.invalid">{{callingId ? 'Update' : 'Add'}}</ion-button>

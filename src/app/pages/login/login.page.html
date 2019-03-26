@@ -1,7 +1,8 @@
-<ion-content text-center padding class="login-container">
-    <img src="../../../assets/icon/android-chrome-192x192.png" margin>
-    <ion-button expand="block" fill="outline" (click)="login()" shape="round" color="danger">
+<ion-content text-center padding class="login-container" [class.desktop]="platform.is('desktop')" [class.mobile]="!platform.is('desktop')" justify-content-center>
+    <img src="../../../assets/icon/android-chrome-192x192.png" margin><br>
+    <h1><span class="bishopric">Bishopric</span>Tools</h1>
+    <ion-button [class.desktop]="platform.is('desktop')" [class.mobile]="!platform.is('desktop')" [expand]="!platform.is('desktop') ? 'block' : null" fill="outline" (click)="login()" shape="round" color="danger" style="margin-top: 50px;">
         <ion-icon name="logo-google"></ion-icon>&nbsp;
-        Login with Google
+        Login
     </ion-button>
 </ion-content>
