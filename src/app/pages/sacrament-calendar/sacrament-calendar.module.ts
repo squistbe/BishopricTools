@@ -10,6 +10,7 @@ import { SacramentService } from '../../services/sacrament.service';
 import { ComponentsModule } from '../../components/components.module';
 import { SacramentOptionsComponent } from './sacrament-options/sacrament-options.component';
 import { SacramentMenuComponent } from './sacrament-menu/sacrament-menu.component';
+import { ConductingMenuComponent } from './conducting-menu/conducting-menu.component';
 
 const routes: Routes = [
   {
@@ -40,8 +41,8 @@ const routes: Routes = [
     ComponentsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [SacramentCalendarPage, SacramentOptionsComponent, SacramentMenuComponent],
-  entryComponents: [SacramentOptionsComponent, SacramentMenuComponent],
+  declarations: [SacramentCalendarPage, SacramentOptionsComponent, SacramentMenuComponent, ConductingMenuComponent],
+  entryComponents: [SacramentOptionsComponent, SacramentMenuComponent, ConductingMenuComponent],
   providers: [SacramentService]
 })
 export class SacramentCalendarPageModule {}

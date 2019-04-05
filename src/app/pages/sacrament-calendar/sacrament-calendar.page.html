@@ -4,7 +4,7 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <!-- <ion-title text-capitalize>{{month}}</ion-title> -->
-    <ion-text margin-start text-nowrap text-capitalize *ngIf="(conducting$ | async)?.member as member">{{month}} ({{member.displayName}})</ion-text>
+    <ion-text margin-start text-nowrap text-capitalize>{{month}}</ion-text>
     <ion-buttons slot="end">
       <ion-button (click)="presentOptions($event)">
         <ion-icon name="more"></ion-icon>
@@ -37,6 +37,36 @@
           <p text-wrap></p>
         </ion-label>
       </ion-item> -->
+      <ion-item lines="full" class="pointer-highlight" (click)="presentBishopric($event, sacrament)">
+        <!-- <ion-icon name="person" slot="start"></ion-icon> -->
+        <ng-container *ngIf="sacrament.conducting; else conducting;">
+          <ion-avatar *ngIf="sacrament.conducting.photoURL" slot="start">
+            <img [src]="sacrament.conducting.photoURL">
+          </ion-avatar>
+          <ion-icon *ngIf="!sacrament.conducting.photoURL" slot="start" color="primary" name="contact"></ion-icon>
+          <ion-label>
+            <h2>Conducting</h2>
+            <p>{{sacrament.conducting.displayName}}</p>
+          </ion-label>
+        </ng-container>
+        <ng-template #conducting>
+          <ng-container *ngIf="(conducting$ | async)?.member as member">
+            <ion-avatar *ngIf="member.photoURL" slot="start">
+              <img [src]="member.photoURL">
+            </ion-avatar>
+            <ion-icon *ngIf="!member.photoURL" slot="start" color="primary" name="contact"></ion-icon>
+            <ion-label>
+              <h2>Conducting</h2>
+              <p>{{member.displayName}}</p>
+            </ion-label>
+          </ng-container>
+        </ng-template>
+        <!-- <ion-label>
+          <h2>Conducting</h2>
+          <p *ngIf="sacrament.conducting; else conducting;">{{sacrament.conducting.displayName}}</p>
+          <ng-template #conducting><p *ngIf="(conducting$ | async)?.member as member">{{member.displayName}}</p></ng-template>
+        </ion-label> -->
+      </ion-item>
       <ion-item lines="full" (click)="presentHymn(sacrament, 'openingHymn')" class="pointer-highlight">
         <ion-icon name="musical-notes" slot="start"></ion-icon>
         <ion-label>
@@ -84,11 +114,25 @@
           <p text-wrap *ngIf="sacrament.closingHymn">#{{sacrament.closingHymn.number}} {{sacrament.closingHymn.name}}</p>
         </ion-label>
       </ion-item>
-      <ion-item lines="none" (click)="presentMembers(sacrament, 'benediction')" class="pointer-highlight">
+      <ion-item lines="full" (click)="presentMembers(sacrament, 'benediction')" class="pointer-highlight">
         <ion-icon name="person" slot="start"></ion-icon>
         <ion-label>
           <h2>Benediction</h2>
           <p *ngIf="sacrament.benediction">{{sacrament.benediction.givenNames}} {{sacrament.benediction.familyName}}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="full" (click)="presentMembers(sacrament, 'chorister')" class="pointer-highlight">
+          <ion-icon name="person" slot="start"></ion-icon>
+        <ion-label>
+          <h2>Chorister</h2>
+          <p *ngIf="sacrament.chorister">{{sacrament.chorister.givenNames}} {{sacrament.chorister.familyName}}</p>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none" (click)="presentMembers(sacrament, 'organist')" class="pointer-highlight">
+        <ion-icon name="person" slot="start"></ion-icon>
+        <ion-label>
+          <h2>Organist</h2>
+          <p *ngIf="sacrament.organist">{{sacrament.organist.givenNames}} {{sacrament.organist.familyName}}</p>
         </ion-label>
       </ion-item>
     </ng-container>

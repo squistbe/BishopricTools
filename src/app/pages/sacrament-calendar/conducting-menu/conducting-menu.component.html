@@ -1,0 +1,9 @@
+<ion-list lines="full" no-padding>
+  <ion-item *ngFor="let item of items$ | async" (click)="changeConducting(item)" class="pointer-highlight">
+    <ion-avatar *ngIf="item.photoURL" slot="start" [style.width.px]="30" [style.height.px]="30">
+      <img [src]="item.photoURL">
+    </ion-avatar>
+    <ion-icon *ngIf="!item.photoURL" slot="start" color="primary" name="contact" no-margin style="margin-right: 20px;"></ion-icon>
+    <ion-label>{{item.displayName}}</ion-label>
+  </ion-item>
+</ion-list>

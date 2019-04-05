@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
+      <ion-menu-button can-hide></ion-menu-button>
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-searchbar [(ngModel)]="searchText" placeholder="Search" *ngIf="!getReorder() && !getDeleteMode()"></ion-searchbar>
@@ -49,7 +49,7 @@
       <ion-progress-bar type="indeterminate"></ion-progress-bar>
     </ng-template>
   </ion-list> -->
-  <ion-list lines="full" no-padding>
+  <ion-list lines="full">
     <ng-container *ngIf="(callings | async | calling : searchText) as items; else loading;">
       <ion-reorder-group [disabled]="!getReorder()" (ionItemReorder)="callingReorder($event, items)">
         <ion-item-sliding [disabled]="platform.is('desktop')" #slidingItem *ngFor="let calling of items; trackBy: trackById; let i = index;">

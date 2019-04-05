@@ -115,4 +115,33 @@ export class SacramentMenuComponent implements OnInit {
     return await alert.present();
   }
 
+  async presentTopic() {
+    this.popover.dismiss();
+    const topic = await this.alert.create({
+      header: `${this.sacrament.topic ? 'Edit' : 'Add'} Topic`,
+      inputs: [
+        {
+          name: 'topic',
+          type: 'text',
+          placeholder: 'Enter topic...',
+          value: this.sacrament.topic
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Ok',
+          handler: (data) => {
+            this.sacramentService.updateSacrament({...this.sacrament, ...data});
+          }
+        }
+      ]
+    });
+    return await topic.present();
+  }
+
 }

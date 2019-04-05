@@ -1,4 +1,5 @@
 import { Member } from './member';
+import { User } from './user';
 
 export interface Hymn {
     name: string;
@@ -25,7 +26,7 @@ export interface Sacrament {
     speakers?: Member[];
     unitNumber: number;
     meetingOptions: MeetingOptions;
-    conducting?: Member;
+    conducting?: User;
     music?: string;
     organist?: Member;
     chorister?: Member;

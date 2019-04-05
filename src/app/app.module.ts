@@ -20,6 +20,7 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
 import { CoreModule } from './core/core.module';
+import { FcmService } from './services/fcm.service';
 
 @NgModule({
   declarations: [AppComponent],
@@ -43,6 +44,7 @@ import { CoreModule } from './core/core.module';
     StatusBar,
     SplashScreen,
     AngularFireAuth,
+    FcmService,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
   ],
   bootstrap: [AppComponent]

@@ -220,10 +220,10 @@ mark {
 
   ion-img {
     margin: 0 5px; 
-    border-radius: 5px; 
+    // border-radius: 5px; 
     width: 35px; 
     height: 35px;
-    box-shadow: 0 0 4px 0 #333;
+    // box-shadow: 0 0 4px 0 #333;
   }
 }
 
@@ -235,6 +235,6 @@ mark {
   }
 }
 
-.can-go-back ion-menu-button {
+.can-go-back ion-menu-button[can-hide] {
   display: none;
 }

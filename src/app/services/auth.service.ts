@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { Observable, of } from 'rxjs';
-import { switchMap, take, map, shareReplay } from 'rxjs/operators';
+import { switchMap, take, map, shareReplay, first } from 'rxjs/operators';
 import { DbService } from './db.service';
 
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
@@ -31,8 +31,7 @@ export class AuthService {
     ) {
         this.user$ = this.afAuth.authState.pipe(
             switchMap(user => (user ? db.doc$(`users/${user.uid}`) : of(null))),
-            take(1),
-            shareReplay(1)
+            first()
         );
 
         this.handleRedirect();
@@ -65,7 +64,7 @@ export class AuthService {
         return await this.updateUserData(credential.user);
     }
 
-    private updateUserData({ uid, email, displayName, photoURL, isAnonymous }) {
+    private updateUserData({ uid, email, displayName, photoURL, isAnonymous }, roles?, unitNumber?, calling?) {
         // Sets user data to firestore on login
 
         const path = `users/${uid}`;
@@ -75,7 +74,10 @@ export class AuthService {
             email,
             displayName,
             photoURL,
-            isAnonymous
+            isAnonymous,
+            roles,
+            unitNumber,
+            calling
         };
         this.storage.set('user', data);
         return this.db.updateAt(path, data);
@@ -83,6 +85,9 @@ export class AuthService {
 
     async signOut() {
         await this.afAuth.auth.signOut();
+        if (this.platform.is('cordova')) {
+            await this.gplus.logout();
+        }
         await this.storage.remove('user');
         await this.router.navigate(['/login']);
         window.location.reload();
@@ -91,11 +96,11 @@ export class AuthService {
     //// GOOGLE AUTH
 
     setRedirect(val) {
-        localStorage.setItem('authRedirect', val);
+        this.storage.set('authRedirect', val);
     }
 
-    isRedirect() {
-        return localStorage.getItem('authRedirect') === 'true';
+    async isRedirect() {
+        return await this.storage.get('authRedirect');
     }
 
     async googleLogin() {
@@ -105,7 +110,7 @@ export class AuthService {
             if (this.platform.is('cordova')) {
                 user = await this.nativeGoogleLogin();
             } else {
-                this.setRedirect(true);
+                await this.setRedirect(true);
                 const provider = new auth.GoogleAuthProvider();
                 user = await this.afAuth.auth.signInWithRedirect(provider);
             }
@@ -117,21 +122,30 @@ export class AuthService {
     }
 
     // Handle login with redirect for web Google auth
-    private handleRedirect() {
-        if (this.isRedirect() !== true) {
+    private async handleRedirect() {
+        if ((await this.isRedirect()) !== true) {
             return null;
         }
 
-        this.showLoading();
-        this.afAuth.auth.getRedirectResult()
-            .then(result => {
-                if (result.user && result.additionalUserInfo.isNewUser) {
-                    this.updateUserData(result.user);
-                }
-                this.setRedirect(false);
-                this.dismissLoading();
-            })
-            .catch(err => console.log(err));
+        // this.showLoading();
+        const result = await this.afAuth.auth.getRedirectResult();
+        if (result.additionalUserInfo.isNewUser) {
+            this.updateUserData(result.user);
+        } else {
+            const user = await this.user$.toPromise();
+            this.updateUserData(user, user.roles, user.unitNumber, user.calling);
+        }
+        await this.setRedirect(false);
+        // this.dismissLoading();
+        // this.afAuth.auth.getRedirectResult()
+        //     .then(result => {
+        //         if (result.user && result.additionalUserInfo.isNewUser) {
+        //             this.updateUserData(result.user);
+        //         }
+        //         this.setRedirect(false);
+        //         this.dismissLoading();
+        //     })
+        //     .catch(err => console.log(err));
 
     }
 
@@ -150,9 +164,16 @@ export class AuthService {
             offline: true,
             scopes: 'profile email'
         });
-
-        return await this.afAuth.auth.signInWithCredential(
+        this.showLoading();
+        const result = await this.afAuth.auth.signInAndRetrieveDataWithCredential(
             auth.GoogleAuthProvider.credential(gplusUser.idToken)
         );
+        if (result.additionalUserInfo.isNewUser) {
+            await this.updateUserData(result.user);
+        } else {
+            const user: any = await this.user$.toPromise();
+            await this.updateUserData(user, user.roles, user.unitNumber, user.calling);
+        }
+        return await this.dismissLoading();
     }
 }

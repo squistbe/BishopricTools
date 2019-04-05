@@ -130,3 +130,29 @@ exports.updateCallingSortIndex = functions.firestore
         })
         .catch(error => console.log(error));
 });
+
+exports.updateCallingInfo = functions.firestore
+.document('callings/{callingId}')
+.onUpdate((snap, context) => {
+    const after = snap.after.data();
+    const before = snap.before.data();
+    const db = admin.firestore();
+    const callingId = context.params.callingId;
+    let data;
+    if (before.member && !after.member) {
+        data = {
+            notes: '',
+            status: {}
+        };
+    }
+    if (!before.member && after.member) {
+        data = {
+            notes: '',
+            status: {
+                name: 'waiting',
+                updatedAt: new Date()
+            }
+        };
+    }
+    return db.collection('callings').doc(callingId).set(data, {merge: true}).catch(error => console.error(error));
+});

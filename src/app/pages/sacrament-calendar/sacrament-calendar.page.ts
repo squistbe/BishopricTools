@@ -10,6 +10,7 @@ import { SacramentOptionsComponent } from './sacrament-options/sacrament-options
 import { Location } from '@angular/common';
 import { SacramentMenuComponent } from './sacrament-menu/sacrament-menu.component';
 import { delay, switchMap } from 'rxjs/operators';
+import { ConductingMenuComponent } from './conducting-menu/conducting-menu.component';
 
 @Component({
   selector: 'app-sacrament-calendar',
@@ -140,5 +141,14 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
   deleteSpeaker(sacrament, i) {
     sacrament.speakers.splice(i, 1);
     this.sacramentService.updateSacrament(sacrament);
+  }
+
+  async presentBishopric(e, sacrament) {
+    const popover = await this.popover.create({
+      component: ConductingMenuComponent,
+      componentProps: {sacrament},
+      event: e
+    });
+    return await popover.present();
   }
 }

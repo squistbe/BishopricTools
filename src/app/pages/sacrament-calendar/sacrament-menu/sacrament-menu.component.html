@@ -1,8 +1,12 @@
 <ion-list lines="full" no-padding>
   <ion-item class="pointer-highlight" (click)="presentMembers('speakers')" *ngIf="!sacrament.meetingOptions?.isTestimonyMeeting && !isConference()">
     <ion-label>Add Speaker</ion-label>
-    <ion-icon name="sad" slot="start"></ion-icon>
+    <ion-icon name="microphone" slot="start"></ion-icon>
   </ion-item> 
+  <ion-item class="pointer-highlight" (click)="presentTopic()" *ngIf="!sacrament.meetingOptions?.isTestimonyMeeting && !isConference()">
+    <ion-label>{{sacrament.topic ? 'Edit' : 'Add'}} Topic</ion-label>
+    <ion-icon name="list-box" slot="start"></ion-icon>
+  </ion-item>
   <ion-item class="pointer-highlight" (click)="presentMeetingOptions()">
     <ion-label>Meeting Type</ion-label>
     <ion-icon name="settings" slot="start"></ion-icon>

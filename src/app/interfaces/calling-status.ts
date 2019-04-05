@@ -15,7 +15,7 @@ export enum CallingStatusType {
 
 export interface CallingStatusMap {
     name: CallingStatusType;
-    updateAt: Date;
+    updatedAt: Date;
 }
 
 export class CallingStatus {
@@ -25,13 +25,13 @@ export class CallingStatus {
             case CallingStatusType.setApart:    return 'Set Apart';
             case CallingStatusType.sustain:     return 'Sustain';
             case CallingStatusType.accepted:    return 'Accepted';
-            case CallingStatusType.release:     return 'Release';
-            case CallingStatusType.waiting:     return 'Waiting';
-            case CallingStatusType.goRelease:   return 'Go Release';
             case CallingStatusType.go:          return 'Go';
-            case CallingStatusType.recommended: return 'Recommended';
-            case CallingStatusType.pendRelease: return 'Pending Release';
             case CallingStatusType.pending:     return 'Pending';
+            case CallingStatusType.waiting:     return 'Waiting';
+            case CallingStatusType.recommended: return 'Recommended';
+            case CallingStatusType.release:     return 'Release';
+            case CallingStatusType.goRelease:   return 'Go Release';
+            case CallingStatusType.pendRelease: return 'Pending Release';
             case CallingStatusType.vacant:      return 'Vacant';
         }
     }

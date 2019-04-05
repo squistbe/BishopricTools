@@ -14,8 +14,7 @@
     [(ngModel)]="calling.status.name" 
     interface="popover" 
     placeholder="Select status" 
-    (ionChange)="statusChange(calling)"
-    [disabled]="!calling.member">
+    (ionChange)="statusChange(calling)">
     <ion-select-option *ngFor="let status of callingStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
   </ion-select>
 </div>

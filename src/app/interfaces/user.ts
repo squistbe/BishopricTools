@@ -1,11 +1,12 @@
 export interface User {
     uid: string;
-    email: string;
+    email?: string;
     photoURL?: string;
     displayName?: string;
     roles?: Roles;
     unitNumber?: number;
     calling?: UserCalling;
+    isAnonymous?: boolean;
 }
 
 export interface Roles {

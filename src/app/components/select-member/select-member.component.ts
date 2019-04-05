@@ -34,7 +34,6 @@ export class SelectMemberComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.memberService.offset.next('');
-    setTimeout(() => this.memberSearch.setFocus(), 100);
   }
 
   trackById(idx, member) {

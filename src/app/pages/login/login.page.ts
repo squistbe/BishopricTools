@@ -18,7 +18,7 @@ export class LoginPage implements OnInit {
 
   ngOnInit() {
     if (this.isLoggedIn()) {
-      this.router.navigate(['/']);
+      this.router.navigateByUrl('/');
     }
   }
 
@@ -28,7 +28,8 @@ export class LoginPage implements OnInit {
   }
 
   async login() {
-    return await this.auth.googleLogin();
+    await this.auth.googleLogin();
+    return await this.router.navigateByUrl('/');
   }
 
 }

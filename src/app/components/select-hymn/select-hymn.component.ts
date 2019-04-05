@@ -9,7 +9,6 @@ import { HymnService } from '../../services/hymn.service';
   styleUrls: ['./select-hymn.component.scss']
 })
 export class SelectHymnComponent implements OnInit, AfterViewInit {
-  @ViewChild('hymnSearch') hymnSearch;
   hymns;
   searchText;
 
@@ -24,11 +23,10 @@ export class SelectHymnComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.hymnService.offset.next('');
-    setTimeout(() => this.hymnSearch.setFocus(), 100);
   }
 
   onKeyup(e) {
-    this.searchText = e.target.value;
+    this.searchText = e.target.value.toLowerCase();
     this.hymnService.offset.next(this.searchText);
   }
 
