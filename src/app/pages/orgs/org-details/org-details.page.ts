@@ -1,13 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CallNumber } from '@ionic-native/call-number/ngx';
+import { SMS } from '@ionic-native/sms/ngx';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { CallingService } from '../../../services/calling.service';
-import { ModalController, Platform, PopoverController, AlertController } from '@ionic/angular';
+import { ModalController, Platform, PopoverController, AlertController, ActionSheetController } from '@ionic/angular';
 import { SelectMemberComponent } from '../../../components/select-member/select-member.component';
 import { OrgOptionsComponent } from './org-options/org-options.component';
 import { Calling } from '../../../interfaces/calling';
 import { CallingStatus, CallingStatusType } from '../../../interfaces/calling-status';
 import { Location } from '@angular/common';
+import { MemberService } from '../../../services/member.service';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-org-details',
@@ -31,7 +35,11 @@ export class OrgDetailsPage implements OnInit, OnDestroy {
     public platform: Platform,
     private popover: PopoverController,
     private location: Location,
-    private alert: AlertController
+    private alert: AlertController,
+    private actionSheetController: ActionSheetController,
+    private memberService: MemberService,
+    private callNumber: CallNumber,
+    private sms: SMS
   ) { }
 
   ngOnInit() {
@@ -175,10 +183,37 @@ export class OrgDetailsPage implements OnInit, OnDestroy {
     }
   }
 
-  async presentNotes(calling) {
-    const title = `${calling ? 'Edit' : 'Add'} Notes`;
+  async presentNotes(calling, slidingItem?) {
+    if (slidingItem) {
+      slidingItem.close();
+    }
+    const buttons: any = [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        cssClass: 'secondary'
+      },
+      {
+        text: 'Done',
+        handler: (res) => {
+          const data = {...calling, ...res};
+          this.callingService.updateCalling(data, true);
+        }
+      }
+    ];
+    if (calling.notes) {
+      buttons.push({
+        text: 'Delete',
+        cssClass: 'danger',
+        handler: () => {
+          calling.notes = '';
+          this.callingService.updateCalling({...calling}, true);
+        }
+      });
+    }
     const alert = await this.alert.create({
-      header: title,
+      cssClass: 'alert-notes',
+      header: `${calling ? 'Edit' : 'Add'} Notes`,
       inputs: [
         {
           type: 'text',
@@ -186,21 +221,50 @@ export class OrgDetailsPage implements OnInit, OnDestroy {
           value: calling.notes
         }
       ],
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-          cssClass: 'secondary'
-        },
-        {
-          text: 'Done',
-          handler: (res) => {
-            const data = {...calling, ...res};
-            this.callingService.updateCalling(data, true);
-          }
-        }
-      ]
+      buttons: buttons
     });
     return await alert.present();
+  }
+
+  async presentActionSheet(e, calling) {
+    if (calling.member) {
+      const member = await this.memberService.getMember(calling.member.id).pipe(take(1)).toPromise();
+      if (!member.phone) {
+        const alert = await this.alert.create({
+          message: `${member.givenNames} ${member.familyName} does not have a phone number.`,
+          buttons: ['OK']
+        });
+        return await alert.present();
+      } else {
+        const actionSheet = await this.actionSheetController.create({
+          header: `${member.phone}`,
+          buttons: [{
+            text: 'Call',
+            icon: 'call',
+            handler: () => {
+              if (this.platform.is('cordova')) {
+                this.callNumber.callNumber(member.phone, true);
+              } else {
+                window.open(`tel:${member.phone}`);
+              }
+            }
+          }, {
+            text: 'Text',
+            icon: 'text',
+            handler: () => {
+              if (this.platform.is('cordova')) {
+                this.sms.send(member.phone, '');
+              } else {
+                window.open(`sms:${member.phone}`);
+              }
+            }
+          }, {
+            text: 'Cancel',
+            role: 'cancel'
+          }]
+        });
+        await actionSheet.present();
+      }
+    }
   }
 }

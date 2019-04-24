@@ -1,21 +1,26 @@
-<ion-label text-wrap slot="start" [color]="calling.status.name || 'medium'" style="padding: 5px 0;">
-  <h2 [style.fontStyle]="!calling.member ? 'italic' : 'normal'" [style.fontWeight]="!calling.member ? 'normal' : 'bold'">
+<ion-label text-wrap slot="start" [color]="!calling.status.name || calling.status.name === 'vacant' ? 'medium' : null">
+  <h2 [style.fontStyle]="!calling.member ? 'italic' : 'normal'">
     <!-- {{calling.name}} -->
     <span [innerHtml]="calling.name | highlight : search"></span>
     <span *ngIf="calling.className"> - {{calling.className}}</span>
   </h2>
-  <p *ngIf="calling.member"><span [innerHtml]="calling.member.givenNames | highlight : search"></span>&nbsp;<span [innerHtml]="calling.member.familyName | highlight : search"></span></p>
-  <p *ngIf="!calling.member"><i>vacant</i></p>
+
+  <div class="middle-container">
+    <p *ngIf="calling.member"><span [innerHtml]="calling.member.givenNames | highlight : search"></span>&nbsp;<span [innerHtml]="calling.member.familyName | highlight : search"></span></p>
+    <p *ngIf="!calling.member"><i>vacant</i></p>
+    <div class="status-select">
+      <ion-select 
+        no-padding
+        [(ngModel)]="calling.status.name" 
+        interface="popover" 
+        placeholder="Select status"
+        (click)="$event.stopPropagation();"
+        (ionChange)="statusChange(calling)">
+        <ion-select-option *ngFor="let status of callingStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
+      </ion-select>
+    </div>
+  </div>
+  
   <ion-note *ngIf="calling.notes">*{{calling.notes}}</ion-note>
+  
 </ion-label>
-<div slot="end" style="position: relative;">
-  <ion-select 
-    style="max-width: 100%; font-size: 14px;"
-    [(ngModel)]="calling.status.name" 
-    interface="popover" 
-    placeholder="Select status" 
-    (ionChange)="statusChange(calling)">
-    <ion-select-option *ngFor="let status of callingStatuses" [value]="status">{{getStatus(status)}}</ion-select-option>
-  </ion-select>
-</div>
-<!-- <ion-badge *ngIf="calling.status.name" [color]="calling.status.name" slot="end">&nbsp;&nbsp;&nbsp;</ion-badge> -->

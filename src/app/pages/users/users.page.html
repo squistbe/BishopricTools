@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Users</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let user of users$ | async">
+      <ion-avatar *ngIf="user.photoURL" slot="start">
+        <img [src]="user.photoURL">
+      </ion-avatar>
+      <ion-icon *ngIf="!user.photoURL" slot="start" color="primary" name="contact"></ion-icon>
+      <ion-label>
+        <h2>{{user.displayName}}</h2>
+        <!-- <p>{{user.lastSignIn | date: 'short'}}</p> -->
+      </ion-label>
+      <ion-text slot="end" style="display: flex; align-items: center;">
+        <ion-checkbox class="user-roles" no-margin [(ngModel)]="user.roles.admin" (ionChange)="toggleRole('admin', user)"></ion-checkbox>
+        <ion-text margin-end>Admin</ion-text>
+        <ion-checkbox class="user-roles" no-margin [(ngModel)]="user.roles.guest" (ionChange)="toggleRole('admin', user)"></ion-checkbox>
+        <ion-text margin-end>Guest</ion-text>
+      </ion-text>
+    </ion-item>
+  </ion-list>
+</ion-content>

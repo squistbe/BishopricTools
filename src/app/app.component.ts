@@ -7,7 +7,7 @@ import { AuthService } from './services/auth.service';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Router, NavigationEnd } from '@angular/router';
-import { FcmService } from './services/fcm.service';
+// import { FcmService } from './services/fcm.service';
 
 @Component({
   selector: 'app-root',
@@ -87,8 +87,7 @@ export class AppComponent implements OnDestroy {
     private splashScreen: SplashScreen,
     private statusBar: StatusBar,
     private auth: AuthService,
-    private router: Router,
-    private fcm: FcmService
+    private router: Router
   ) {
     this.initializeApp();
     router.events.subscribe((val) => {
@@ -114,21 +113,22 @@ export class AppComponent implements OnDestroy {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.userSub = this.auth.user$.pipe(take(1)).subscribe(user => this.profile = user);
-      this.notificationSetup();
+      debugger;
+      // this.notificationSetup();
     });
   }
 
-  private notificationSetup() {
-    this.fcm.getToken();
-    this.fcm.onNotifications().subscribe(
-      (msg) => {
-        if (this.platform.is('ios')) {
-          console.log(msg.aps.alert);
-        } else {
-          console.log(msg.body);
-        }
-      });
-  }
+  // private notificationSetup() {
+  //   this.fcm.getToken();
+  //   this.fcm.onNotifications().subscribe(
+  //     (msg) => {
+  //       if (this.platform.is('ios')) {
+  //         console.log(msg.aps.alert);
+  //       } else {
+  //         console.log(msg.body);
+  //       }
+  //     });
+  // }
 
   ngOnDestroy() {
     this.userSub.unsubscribe();

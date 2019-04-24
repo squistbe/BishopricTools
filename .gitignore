@@ -15,6 +15,7 @@ npm-debug.log*
 .firebase/
 .idea/
 .ionic/
+.gradle/
 .sourcemaps/
 .sass-cache/
 .tmp/
@@ -38,3 +39,4 @@ google-services.json
 *.keystore
 *.apk
 *.p8
+*.p12

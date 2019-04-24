@@ -3,7 +3,8 @@ import { Observable } from 'rxjs';
 import { AlertController, ToastController, Platform } from '@ionic/angular';
 import { MemberService } from '../../services/member.service';
 import { Router } from '@angular/router';
-import { switchMap, shareReplay } from 'rxjs/operators';
+import { switchMap, shareReplay, take } from 'rxjs/operators';
+import { Storage } from '@ionic/storage';
 // import differenceBy from 'lodash/differenceBy';
 
 @Component({
@@ -16,18 +17,21 @@ export class MembersPage implements OnInit, AfterViewInit {
   members: Observable<any[]>;
   fileReaded;
   searchText;
+  user;
 
   constructor(
       private memberService: MemberService,
       private router: Router,
       private alert: AlertController,
       private toast: ToastController,
-      public platform: Platform
+      public platform: Platform,
+      public storage: Storage
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.user = await this.storage.get('user');
     this.members = this.memberService.cursor.pipe(
-      switchMap(cursor => this.memberService.search(cursor)),
+      switchMap(cursor => this.memberService.search(cursor, this.user.unitNumber)),
       shareReplay(1)
     );
   }
@@ -66,9 +70,30 @@ export class MembersPage implements OnInit, AfterViewInit {
     this.upload.nativeElement.click();
   }
 
-  addMember() {
+  async addMember() {
     this.router.navigate(['members', 'create']);
   }
+
+  createIndex(name, unitNumber) {
+    let trim = name;
+    if (name.charAt(0) === ' ') {
+      trim = name.substr(1);
+    }
+
+    const arr = trim.toLowerCase().split('');
+    const searchableIndex = {};
+    const unitIndex = {};
+    let prevKey = '';
+
+    for (const char of arr) {
+        const key = prevKey + char;
+        searchableIndex[key] = true;
+        prevKey = key;
+    }
+    unitIndex[unitNumber] = searchableIndex;
+
+    return unitIndex;
+}
 
   async presentFilters() {
     const filter = this.memberService.offset.getValue();
@@ -197,7 +222,7 @@ export class MembersPage implements OnInit, AfterViewInit {
         email: record[header.indexOf('Individual E-mail')],
         phone: record[header.indexOf('Individual Phone Number')],
         gender: record[header.indexOf('Sex')],
-        unitNumber: 477400,
+        unitNumber: this.user.unitNumber,
         updatedAt: new Date()
       };
     });

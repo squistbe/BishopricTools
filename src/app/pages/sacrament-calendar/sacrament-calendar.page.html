@@ -18,7 +18,7 @@
     <ion-card-header padding-horizontal color="light">
       <ion-card-title>
         {{sacrament.date | date: 'MMMM d'}}
-        <ion-button float-right fill="clear" color="dark" (click)="presentMenu($event, sacrament)">
+        <ion-button *ngIf="(user | async)?.roles?.admin" float-right fill="clear" color="dark" (click)="presentMenu($event, sacrament)">
           <ion-icon name="more"></ion-icon>
         </ion-button>
       </ion-card-title>

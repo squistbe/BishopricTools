@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AgendaService } from '../../../services/agenda.service';
 import { UserService } from '../../../services/user.service';
 import { Observable } from 'rxjs';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-agenda-form',
@@ -19,7 +20,8 @@ export class AgendaFormComponent implements OnInit {
     private userService: UserService,
     private modal: ModalController,
     private fb: FormBuilder,
-    private agendaService: AgendaService
+    private agendaService: AgendaService,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -45,9 +47,10 @@ export class AgendaFormComponent implements OnInit {
   }
 
   async createTodo() {
+    const user = await this.storage.get('user');
     const id = this.todo.id || '';
     const data = {
-      unitNumber: 477400,
+      unitNumber: user.unitNumber,
       createdAt: Date.now(),
       ...this.todo,
       ...this.todoForm.value

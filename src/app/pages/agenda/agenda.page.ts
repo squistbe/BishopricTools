@@ -93,9 +93,9 @@ export class AgendaPage implements OnInit, OnDestroy {
     this.agendaService.updateStatus(todo.id, status);
   }
 
-  async presentTodoForm(sortIndex) {
+  async presentTodoForm(sortIndex, data?) {
     const uid = this.userSub.getValue();
-    const todo = {uid, sortIndex};
+    const todo = {...data, uid, sortIndex};
     const modal = await this.modal.create({
       component: AgendaFormComponent,
       componentProps: {todo}
@@ -127,7 +127,7 @@ export class AgendaPage implements OnInit, OnDestroy {
   }
 
   focusTodo(todo, e) {
-    if (e.target.tagName === 'ION-ITEM') {
+    if (e.target.tagName === 'ION-ITEM' && this.platform.is('desktop')) {
       todo.$$focused = true;
       const textarea = e.target.querySelector('ion-textarea');
       const input = textarea.getInputElement();
@@ -140,11 +140,13 @@ export class AgendaPage implements OnInit, OnDestroy {
           el.style.paddingBottom = '10px';
         }, 100);
       });
-
+    } else {
+      this.presentTodoForm(todo.sortIndex, todo);
     }
   }
 
-  blurTodo(todo, e?, sortIndex?) {
+  async blurTodo(todo, e?, sortIndex?) {
+    const user = await this.auth.user();
     e.target.getInputElement().then(el => {
       el.style.height = 'auto';
     });
@@ -155,7 +157,7 @@ export class AgendaPage implements OnInit, OnDestroy {
     const data = {
       ...todo,
       sortIndex: sortIndex || todo.sortIndex,
-      unitNumber: todo.unitNumber || 477400,
+      unitNumber: todo.unitNumber || user.unitNumber,
       status: todo.status || 'pending',
       content: todo.content || e.target.value,
       uid: todo.uid || this.userId,

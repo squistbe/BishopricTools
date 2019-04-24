@@ -1,8 +1,8 @@
 <ng-container *ngIf="member$ | async as member">
   <ion-header>
     <ion-toolbar>
-      <ion-title *ngIf="!member.id">Add New Member</ion-title>
-      <ion-title *ngIf="member.id">Update {{member.givenNames}} {{member.familyName}}</ion-title>
+      <ion-title *ngIf="!member.id">Add</ion-title>
+      <ion-title *ngIf="member.id">{{member.givenNames}} {{member.familyName}}</ion-title>
       <ion-buttons slot="start">
         <ion-menu-button can-hide></ion-menu-button>
         <ion-back-button></ion-back-button>

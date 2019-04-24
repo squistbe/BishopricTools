@@ -1,10 +1,15 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="!interview.id">Create</ion-title>
-    <ion-title *ngIf="interview.id">Update</ion-title>
-    <ion-buttons slot="end">
+    <!-- <ion-title *ngIf="!interview.id">Create</ion-title>
+    <ion-title *ngIf="interview.id">Update</ion-title> -->
+    <ion-buttons slot="start">
       <ion-button (click)="modalCtrl.dismiss()">
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+        Cancel
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button color="primary" (click)="submitInterview()">
+        <strong>Done</strong>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -42,6 +47,6 @@
     <ion-item lines="full">
       <ion-textarea formControlName="details" placeholder="Interview details..."></ion-textarea>
     </ion-item>
-    <ion-button type="submit" margin-vertical>{{interview.id ? 'Update' : 'Create'}}</ion-button>
+    <!-- <ion-button type="submit" margin-vertical></ion-button> -->
   </form>
 </ion-content>

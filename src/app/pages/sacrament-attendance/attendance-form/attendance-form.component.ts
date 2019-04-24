@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular';
 import moment from 'moment';
 import { AttendanceService } from '../../../services/attendance.service';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-attendance-form',
@@ -15,7 +16,8 @@ export class AttendanceFormComponent implements OnInit {
 
   constructor(
     private modal: ModalController,
-    private attendanceService: AttendanceService
+    private attendanceService: AttendanceService,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -23,7 +25,7 @@ export class AttendanceFormComponent implements OnInit {
     this.attendanceForm = new FormGroup({
       date: new FormControl(data.date || this.getNextSunday().format(), Validators.required),
       total: new FormControl(data.total || null, Validators.required),
-      unitNumber: new FormControl(data.unitNumber || 477400)
+      unitNumber: new FormControl(data.unitNumber)
     });
   }
 
@@ -40,6 +42,8 @@ export class AttendanceFormComponent implements OnInit {
   }
 
   async submitAttendance() {
+    const user = await this.storage.get('user');
+    this.attendanceForm.controls.unitNumber.setValue(user.unitNumber);
     this.attendanceService.updateAttendance({...this.item, ...this.attendanceForm.value});
     this.close();
   }

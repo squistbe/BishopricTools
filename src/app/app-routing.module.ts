@@ -97,6 +97,20 @@ const routes: Routes = [
   {
     path: 'announcements',
     loadChildren: './pages/announcements/announcements.module#AnnouncementsPageModule'
+  },
+  {
+    path: 'support',
+    loadChildren: './pages/support/support.module#SupportPageModule'
+  },
+  {
+    path: 'users',
+    loadChildren: './pages/users/users.module#UsersPageModule',
+    canActivate: [AuthGuard, RolesGuard],
+    data: {
+      expectedRoles: {
+        admin: true
+      }
+    }
   }
 ];
 

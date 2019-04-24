@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ModalController } from '@ionic/angular';
 import { Member } from '../../interfaces/member';
 import { switchMap, shareReplay } from 'rxjs/operators';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-select-member',
@@ -18,16 +19,18 @@ export class SelectMemberComponent implements OnInit, AfterViewInit {
 
   constructor(
     private memberService: MemberService,
-    private modal: ModalController
+    private modal: ModalController,
+    private storage: Storage
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const user = await this.storage.get('user');
     if (this.data) {
       this.memberService.setAgeLimit(this.data.ageReq || null);
       this.memberService.setGenderReq(this.data.genderReq || null);
     }
     this.members = this.memberService.cursor.pipe(
-      switchMap(cursor => this.memberService.search(cursor)),
+      switchMap(cursor => this.memberService.search(cursor, user.unitNumber)),
       shareReplay(1)
     );
   }

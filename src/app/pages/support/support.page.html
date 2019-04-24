@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Support</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="supportForm" (ngSubmit)="submit()">
+    <ion-item lines="full">
+      <ion-input formControlName="name" placeholder="Name"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-input formControlName="email" placeholder="Email"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-input formControlName="phone" placeholder="Phone"></ion-input>
+    </ion-item>
+    <ion-item lines="full">
+      <ion-textarea formControlName="content" placeholder="Ask a question" rows="3"></ion-textarea>
+    </ion-item>
+    <ion-button type="submit" margin-top>Send</ion-button>
+  </form>
+</ion-content>

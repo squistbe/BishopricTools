@@ -1,10 +1,15 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title *ngIf="!todo.id">Create New Todo</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" color="primary">
+        Cancel
+      </ion-button>
+    </ion-buttons>
+    <ion-title *ngIf="!todo.id">New Todo</ion-title>
     <ion-title *ngIf="todo.id">Update</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="close()">
-        <ion-icon name="close"></ion-icon>
+      <ion-button color="primary" (click)="close()" [disabled]="todoForm.invalid" (click)="createTodo()">
+        <strong>Done</strong>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -12,8 +17,7 @@
 <ion-content padding>
   <form [formGroup]="todoForm" (ngSubmit)="createTodo()" *ngIf="users | async as items;">
     <ion-item>
-      <ion-label>Who?</ion-label>
-      <ion-select interface="popover" formControlName="uid">
+      <ion-select interface="popover" placeholder="Select user..." formControlName="uid" style="min-width: 100%;">
         <ion-select-option *ngFor="let user of items" [value]="user.uid">{{user.displayName}}</ion-select-option>
       </ion-select>
     </ion-item>
@@ -22,14 +26,16 @@
       <ion-textarea rows="6" formControlName="content" [color]="todoForm.controls.color.value"></ion-textarea>
     </ion-item>
     <ion-item>
-      <ion-label>Text Color</ion-label>
+      <ion-label>Type/Color</ion-label>
       <ion-select formControlName="color" interface="popover">
-        <ion-select-option value="dark">Black</ion-select-option>
-        <ion-select-option value="primary">Blue</ion-select-option>
-        <ion-select-option value="danger">Red</ion-select-option>
-        <ion-select-option value="tertiary">Purple</ion-select-option>
-        <ion-select-option value="success">Green</ion-select-option>
-        <ion-select-option value="warning">Yellow</ion-select-option>
+        <ion-select-option value="dark">General/Black</ion-select-option>
+        <ion-select-option value="done">Bishopric/Brown</ion-select-option>
+        <ion-select-option value="primary">Elders/Blue</ion-select-option>
+        <ion-select-option value="danger">Primary/Red</ion-select-option>
+        <ion-select-option value="tertiary">YW/Purple</ion-select-option>
+        <ion-select-option value="success">YM/Green</ion-select-option>
+        <ion-select-option value="warning">RS/Yellow</ion-select-option>
+        <ion-select-option value="secondary">SS/Teal</ion-select-option>
       </ion-select>
     </ion-item>
     <ion-item>
@@ -48,6 +54,6 @@
       </ion-list>
     </ion-item>
     
-    <ion-button margin-top [disabled]="todoForm.invalid" type="submit">{{todo.id ? 'Update!' : 'Create'}}</ion-button>
+    <!-- <ion-button margin-top [disabled]="todoForm.invalid" type="submit">{{todo.id ? 'Update!' : 'Create'}}</ion-button> -->
   </form>
 </ion-content>

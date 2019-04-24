@@ -86,6 +86,7 @@ export class SacramentOptionsComponent implements OnInit {
     return await alert.present();
   }
 
+  // TODO: need to fix unitnumber
   getSundays(year: number) {
     const date = new Date(year, 0, 1);
     while (date.getDay() !== 0) {

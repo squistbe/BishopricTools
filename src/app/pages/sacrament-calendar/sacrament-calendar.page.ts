@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription, of, BehaviorSubject, Subject } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { SacramentService } from '../../services/sacrament.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SacramentSettings, Sacrament } from '../../interfaces/sacrament';
@@ -9,8 +9,9 @@ import { SelectHymnComponent } from '../../components/select-hymn/select-hymn.co
 import { SacramentOptionsComponent } from './sacrament-options/sacrament-options.component';
 import { Location } from '@angular/common';
 import { SacramentMenuComponent } from './sacrament-menu/sacrament-menu.component';
-import { delay, switchMap } from 'rxjs/operators';
 import { ConductingMenuComponent } from './conducting-menu/conducting-menu.component';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../interfaces/user';
 
 @Component({
   selector: 'app-sacrament-calendar',
@@ -23,6 +24,7 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
   months = SacramentSettings.SACRAMENT_MONTHS;
   monthSub: Subscription;
   updated;
+  user;
 
   constructor(
     private sacramentService: SacramentService,
@@ -30,7 +32,8 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
     private modal: ModalController,
     private popover: PopoverController,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private auth: AuthService
   ) {
     const now = new Date();
     const year = now.getFullYear().toString();
@@ -51,6 +54,7 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
       this.conducting$ = this.sacramentService.getConducting(month);
     });
     this.sacraments = this.sacramentService.getSacraments();
+    this.user = this.auth.user$;
   }
 
   ngOnDestroy() {

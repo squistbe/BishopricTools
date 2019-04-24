@@ -3,4 +3,37 @@
     flex: 1;
     align-items: center;
     justify-content: space-between;
+
+    h2 {
+        flex: 1;
+    }
+
+    ion-label {
+        flex: 1;
+        margin-left: 0;
+        margin-right: 0;
+        margin-top: 11px;
+        margin-bottom: 10px;
+
+        .middle-container {
+            display: flex;
+            justify-content: space-between;
+
+            p {
+                flex: 1;
+                color: #a6a6a6;
+            }
+
+            .status-select {
+                // flex: 1;
+                position: relative;
+            }
+
+            ion-select {
+                max-width: 100%;
+                font-size: 14px;
+                padding: 0 10px;
+            }
+        }
+    }
 }

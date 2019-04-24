@@ -11,6 +11,7 @@ import { FilterHymnsPipe } from '../pipes/filter-hymns.pipe';
 import { HighlightPipe } from '../pipes/highlight.pipe';
 
 import { HymnService } from '../services/hymn.service';
+import { BishopricPipe } from '../pipes/bishopric.pipe';
 
 @NgModule({
   imports: [
@@ -19,8 +20,8 @@ import { HymnService } from '../services/hymn.service';
     FormsModule,
     ReactiveFormsModule
   ],
-  exports: [SelectMemberComponent, SelectHymnComponent, SelectStatusComponent, HighlightPipe],
-  declarations: [SelectMemberComponent, SelectHymnComponent, SelectStatusComponent, FilterHymnsPipe, HighlightPipe],
+  exports: [SelectMemberComponent, SelectHymnComponent, SelectStatusComponent, HighlightPipe, BishopricPipe],
+  declarations: [SelectMemberComponent, SelectHymnComponent, SelectStatusComponent, FilterHymnsPipe, HighlightPipe, BishopricPipe],
   entryComponents: [SelectMemberComponent, SelectHymnComponent, SelectStatusComponent],
   providers: [HymnService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]

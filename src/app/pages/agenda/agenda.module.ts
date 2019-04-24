@@ -10,6 +10,7 @@ import { AgendaService } from '../../services/agenda.service';
 import { AgendaFormComponent } from './agenda-form/agenda-form.component';
 import { AgendaOptionsComponent } from './agenda-options/agenda-options.component';
 import { InitialsPipe } from '../../pipes/initials.pipe';
+import { ComponentsModule } from '../../components/components.module';
 
 const routes: Routes = [
   {
@@ -28,6 +29,7 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
+    ComponentsModule,
     RouterModule.forChild(routes)
   ],
   declarations: [AgendaPage, AgendaFormComponent, AgendaOptionsComponent, InitialsPipe],

@@ -4,22 +4,27 @@ admin.initializeApp();
 
 exports.createMemberIndex = functions.firestore
 .document('members/{memberId}')
-.onCreate((snap, context) => {
+.onWrite((snap, context) => {
     const memberId = context.params.memberId;
-    const member = snap.data();
-    const familyNameIndex = createIndex(member.familyName);
-    const givenNamesIndex = createIndex(member.givenNames);
-    const indexedMember = {...member, familyNameIndex, givenNamesIndex};
-    const db = admin.firestore();
-    return db.collection('members').doc(memberId).set(indexedMember, {merge: true});
+    const after = snap.after.data();
+    const before = snap.before.data();
+    if (after.familyName !== before.familyName || after.givenNames !== before.givenNames) {
+        const familyNameIndex = createIndex(after.familyName, after.unitNumber);
+        const givenNamesIndex = createIndex(after.givenNames, after.unitNumber);
+        const indexedMember = {...after, familyNameIndex, givenNamesIndex};
+        const db = admin.firestore();
+        return db.collection('members').doc(memberId).set(indexedMember, {merge: true});
+    }
+    return Promise.reject(`${memberId} no indexing needed.`)
 });
 
-function createIndex(name) {
+function createIndex(name, unitNumber) {
     let trim = name;
     if (name.charAt(0) === ' ') trim = name.substr(1);
 
     const arr = trim.toLowerCase().split('');
     const searchableIndex = {}
+    const unitIndex = {};
     let prevKey = '';
 
     for (const char of arr) {
@@ -27,8 +32,9 @@ function createIndex(name) {
         searchableIndex[key] = true
         prevKey = key
     }
+    unitIndex[unitNumber] = searchableIndex;
 
-    return searchableIndex
+    return unitIndex;
 }
 
 exports.updateMemberEvent = functions.firestore
@@ -97,8 +103,9 @@ exports.writeAttendance = functions.firestore
 .onCreate((snap, context) => {
     const id = context.params.attendanceId;
     const db = admin.firestore();
+    const data = snap.data();
     return db.collection('members')
-        .where('unitNumber', '==', 477400)
+        .where('unitNumber', '==', data.unitNumber)
         .get()
         .then(querySnapshot => {
             return db.collection('attendance').doc(id).set({members: querySnapshot.size}, {merge: true}).catch(error => console.error(error));
@@ -145,14 +152,14 @@ exports.updateCallingInfo = functions.firestore
             status: {}
         };
     }
-    if (!before.member && after.member) {
-        data = {
-            notes: '',
-            status: {
-                name: 'waiting',
-                updatedAt: new Date()
-            }
-        };
-    }
+    // if (!before.member && after.member) {
+    //     data = {
+    //         notes: '',
+    //         status: {
+    //             name: 'waiting',
+    //             updatedAt: new Date()
+    //         }
+    //     };
+    // }
     return db.collection('callings').doc(callingId).set(data, {merge: true}).catch(error => console.error(error));
 });

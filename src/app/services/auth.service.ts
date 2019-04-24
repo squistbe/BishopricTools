@@ -1,10 +1,10 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { auth } from 'firebase/app';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { Observable, of } from 'rxjs';
-import { switchMap, take, map, shareReplay, first } from 'rxjs/operators';
+import { switchMap, take, map, first } from 'rxjs/operators';
 import { DbService } from './db.service';
 
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
@@ -59,12 +59,12 @@ export class AuthService {
             .toPromise();
     }
 
-    async anonymousLogin() {
+    async anonymousLogin(additionalInfo?) {
         const credential = await this.afAuth.auth.signInAnonymously();
-        return await this.updateUserData(credential.user);
+        return await this.updateUserData(credential.user, {...additionalInfo});
     }
 
-    private updateUserData({ uid, email, displayName, photoURL, isAnonymous }, roles?, unitNumber?, calling?) {
+    private async updateUserData({ uid, email, displayName, photoURL, isAnonymous }, additionalInfo?) {
         // Sets user data to firestore on login
 
         const path = `users/${uid}`;
@@ -75,12 +75,10 @@ export class AuthService {
             displayName,
             photoURL,
             isAnonymous,
-            roles,
-            unitNumber,
-            calling
+            ...additionalInfo
         };
-        this.storage.set('user', data);
-        return this.db.updateAt(path, data);
+        await this.storage.set('user', data);
+        return await this.db.updateAt(path, data);
     }
 
     async signOut() {
@@ -88,7 +86,7 @@ export class AuthService {
         if (this.platform.is('cordova')) {
             await this.gplus.logout();
         }
-        await this.storage.remove('user');
+        // await this.storage.remove('user');
         await this.router.navigate(['/login']);
         window.location.reload();
     }
@@ -123,30 +121,26 @@ export class AuthService {
 
     // Handle login with redirect for web Google auth
     private async handleRedirect() {
-        if ((await this.isRedirect()) !== true) {
+        const redirect = await this.isRedirect();
+        if (!redirect) {
             return null;
         }
 
-        // this.showLoading();
+        const loading = await this.loadingController.create();
+        await loading.present();
         const result = await this.afAuth.auth.getRedirectResult();
-        if (result.additionalUserInfo.isNewUser) {
+        if (result.user && result.additionalUserInfo.isNewUser) {
             this.updateUserData(result.user);
         } else {
             const user = await this.user$.toPromise();
-            this.updateUserData(user, user.roles, user.unitNumber, user.calling);
+            if (!user) {
+                this.router.navigate(['access-denied']);
+            } else {
+                this.updateUserData(user, {...user});
+            }
         }
+        await loading.dismiss();
         await this.setRedirect(false);
-        // this.dismissLoading();
-        // this.afAuth.auth.getRedirectResult()
-        //     .then(result => {
-        //         if (result.user && result.additionalUserInfo.isNewUser) {
-        //             this.updateUserData(result.user);
-        //         }
-        //         this.setRedirect(false);
-        //         this.dismissLoading();
-        //     })
-        //     .catch(err => console.log(err));
-
     }
 
     async showLoading() {
@@ -172,7 +166,7 @@ export class AuthService {
             await this.updateUserData(result.user);
         } else {
             const user: any = await this.user$.toPromise();
-            await this.updateUserData(user, user.roles, user.unitNumber, user.calling);
+            await this.updateUserData(user, {...user});
         }
         return await this.dismissLoading();
     }

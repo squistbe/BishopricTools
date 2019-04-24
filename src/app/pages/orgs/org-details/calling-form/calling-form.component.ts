@@ -7,6 +7,7 @@ import { CallingStatus, CallingStatusType } from '../../../../interfaces/calling
 import { ModalController } from '@ionic/angular';
 import { SelectMemberComponent } from '../../../../components/select-member/select-member.component';
 import { PopoverOptions } from '@ionic/core';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'calling-form',
@@ -34,7 +35,8 @@ export class CallingFormComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private callingService: CallingService,
-    private modal: ModalController
+    private modal: ModalController,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -90,11 +92,12 @@ export class CallingFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  submitMember() {
+  async submitMember() {
+    const user = await this.storage.get('user');
     const data = {
       orgTag: this.orgTag,
       orgId: this.orgId,
-      unitNumber: 477400,
+      unitNumber: user.unitNumber,
       ...this.callingForm.value,
       status: {
         name: this.status.value,

@@ -1,21 +1,23 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Chart } from 'chart.js';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController, AlertController, Platform } from '@ionic/angular';
 import { AttendanceFormComponent } from './attendance-form/attendance-form.component';
 import { AttendanceService } from '../../services/attendance.service';
 import moment from 'moment';
+import { Storage } from '@ionic/storage';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sacrament-attendance',
   templateUrl: './sacrament-attendance.page.html',
   styleUrls: ['./sacrament-attendance.page.scss'],
 })
-export class SacramentAttendancePage implements OnInit {
+export class SacramentAttendancePage implements OnInit, OnDestroy {
   @ViewChild('lineCanvas') lineCanvas;
   lineChart;
   showChart = localStorage.getItem('showAttendanceChart') === 'true';
-  chartSub;
+  chartSub: Subscription;
   month;
   year;
   list;
@@ -26,15 +28,17 @@ export class SacramentAttendancePage implements OnInit {
     private modal: ModalController,
     private attendanceService: AttendanceService,
     private alert: AlertController,
-    public platform: Platform
+    public platform: Platform,
+    private storage: Storage
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    const user = await this.storage.get('user');
     this.month = this.route.snapshot.paramMap.get('month');
     this.year = this.route.snapshot.paramMap.get('year') || new Date().getFullYear().toString();
     this.attendanceService.year.next(this.year);
-    this.list = this.attendanceService.getAttendance();
-    this.chartSub = this.attendanceService.getAttendance().subscribe(res => {
+    this.list = this.attendanceService.getAttendance(user.unitNumber);
+    this.chartSub = this.attendanceService.getAttendance(user.unitNumber).subscribe(res => {
       const data = res.map((val: any) => val.total).reverse();
       const labels = res.map((val: any) => moment(val.date).format('MMM Do')).reverse();
       if (this.lineChart) {
@@ -74,6 +78,12 @@ export class SacramentAttendancePage implements OnInit {
         });
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.chartSub) {
+      this.chartSub.unsubscribe();
+    }
   }
 
   async addAttendance(item?) {

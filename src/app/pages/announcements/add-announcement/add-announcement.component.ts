@@ -33,7 +33,7 @@ export class AddAnnouncementComponent implements OnInit {
     });
     const uid = await this.auth.uid();
     if (!uid) {
-      await this.auth.anonymousLogin();
+      await this.auth.anonymousLogin({unitNumber: parseInt(unitParam, null)});
       window.location.reload();
     }
   }

@@ -15,19 +15,22 @@ import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { Firebase } from '@ionic-native/firebase/ngx';
 import { GooglePlus } from '@ionic-native/google-plus/ngx';
+import { CallNumber } from '@ionic-native/call-number/ngx';
+import { SMS } from '@ionic-native/sms/ngx';
+import { Keyboard } from '@ionic-native/keyboard/ngx';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
-import { CoreModule } from './core/core.module';
 import { FcmService } from './services/fcm.service';
+import { AuthService } from './services/auth.service';
 
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(),
+    IonicModule.forRoot({scrollAssist: false}),
     AppRoutingModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule,
@@ -35,7 +38,6 @@ import { FcmService } from './services/fcm.service';
     AngularFireFunctionsModule,
     AngularFireMessagingModule,
     HttpClientModule,
-    CoreModule,
     IonicStorageModule.forRoot()
   ],
   providers: [
@@ -45,6 +47,10 @@ import { FcmService } from './services/fcm.service';
     SplashScreen,
     AngularFireAuth,
     FcmService,
+    AuthService,
+    CallNumber,
+    SMS,
+    Keyboard,
     {provide: RouteReuseStrategy, useClass: IonicRouteStrategy}
   ],
   bootstrap: [AppComponent]

@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { Member } from '../../../interfaces/member';
 import { Router } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { MemberService } from '../../../services/member.service';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'member-form',
@@ -17,7 +18,8 @@ export class MemberFormComponent implements OnInit {
   constructor(
     private memberService: MemberService,
     private router: Router,
-    private toast: ToastController
+    private toast: ToastController,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -39,6 +41,14 @@ export class MemberFormComponent implements OnInit {
       email: new FormControl(this.member.email, Validators.email),
       unitNumber: new FormControl(this.member.unitNumber, Validators.required)
     });
+    this.getUnitNumber();
+  }
+
+  async getUnitNumber () {
+    if (!this.member.id) {
+      const user = await this.storage.get('user');
+      this.memberForm.controls.unitNumber.setValue(user.unitNumber);
+    }
   }
 
   submitMember() {

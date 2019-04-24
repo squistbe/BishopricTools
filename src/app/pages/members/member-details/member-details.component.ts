@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { DbService } from '../../../services/db.service';
 import { ActivatedRoute } from '@angular/router';
 import { of, Observable } from 'rxjs';
 import { Member, MemberClass } from '../../../interfaces/member';
+import { MemberService } from '../../../services/member.service';
 
 @Component({
   selector: 'app-member-details',
@@ -13,7 +13,7 @@ export class MemberDetailsComponent implements OnInit {
   member$: Observable<Member>;
 
   constructor(
-    private db: DbService,
+    private memberService: MemberService,
     private route: ActivatedRoute
   ) { }
 
@@ -22,7 +22,7 @@ export class MemberDetailsComponent implements OnInit {
     if (!id) {
       this.member$ = of(new MemberClass());
     } else {
-      this.member$ = this.db.doc$(`members/${id}`);
+      this.member$ = this.memberService.getMember(id);
     }
   }
 

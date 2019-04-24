@@ -26,10 +26,19 @@
           <ion-label><h2>{{interview.date | date: 'EEEE, MMMM d'}}</h2></ion-label>
         </ion-item-divider>
         <ion-item-sliding [disabled]="platform.is('desktop')">
-          <ion-item color="{{getStatusColor(interview.status)}}" lines="full" class="pointer-highlight" (click)="interviewDetails(interview)">
+          <ion-item 
+            lines="full" 
+            class="pointer-highlight border-left"
+            [class.success]="interview.status === 'arrived'"
+            [class.danger]="interview.status === 'missed'"
+            [class.warning]="interview.status === 'pending'"
+            [class.light]="interview.status === 'confirmed'"
+            [class.medium]="interview.status === 'blocked'"
+            [class.secondary]="interview.status === 'contacted'"
+            (click)="interviewDetails(interview)">
             <ion-label>
-              <h1 *ngIf="interview.status !== 'blocked'">{{interview.member.givenNames}} {{interview.member.familyName}}</h1>
-              <h1 *ngIf="interview.status === 'blocked'">Unavailable</h1>
+              <h2 *ngIf="interview.status !== 'blocked'">{{interview.member.givenNames}} {{interview.member.familyName}}</h2>
+              <h2 *ngIf="interview.status === 'blocked'">Unavailable</h2>
               <h3>
                 <span *ngIf="interview.duration !== 'allDay'">
                   {{interview.date | date: 'h:mm a'}}

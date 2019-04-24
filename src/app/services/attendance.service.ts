@@ -13,7 +13,7 @@ export class AttendanceService {
     private db: DbService
   ) { }
 
-  getAttendance() {
+  getAttendance(unitNumber) {
     return this.year.pipe(
       switchMap(year => {
         const min = new Date(year || new Date().getFullYear().toString());
@@ -23,7 +23,7 @@ export class AttendanceService {
         }
         return this.db.collection$('attendance', ref =>
           ref
-            .where('unitNumber', '==', 477400)
+            .where('unitNumber', '==', unitNumber)
             .where('date', '<', max)
             .where('date', '>', min)
             .orderBy('date', 'desc')

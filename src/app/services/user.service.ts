@@ -13,15 +13,21 @@ export class UserService {
     private db: DbService
   ) { }
 
-  getUsers() {
+  getUsers(isAnonymous?) {
     return this.auth.user$.pipe(
       switchMap(user =>
         this.db.collection$('users', ref =>
           ref
-              .where('unitNumber', '==', user.unitNumber)
+            .where('isAnonymous', '==', !!isAnonymous)
+            .where('unitNumber', '==', user.unitNumber)
+            .orderBy('displayName')
         )
       ),
       shareReplay(1)
     );
+  }
+
+  updateUser(data) {
+    return this.db.updateAt(`users/${data.id || ''}`, data);
   }
 }

@@ -1,9 +1,14 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Attendance</ion-title>
+    <!-- <ion-title>Attendance</ion-title> -->
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" color="primary">
+        Cancel
+      </ion-button>
+    </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="close()">
-        <ion-icon slot="icon-only" name="close"></ion-icon>
+      <ion-button (click)="submitAttendance()" [disabled]="attendanceForm.invalid" color="primary">
+        <strong>Done</strong>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -18,6 +23,6 @@
     <ion-item>
       <ion-input type="number" formControlName="total" placeholder="Count"></ion-input>
     </ion-item>
-    <ion-button type="submit" [disabled]="attendanceForm.invalid" margin-top>Submit</ion-button>
+    <!-- <ion-button type="submit" margin-top>Submit</ion-button> -->
   </form>
 </ion-content>

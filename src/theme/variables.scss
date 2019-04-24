@@ -76,6 +76,20 @@
   --ion-color-light-shade: #d7d8da;
   --ion-color-light-tint: #f5f6f9;
 
+  --ion-color-done: #9f0800;
+  --ion-color-setApart: #d500c3;
+  --ion-color-accepted: #3880ff;
+  --ion-color-sustain: #9e49d5;
+  --ion-color-release: #0bdcf5;
+  --ion-color-waiting: #f8ac48;
+  --ion-color-goRelease: #0ba649;
+  --ion-color-go: #19f124;
+  --ion-color-recommended: #ff0d05;
+  --ion-color-pendRelease: #e2c900;
+  --ion-color-pending: #fff404;
+  --ion-color-vacant: #989aa2;
+  --ion-color-sky: #f7faff;
+
   /** toolbar **/
   --ion-toolbar-background: #f8f8f8;
 }
@@ -227,6 +241,16 @@ mark {
   }
 }
 
+.alert-notes .alert-button-group-vertical {
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row ;
+
+  .danger {
+    color: var(--ion-color-danger);
+  }
+}
+
 .calling-names .popover-content {
   width: 300px;
   
@@ -237,4 +261,84 @@ mark {
 
 .can-go-back ion-menu-button[can-hide] {
   display: none;
+}
+
+.border-left.success {
+  border-left: 5px solid var(--ion-color-success);
+}
+
+.border-left.danger {
+  border-left: 5px solid var(--ion-color-danger);
+}
+
+.border-left.warning {
+  border-left: 5px solid var(--ion-color-warning);
+}
+
+.border-left.comfirmed {
+  border-left: 5px solid var(--ion-color-light);
+}
+
+.border-left.blocked {
+  border-left: 5px solid var(--ion-color-medium);
+}
+
+.border-left.secondary {
+  border-left: 5px solid var(--ion-color-secondary);
+}
+
+.border-left.medium {
+  border-left: 5px solid var(--ion-color-medium);
+}
+
+.border-left.light {
+  border-left: 5px solid var(--ion-color-light);
+}
+
+.border-left.done {
+  border-left: 5px solid var(--ion-color-done);
+}
+
+.border-left.setApart {
+  border-left: 5px solid var(--ion-color-setApart);
+}
+
+.border-left.accepted {
+  border-left: 5px solid var(--ion-color-accepted);
+}
+
+.border-left.sustain {
+  border-left: 5px solid var(--ion-color-sustain);
+}
+
+.border-left.release {
+  border-left: 5px solid var(--ion-color-release);
+}
+
+.border-left.waiting {
+  border-left: 5px solid var(--ion-color-waiting);
+}
+
+.border-left.goRelease {
+  border-left: 5px solid var(--ion-color-goRelease);
+}
+
+.border-left.go {
+  border-left: 5px solid var(--ion-color-go);
+}
+
+.border-left.recommended {
+  border-left: 5px solid var(--ion-color-recommended);
+}
+
+.border-left.pendRelease {
+  border-left: 5px solid var(--ion-color-pendRelease);
+}
+
+.border-left.pending {
+  border-left: 5px solid var(--ion-color-pending);
+}
+
+.border-left.vacant {
+  border-left: 5px solid var(--ion-color-vacant);
 }

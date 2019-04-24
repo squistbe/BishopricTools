@@ -30,6 +30,12 @@
               My Profile
             </ion-label>
           </ion-item>
+          <ion-item *ngIf="profile?.roles?.admin" lines="none" [routerDirection]="'root'" [routerLink]="['/users']" class="pointer-highlight" detail="false">
+            <ion-icon name="contacts" slot="start" no-margin></ion-icon>
+            <ion-label color="medium" margin-start>
+              Users
+            </ion-label>
+          </ion-item>
           <ion-item lines="none" detail="false" (click)="signout()" class="pointer-highlight">
             <ion-icon name="log-out" slot="start" no-margin></ion-icon>
             <ion-label color="medium" margin-start>

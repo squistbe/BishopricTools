@@ -5,7 +5,7 @@ import { InterviewService } from '../../../services/interview.service';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 import { SelectMemberComponent } from '../../../components/select-member/select-member.component';
-import { BehaviorSubject } from 'rxjs';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'app-interview-details',
@@ -26,7 +26,8 @@ export class InterviewDetailsComponent implements OnInit {
   constructor(
     private interviewService: InterviewService,
     private route: ActivatedRoute,
-    public modalCtrl: ModalController
+    public modalCtrl: ModalController,
+    private storage: Storage
   ) { }
 
   ngOnInit() {
@@ -78,8 +79,9 @@ export class InterviewDetailsComponent implements OnInit {
   }
 
   async submitInterview() {
+    const user = await this.storage.get('user');
     const data = {
-      unitNumber: 477400,
+      unitNumber: user.unitNumber,
       ...this.interview,
       ...this.interviewForm.value
     };

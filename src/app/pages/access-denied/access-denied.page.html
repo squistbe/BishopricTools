@@ -1,7 +1,14 @@
 <ion-header>
   <ion-toolbar><ion-title>Access denied</ion-title></ion-toolbar>
 </ion-header>
-<ion-content padding>
-  <p>Please wait for your admin to grant you access.</p>
+<ion-content padding *ngIf="(user$ | async) as user">
+  <p *ngIf="user.unitNumber">Please wait for your admin to grant you access.</p>
   <!-- <ion-img src="../../../assets/images/prophet.jpg"></ion-img> -->
+  <div *ngIf="!user.unitNumber">
+    <ion-item>
+      <ion-label position="stacked" text-wrap>Looks like you aren't part of a unit (Ward). Do you know your unit number?</ion-label>
+      <ion-input inputmode="numeric" [(ngModel)]="unitNumber"></ion-input>
+    </ion-item>
+    <ion-button margin-top (click)="next()">Next</ion-button>
+  </div>
 </ion-content>
