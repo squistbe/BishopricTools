@@ -113,7 +113,6 @@ export class AppComponent implements OnDestroy {
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       this.userSub = this.auth.user$.pipe(take(1)).subscribe(user => this.profile = user);
-      debugger;
       // this.notificationSetup();
     });
   }

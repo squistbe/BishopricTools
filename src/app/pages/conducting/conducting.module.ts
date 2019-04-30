@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { ConductingPage } from './conducting.page';
 import { SacramentService } from '../../services/sacrament.service';
+import { SortPipe } from '../../pipes/sort.pipe';
 
 const routes: Routes = [
   {
@@ -23,6 +24,6 @@ const routes: Routes = [
     RouterModule.forChild(routes)
   ],
   providers: [SacramentService],
-  declarations: [ConductingPage]
+  declarations: [ConductingPage, SortPipe]
 })
 export class ConductingPageModule {}

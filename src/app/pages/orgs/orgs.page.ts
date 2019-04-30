@@ -6,6 +6,8 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { CallingService } from '../../services/calling.service';
 import { CallingStatusType, CallingStatus } from '../../interfaces/calling-status';
+import { ModalController } from '@ionic/angular';
+import { StatusDefinitionsComponent } from '../../components/status-definitions/status-definitions.component';
 
 @Component({
   selector: 'app-orgs',
@@ -20,7 +22,8 @@ export class OrgsPage implements OnInit {
     private db: DbService,
     private auth: AuthService,
     private router: Router,
-    private callingService: CallingService
+    private callingService: CallingService,
+    private modal: ModalController
   ) { }
 
   ngOnInit() {
@@ -52,6 +55,13 @@ export class OrgsPage implements OnInit {
   goToOrg(org) {
     this.router.navigate(['orgs', org.id], {queryParams: {tag: org.orgTag}});
     this.callingService.changeOrgTitle(org.name);
+  }
+
+  async presentStatusDefs() {
+    const modal = await this.modal.create({
+      component: StatusDefinitionsComponent
+    });
+    return await modal.present();
   }
 
 }

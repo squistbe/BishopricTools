@@ -12,6 +12,7 @@ import { SacramentMenuComponent } from './sacrament-menu/sacrament-menu.componen
 import { ConductingMenuComponent } from './conducting-menu/conducting-menu.component';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sacrament-calendar',
@@ -38,9 +39,9 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
     const now = new Date();
     const year = now.getFullYear().toString();
     const month = SacramentSettings.SACRAMENT_MONTHS[now.getMonth()].toLowerCase();
-    if (route.snapshot.data.isEmpty) {
-      router.navigate([year, month], {relativeTo: route});
-    }
+    // if (route.snapshot.data.isEmpty && !localStorage.getItem('lastRoute').includes(month)) {
+    //   router.navigate([year, month], {relativeTo: route});
+    // }
   }
 
   ngOnInit() {
@@ -49,16 +50,22 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
     const selectedMonth = this.route.snapshot.paramMap.get('month') || SacramentSettings.SACRAMENT_MONTHS[now.getMonth()].toLowerCase();
     this.sacramentService.selectedMonth.next(selectedMonth);
     this.sacramentService.selectedYear.next(selectedYear);
-    this.monthSub = this.sacramentService.selectedMonth.subscribe(month => {
-      this.location.go(`sacrament-calendar/${this.sacramentService.selectedYear.getValue()}/${month}`);
-      this.conducting$ = this.sacramentService.getConducting(month);
-    });
+    // this.monthSub = this.sacramentService.selectedMonth.subscribe(month => {
+    //   // this.location.go(`sacrament-calendar/${this.sacramentService.selectedYear.getValue()}/${month}`);
+    //   this.conducting$ = this.sacramentService.getConducting(month);
+    // });
+    this.conducting$ = this.sacramentService.selectedMonth.pipe(
+      switchMap(month => {
+        this.location.go(`sacrament-calendar/${this.sacramentService.selectedYear.getValue()}/${month}`);
+        return this.sacramentService.getConducting(month);
+      })
+    );
     this.sacraments = this.sacramentService.getSacraments();
     this.user = this.auth.user$;
   }
 
   ngOnDestroy() {
-    this.monthSub.unsubscribe();
+    // this.monthSub.unsubscribe();
   }
 
   get month() {

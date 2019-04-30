@@ -3,13 +3,13 @@ export enum CallingStatusType {
     setApart    = <any>'setApart', // sustained, need to be set apart
     sustain     = <any>'sustain', // needs to be sustained
     accepted    = <any>'accepted', // calling accepted
-    release     = <any>'release', // need to be released
-    waiting     = <any>'waiting', // a reservation or consideration
-    goRelease   = <any>'goRelease', // call to release from calling
-    go          = <any>'go', // ready to extend the calling
+    go          = <any>'go', // ready to extend the calling, schedule interview
     recommended = <any>'recommended', // name presented by or president
-    pendRelease = <any>'pendRelease', // being considered for release
     pending     = <any>'pending', // being considered for calling
+    waiting     = <any>'waiting', // a reservation or consideration
+    release     = <any>'release', // need to be released
+    pendRelease = <any>'pendRelease', // being considered for release
+    goRelease   = <any>'goRelease', // call to release from calling
     vacant      = <any>'vacant' // empty calling
 }
 
@@ -25,14 +25,45 @@ export class CallingStatus {
             case CallingStatusType.setApart:    return 'Set Apart';
             case CallingStatusType.sustain:     return 'Sustain';
             case CallingStatusType.accepted:    return 'Accepted';
-            case CallingStatusType.go:          return 'Go';
+            case CallingStatusType.go:          return 'Go/Schedule';
             case CallingStatusType.pending:     return 'Pending';
             case CallingStatusType.waiting:     return 'Waiting';
             case CallingStatusType.recommended: return 'Recommended';
-            case CallingStatusType.release:     return 'Release';
+            case CallingStatusType.release:     return 'Released';
             case CallingStatusType.goRelease:   return 'Go Release';
             case CallingStatusType.pendRelease: return 'Pending Release';
             case CallingStatusType.vacant:      return 'Vacant';
+        }
+    }
+
+    static getDefinition(type): string {
+        switch (type) {
+            case CallingStatusType.done:
+                return 'Individual has been sustained and set apart by a member of the Bishopric.';
+            case CallingStatusType.setApart:
+                return 'Individual has been sustained and needs to set apart by a member of the Bishopric.';
+            case CallingStatusType.sustain:
+                return 'Individual needs to be sustained by a member of the Bishopric in Auxilary, Quorum or Sacrament Meeting.';
+            case CallingStatusType.accepted:
+                return 'Individual has been interviewed by a member of the Bishopric and has accepted the calling.';
+            case CallingStatusType.go:
+                return `The Bisopric has approved the individual for the calling and is ready to extend the calling.
+                    An interview is typically scheduled by the Executive Secretary.`;
+            case CallingStatusType.pending:
+                return 'The individual is being considered for a calling by the Bishopric.';
+            case CallingStatusType.waiting:
+                return 'A reservation or consideration for the calling.';
+            case CallingStatusType.recommended:
+                return 'The individual was recommended by a member of the Auxilary or Quorum Presidency.';
+            case CallingStatusType.release:
+                return `Individual has been released from calling by a member of the Bishopric in an Auxilary,
+                    Quorum or Sacrament Meeting.`;
+            case CallingStatusType.goRelease:
+                return 'Individual moved or needs to be announced as "Released" in organization or Sacrament meeting';
+            case CallingStatusType.pendRelease:
+                return 'Individual is being considered for release.';
+            case CallingStatusType.vacant:
+                return 'Empty calling.';
         }
     }
 

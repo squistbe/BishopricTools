@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { OrgsPage } from './orgs.page';
 import { OrderByPipe } from '../../pipes/order-by.pipe';
 import { CallingService } from '../../services/calling.service';
+import { ComponentsModule } from '../../components/components.module';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
     CommonModule,
     FormsModule,
     IonicModule,
+    ComponentsModule,
     RouterModule.forChild(routes)
   ],
   declarations: [OrgsPage, OrderByPipe],

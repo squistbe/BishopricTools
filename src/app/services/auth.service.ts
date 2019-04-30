@@ -162,12 +162,12 @@ export class AuthService {
         const result = await this.afAuth.auth.signInAndRetrieveDataWithCredential(
             auth.GoogleAuthProvider.credential(gplusUser.idToken)
         );
+        await this.dismissLoading();
         if (result.additionalUserInfo.isNewUser) {
-            await this.updateUserData(result.user);
+            return await this.updateUserData(result.user);
         } else {
             const user: any = await this.user$.toPromise();
-            await this.updateUserData(user, {...user});
+            return await this.updateUserData(user, {...user});
         }
-        return await this.dismissLoading();
     }
 }

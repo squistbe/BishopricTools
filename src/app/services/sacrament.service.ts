@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { DbService } from './db.service';
 import { Sacrament } from '../interfaces/sacrament';
 import { BehaviorSubject } from 'rxjs';
-import { shareReplay, switchMap } from 'rxjs/operators';
+import { shareReplay, switchMap, take } from 'rxjs/operators';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class SacramentService {
   selectedYear = new BehaviorSubject('');
 
   constructor(
-    private db: DbService
+    private db: DbService,
+    private auth: AuthService
   ) { }
 
   getSacraments() {
@@ -38,11 +40,9 @@ export class SacramentService {
   }
 
   getConducting(month?) {
-    const path = month ? `conducting/${month}` : 'conducting';
-    if (month) {
-      return this.db.doc$(path);
-    }
-    return this.db.collection$(path, ref => ref.orderBy('sortIndex'));
+    return this.auth.user$.pipe(
+      switchMap(user => this.db.doc$(`conducting/${user.unitNumber}`))
+    );
   }
 
   updateConducting(id, data) {

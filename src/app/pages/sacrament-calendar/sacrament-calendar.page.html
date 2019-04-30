@@ -17,10 +17,12 @@
   <ion-card class="sacrament-card" *ngFor="let sacrament of sacraments | async; trackBy: trackById;">
     <ion-card-header padding-horizontal color="light">
       <ion-card-title>
-        {{sacrament.date | date: 'MMMM d'}}
-        <ion-button *ngIf="(user | async)?.roles?.admin" float-right fill="clear" color="dark" (click)="presentMenu($event, sacrament)">
-          <ion-icon name="more"></ion-icon>
-        </ion-button>
+        <ion-item lines="none" color="light" no-padding>
+          <h2 no-margin>{{sacrament.date | date: 'MMMM d'}}</h2>
+          <ion-button no-margin *ngIf="(user | async)?.roles?.admin" slot="end" fill="clear" color="dark" (click)="presentMenu($event, sacrament)">
+            <ion-icon name="more"></ion-icon>
+          </ion-button>
+        </ion-item>
       </ion-card-title>
       <ion-card-subtitle *ngIf="!isConference(sacrament)">{{sacrament.topic}}</ion-card-subtitle>
       <!-- <ion-text *ngIf="!isConference(sacrament) && (conducting$ | async)?.member as member">Conducting: {{member.displayName}}</ion-text> -->
@@ -50,14 +52,14 @@
           </ion-label>
         </ng-container>
         <ng-template #conducting>
-          <ng-container *ngIf="(conducting$ | async)?.member as member">
-            <ion-avatar *ngIf="member.photoURL" slot="start">
-              <img [src]="member.photoURL">
+          <ng-container *ngIf="(conducting$ | async) as conductor">
+            <ion-avatar *ngIf="conductor[month]?.member.photoURL" slot="start">
+              <img [src]="conductor[month]?.member.photoURL">
             </ion-avatar>
-            <ion-icon *ngIf="!member.photoURL" slot="start" color="primary" name="contact"></ion-icon>
+            <ion-icon *ngIf="!conductor[month]?.member.photoURL" slot="start" color="primary" name="contact"></ion-icon>
             <ion-label>
               <h2>Conducting</h2>
-              <p>{{member.displayName}}</p>
+              <p>{{conductor[month]?.member.displayName}}</p>
             </ion-label>
           </ng-container>
         </ng-template>
