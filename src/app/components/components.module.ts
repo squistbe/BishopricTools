@@ -13,6 +13,7 @@ import { HighlightPipe } from '../pipes/highlight.pipe';
 import { HymnService } from '../services/hymn.service';
 import { BishopricPipe } from '../pipes/bishopric.pipe';
 import { StatusDefinitionsComponent } from './status-definitions/status-definitions.component';
+import { CallingItemComponent } from '../pages/orgs/org-details/calling-item/calling-item.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { StatusDefinitionsComponent } from './status-definitions/status-definiti
     SelectStatusComponent,
     HighlightPipe,
     BishopricPipe,
-    StatusDefinitionsComponent
+    StatusDefinitionsComponent,
+    CallingItemComponent
   ],
   declarations: [
     SelectMemberComponent,
@@ -36,7 +38,8 @@ import { StatusDefinitionsComponent } from './status-definitions/status-definiti
     FilterHymnsPipe,
     HighlightPipe,
     BishopricPipe,
-    StatusDefinitionsComponent
+    StatusDefinitionsComponent,
+    CallingItemComponent
   ],
   entryComponents: [
     SelectMemberComponent,

@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button color="primary">Done</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <form [formGroup]="reimbursementForm">
+    <ion-item>
+      <ion-datetime formControlName="date"></ion-datetime>
+    </ion-item>
+    <ion-list>
+      <ion-radio-group formControlName="paymentType">
+        <ion-list-header>
+          <ion-label>
+            Payment Type
+          </ion-label>
+        </ion-list-header>
+        <ion-item>
+          <ion-label>Check</ion-label>
+          <ion-radio slot="start" value="check"></ion-radio>
+        </ion-item>
+        <ion-item>
+          <ion-label>Direct Depoist</ion-label>
+          <ion-radio slot="start" value="direct"></ion-radio>
+        </ion-item>
+      </ion-radio-group>
+    </ion-list>
+    <ion-item>
+      <ion-input formControlName="payee" placeholder="Payee"></ion-input>
+    </ion-item>
+    <ion-item>
+
+    </ion-item>
+  </form>
+</ion-content>

@@ -1,0 +1,27 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>Definitions</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="close()">
+          <ion-icon slot="icon-only" name="close"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-card *ngFor="let status of statuses">
+      <ion-card-header>
+        <ion-item lines="none">
+          <ion-badge slot="end" [color]="status">&nbsp;</ion-badge>
+          <ion-label>
+            <h1>{{getStatusTitle(status)}}</h1>
+          </ion-label>
+        </ion-item>
+      </ion-card-header>
+    
+      <ion-card-content>
+        {{getDefinition(status)}}
+      </ion-card-content>
+    </ion-card>
+  </ion-content>

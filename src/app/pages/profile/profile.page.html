@@ -14,5 +14,17 @@
   <ng-container *ngIf="user | async as me">
     <p><ion-text color="dark">Role: {{me.roles?.admin ? 'Admin' : 'Guest'}}</ion-text></p>
     <p><ion-text color="dark">Unit Number: {{me.unitNumber || 'Unassigned'}}</ion-text></p>
+    <div style="overflow: hidden;">
+      <ion-label float-left margin-end>Calling:</ion-label>
+      <ion-select no-padding float-left placeholder="Select" interface="popover" [(ngModel)]="me.calling" (ionChange)="callingChange($event)">
+        <ion-select-option *ngFor="let calling of userCallings;" [value]="calling">{{getCallingText(calling)}}</ion-select-option>
+      </ion-select>
+    </div>
+    <!-- <ion-list>
+      <ion-item *ngFor="let entry of assignments">
+        <ion-label>{{entry.name}}</ion-label>
+        <ion-checkbox slot="start" [(ngModel)]="entry.isChecked"></ion-checkbox>
+      </ion-item>
+    </ion-list> -->
   </ng-container>
 </ion-content>

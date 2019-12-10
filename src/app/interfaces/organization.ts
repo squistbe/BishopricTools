@@ -1,5 +1,3 @@
-import { Calling } from './calling';
-
 export interface Organization {
     name: string;
     sortIndex: number;
@@ -14,9 +12,7 @@ export enum OrgTag {
   ss = 'ss',
   ym = 'ym',
   yw = 'yw',
-  scouts = 'scouts',
   primary = 'primary',
-  cubs = 'cubs',
   other = 'other',
   ftm = 'ftm'
 }
@@ -49,31 +45,21 @@ export const ORGS: Organization[] = [
     },
     {
       sortIndex: 5,
-      name: 'Scouting',
-      orgTag: OrgTag.scouts
-    },
-    {
-      sortIndex: 6,
       name: 'Young Women',
       orgTag: OrgTag.yw
     },
     {
-      sortIndex: 7,
+      sortIndex: 6,
       name: 'Primary',
       orgTag: OrgTag.primary
     },
     {
-      sortIndex: 8,
-      name: 'Cub Scouts',
-      orgTag: OrgTag.cubs
-    },
-    {
-      sortIndex: 9,
+      sortIndex: 7,
       name: 'Other Callings',
       orgTag: OrgTag.other
     },
     {
-      sortIndex: 10,
+      sortIndex: 8,
       name: 'Full-Time Missionaries',
       orgTag: OrgTag.ftm
     }

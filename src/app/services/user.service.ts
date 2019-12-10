@@ -27,6 +27,10 @@ export class UserService {
     );
   }
 
+  getUserById(id) {
+    return this.db.doc$(`users/${id}`);
+  }
+
   updateUser(data) {
     return this.db.updateAt(`users/${data.id || ''}`, data);
   }

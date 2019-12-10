@@ -8,7 +8,17 @@ const routes: Routes = [
     path: 'login',
     loadChildren: './pages/login/login.module#LoginPageModule'
   },
-  // { path: 'home', loadChildren: './pages/home/home.module#HomePageModule', canActivate: [AuthGuard] },
+  {
+    path: 'home',
+    loadChildren: './pages/home/home.module#HomePageModule',
+    canActivate: [AuthGuard, RolesGuard],
+    data: {
+      expectedRoles: {
+        admin: true,
+        guest: true
+      }
+    }
+  },
   {
     path: 'members',
     loadChildren: './pages/members/members.module#MembersPageModule',
@@ -111,6 +121,10 @@ const routes: Routes = [
         admin: true
       }
     }
+  },
+  {
+    path: 'reimbursement',
+    loadChildren: './pages/reimbursement/reimbursement.module#ReimbursementPageModule'
   }
 ];
 

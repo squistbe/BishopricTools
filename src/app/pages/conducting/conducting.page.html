@@ -8,7 +8,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-list *ngIf="conducting | async | keyvalue as months;">
+  <ion-list lines="none" *ngIf="conducting | async | keyvalue as months;">
     <ng-container *ngFor="let month of months | sort: 'value.sortIndex'; trackBy: trackById;">
       <ion-item-divider *ngIf="month.key !== 'id'" padding-top>
         <ion-label text-capitalize>

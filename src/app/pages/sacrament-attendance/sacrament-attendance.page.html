@@ -17,11 +17,13 @@
 <ion-content>
   <ion-card>
     <ion-card-header>
-      <ion-card-title style="overflow:hidden" align-items-center>
-        Chart
-        <ion-button color="medium" fill="clear" (click)="toggleChart()" float-right>
-          <ion-icon slot="icon-only" [name]="!showChart ? 'arrow-dropdown' : 'arrow-dropup'"></ion-icon>
-        </ion-button>
+      <ion-card-title>
+        <ion-item lines="none" no-padding>
+          <h2 style="margin: 0;">Chart</h2>
+          <ion-button no-margin color="medium" fill="clear" (click)="toggleChart()" slot="end">
+            <ion-icon slot="icon-only" [name]="!showChart ? 'arrow-dropdown' : 'arrow-dropup'"></ion-icon>
+          </ion-button>
+        </ion-item>
       </ion-card-title>
     </ion-card-header>
     <ion-card-content [hidden]="showChart">

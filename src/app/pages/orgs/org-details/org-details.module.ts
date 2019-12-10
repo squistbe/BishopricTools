@@ -9,7 +9,6 @@ import { OrgDetailsPage } from './org-details.page';
 import { ComponentsModule } from '../../../components/components.module';
 import { OrgOptionsComponent } from './org-options/org-options.component';
 import { CallingFormComponent } from './calling-form/calling-form.component';
-import { CallingItemComponent } from './calling-item/calling-item.component';
 import { CallingPipe } from '../../../pipes/calling.pipe';
 
 const routes: Routes = [
@@ -36,7 +35,7 @@ const routes: Routes = [
     ComponentsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [OrgDetailsPage, OrgOptionsComponent, CallingFormComponent, CallingItemComponent, CallingPipe],
+  declarations: [OrgDetailsPage, OrgOptionsComponent, CallingFormComponent, CallingPipe],
   entryComponents: [OrgOptionsComponent]
 })
 export class OrgDetailsPageModule {}

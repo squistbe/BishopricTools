@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import { UserCallingStatus } from '../../interfaces/user';
 
 @Component({
   selector: 'app-users',
@@ -20,6 +21,10 @@ export class UsersPage implements OnInit {
   toggleRole(role, user) {
     console.log(user);
     this.userService.updateUser(user);
+  }
+
+  getCallingText(calling) {
+    return UserCallingStatus.asString(calling);
   }
 
 }

@@ -3,12 +3,48 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>
-      Home
-    </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-
+<ion-content *ngIf="user">
+  <ion-card *ngIf="user.calling === 'bishopric_clerk'">
+    <ng-container *ngIf="(tasks$ | async) as tasks">
+      <ion-card-header color="light">
+        <ion-card-title>{{getStatusText(user.preferences?.status)}}</ion-card-title>
+      </ion-card-header>
+      <ion-card-content no-padding>
+        <ion-list lines="full" no-padding>
+          <ion-item 
+          *ngFor="let task of tasks;"
+          class="border-left"
+          [class.sustain]="task.status.name === 'sustain'"
+          [class.go]="task.status.name === 'go'">
+            <calling-item [calling]="task"></calling-item>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ng-container>
+  </ion-card>
+  <ion-card *ngIf="user.calling === 'bishopric_exec'">
+    <ng-container *ngIf="(tasks$ | async) as tasks">
+      <ion-card-header>
+        <ion-card-title>Need to be scheduled</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="full">
+          <ion-item></ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ng-container>
+  </ion-card>
+  <ion-card *ngIf="user.calling === 'bishopric_bishop'">
+    <ion-card-header>
+      <ion-card-title>Upcoming interviews</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list lines="full">
+        <ion-item></ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

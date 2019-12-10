@@ -12,13 +12,19 @@
       <ion-content>
         <ion-list *ngIf="profile?.uid">
           <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item lines="full" [routerDirection]="'root'" [routerLink]="[p.url]" *ngIf="showRoute(p)">
-              <ion-icon slot="start" [name]="p.icon" no-margin></ion-icon>
-              <ion-label margin-start>
+            <ion-item [routerDirection]="'root'" [routerLink]="[p.url]" *ngIf="showRoute(p)">
+              <ion-icon slot="start" [name]="p.icon"></ion-icon>
+              <ion-label>
                 {{p.title}}
               </ion-label>
             </ion-item>
           </ion-menu-toggle>
+          <!-- <ion-item lines="full" [routerDirection]="'root'" routerLink="/reimbursement">
+            <ion-icon slot="start" name="cash"></ion-icon>
+            <ion-label>
+              Reimbursement
+            </ion-label>
+          </ion-item> -->
         </ion-list>
         <ion-menu-toggle auto-hide="false" *ngIf="profile?.uid">
           <ion-item margin-top lines="none" [routerDirection]="'root'" [routerLink]="['/profile', profile.uid]" detail="false">
@@ -44,11 +50,11 @@
           </ion-item>
         </ion-menu-toggle>
       </ion-content>
-      <ion-footer padding>
+      <!-- <ion-footer padding>
         <ion-menu-toggle auto-hide="false">
           <a [routerDirection]="'root'" [routerLink]="'/privacy-policy'" style="text-decoration: none;">Privacy Policy</a>
         </ion-menu-toggle>
-      </ion-footer>
+      </ion-footer> -->
     </ion-menu>
     <ion-router-outlet main></ion-router-outlet>
   </ion-split-pane>

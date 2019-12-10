@@ -21,7 +21,11 @@ export class AppComponent implements OnDestroy {
     // {
     //   title: 'Home',
     //   url: '/home',
-    //   icon: 'home'
+    //   icon: 'home',
+    //   role: {
+    //     admin: true,
+    //     guest: true
+    //   }
     // },
     {
       title: 'Callings',
