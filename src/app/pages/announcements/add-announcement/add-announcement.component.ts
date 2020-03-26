@@ -3,6 +3,7 @@ import { AnnouncementsService } from '../../../services/announcements.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
+import { UnitService } from '../../../services/unit.service';
 
 @Component({
   selector: 'app-add-announcement',
@@ -16,6 +17,7 @@ export class AddAnnouncementComponent implements OnInit {
 
   constructor(
     private announcementsService: AnnouncementsService,
+    private unitService: UnitService,
     private route: ActivatedRoute,
     private router: Router,
     private auth: AuthService
@@ -23,7 +25,7 @@ export class AddAnnouncementComponent implements OnInit {
 
   async ngOnInit() {
     const unitParam = this.route.parent.snapshot.paramMap.get('unitNumber');
-    this.unit = this.announcementsService.getUnit(unitParam);
+    this.unit = this.unitService.getUnit();
     this.form = new FormGroup({
       title: new FormControl(null, Validators.required),
       details: new FormControl(null, Validators.required),

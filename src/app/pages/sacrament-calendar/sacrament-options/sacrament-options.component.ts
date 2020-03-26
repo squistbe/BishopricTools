@@ -1,44 +1,62 @@
-import { Component, OnInit } from '@angular/core';
-import { SacramentSettings, Sacrament } from '../../../interfaces/sacrament';
+import { Component } from '@angular/core';
 import { AlertInput } from '@ionic/core';
+import { Storage } from '@ionic/storage';
 import { AlertController, PopoverController } from '@ionic/angular';
+import { SacramentSettings, Sacrament } from '../../../interfaces/sacrament';
 import { SacramentService } from '../../../services/sacrament.service';
 import { AuthService } from '../../../services/auth.service';
-import { Router } from '@angular/router';
+import { UnitService } from '../../../services/unit.service';
+import moment from 'moment';
+import { DbService } from '../../../services/db.service';
 
 @Component({
   selector: 'app-sacrament-options',
   templateUrl: './sacrament-options.component.html',
   styleUrls: ['./sacrament-options.component.scss']
 })
-export class SacramentOptionsComponent implements OnInit {
-  year: string;
-  month: string;
-
+export class SacramentOptionsComponent {
   constructor(
     private alert: AlertController,
     private sacramentService: SacramentService,
-    private popover: PopoverController
+    private popover: PopoverController,
+    private storage: Storage,
+    private auth: AuthService,
+    private unitService: UnitService
   ) { }
 
-  ngOnInit() {
-    this.sacramentService.selectedMonth.subscribe(month => this.month = month);
-    this.sacramentService.selectedYear.subscribe(year => this.year = year);
+  get month() {
+    return this.sacramentService.selectedSacrament.getValue().month;
   }
 
-  async presentMonths() {
+  get year() {
+    return this.sacramentService.selectedSacrament.getValue().year;
+  }
+
+  async presentFilter(key) {
     this.popover.dismiss();
-    const inputs = SacramentSettings.SACRAMENT_MONTHS.map(month => {
+    let selectedFilter;
+    if (key === 'month') {
+      selectedFilter = SacramentSettings.SACRAMENT_MONTHS;
+    }
+    if (key === 'year') {
+      const user = await this.auth.user();
+      this.unitService.selectedUnit.next(user.unitNumber);
+      const unit = await this.unitService.getUnit().toPromise();
+      if (unit.themes) {
+        selectedFilter = Object.keys(unit.themes).sort((a: any, b: any) => b - a);
+      }
+    }
+    const inputs = selectedFilter.map(v => {
       return {
         type: 'radio',
-        label: month,
-        value: month.toLowerCase(),
-        checked: this.month === month.toLowerCase()
+        label: v,
+        value: v.toLowerCase(),
+        checked: this[key] === v.toLowerCase()
       };
     }) as AlertInput[];
     const alert = await this.alert.create({
-      header: 'Switch Months',
-      inputs: inputs,
+      header: `Swith ${key}`,
+      inputs,
       buttons: [
         {
           text: 'Cancel',
@@ -48,7 +66,9 @@ export class SacramentOptionsComponent implements OnInit {
         {
           text: 'Done',
           handler: (data) => {
-            this.sacramentService.selectedMonth.next(data);
+            const appliedFilter = this.sacramentService.selectedSacrament.getValue();
+            appliedFilter[key] = data;
+            this.sacramentService.selectedSacrament.next(appliedFilter);
           }
         }
       ]
@@ -60,11 +80,18 @@ export class SacramentOptionsComponent implements OnInit {
     this.popover.dismiss();
     const alert = await this.alert.create({
       header: 'Add Calendar',
+      message: `This will add each Sunday for the year you specify.&nbsp;
+      Please add the calendar year (required) and annual theme (not required).`,
       inputs: [
+        {
+          name: 'theme',
+          type: 'text',
+          placeholder: 'Annual theme'
+        },
         {
           name: 'year',
           type: 'number',
-          placeholder: 'Enter year'
+          placeholder: '*Enter year'
         }
       ],
       buttons: [
@@ -74,21 +101,31 @@ export class SacramentOptionsComponent implements OnInit {
           cssClass: 'secondary'
         }, {
           text: 'OK',
-          handler: (data) => {
-            const sacraments = this.getSundays(parseInt(data.year, 10));
-            sacraments.forEach(sacrament => {
-              setTimeout(() => this.sacramentService.updateSacrament(sacrament), 1000);
-            });
-          }
+          handler: this.handleCreateCalendarYear.bind(this)
         }
       ]
     });
     return await alert.present();
   }
 
-  // TODO: need to fix unitnumber
-  getSundays(year: number) {
+  async handleCreateCalendarYear(data) {
+    const user = await this.storage.get('user');
+    this.unitService.selectedUnit.next(user.unitNumber);
+    const unit = await this.unitService.getUnit().toPromise();
+    if (!unit.themes) {
+      unit.themes = {};
+    }
+    unit.themes[data.year] = data.theme;
+    this.unitService.updateUnit(unit).then(async res => {
+      this.sacramentService.selectedSacrament.next({year: data.year, month: 'january'});
+      const sacraments = await this.getSundays(parseInt(data.year, 10));
+      this.sacramentService.updateSacrament(sacraments, true);
+    }).catch(e => console.log(e));
+  }
+
+  async getSundays(year: number) {
     const date = new Date(year, 0, 1);
+    const user = await this.storage.get('user');
     while (date.getDay() !== 0) {
       date.setDate(date.getDate() + 1);
     }
@@ -99,9 +136,9 @@ export class SacramentOptionsComponent implements OnInit {
       const isGC = d <= 7 && (m === 4 || m === 10);
       const isTM = d <= 7 && date.getDay() === 0 && !isGC;
       const meeting: Sacrament = {
-        date: year + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d),
+        date: moment(year + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)).toDate(),
         dateTag: year + '-' + SacramentSettings.SACRAMENT_MONTHS[m - 1].toLowerCase(),
-        unitNumber: 477400,
+        unitNumber: user.unitNumber,
         meetingOptions: {}
       };
       if (isGC) {

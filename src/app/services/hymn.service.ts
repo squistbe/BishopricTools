@@ -20,10 +20,13 @@ export class HymnService {
   search() {
     return this.offset.pipe(
       switchMap(offset => {
+        const offsetParsed = parseInt(offset, 10);
+        const isHymnNumber = Number.isInteger(offsetParsed);
+        const index = (isHymnNumber ? 'number' : 'name') + 'Index';
         if (offset === '') {
           return this.db.collection$('hymns', ref => ref.orderBy('number', 'asc').limit(25));
         }
-        return this.db.collection$('hymns', ref => ref.orderBy(`nameIndex.${offset}`));
+        return this.db.collection$('hymns', ref => ref.orderBy(`${index}.${offset}`));
       })
     );
   }

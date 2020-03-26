@@ -3,6 +3,7 @@ import { Sacrament } from '../../../interfaces/sacrament';
 import { AlertController, PopoverController, ModalController } from '@ionic/angular';
 import { SacramentService } from '../../../services/sacrament.service';
 import { SelectMemberComponent } from '../../../components/select-member/select-member.component';
+import moment from 'moment';
 
 @Component({
   selector: 'app-sacrament-menu',
@@ -144,4 +145,25 @@ export class SacramentMenuComponent implements OnInit {
     return await topic.present();
   }
 
+  async warnRemoval() {
+    this.popover.dismiss();
+    const removeAlert = await this.alert.create({
+      header: 'Remove Meeting',
+      message: `Are you sure you want to remove the <strong>${moment(this.sacrament.date).format('MMMM Do')}</strong> Sacrament Meeting?`,
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary'
+        },
+        {
+          text: 'Yes',
+          handler: (data) => {
+            this.sacramentService.deleteSacrament(this.sacrament.id);
+          }
+        }
+      ]
+    });
+    removeAlert.present();
+  }
 }

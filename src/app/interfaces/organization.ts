@@ -40,7 +40,7 @@ export const ORGS: Organization[] = [
     },
     {
       sortIndex: 4,
-      name: 'Young Men',
+      name: 'Aaronic Priesthood',
       orgTag: OrgTag.ym
     },
     {

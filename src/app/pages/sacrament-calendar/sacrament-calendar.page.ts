@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { SacramentService } from '../../services/sacrament.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,20 +12,21 @@ import { SacramentMenuComponent } from './sacrament-menu/sacrament-menu.componen
 import { ConductingMenuComponent } from './conducting-menu/conducting-menu.component';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, shareReplay } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sacrament-calendar',
   templateUrl: './sacrament-calendar.page.html',
   styleUrls: ['./sacrament-calendar.page.scss'],
 })
-export class SacramentCalendarPage implements OnInit, OnDestroy {
+export class SacramentCalendarPage implements OnInit {
   sacraments: Observable<any[]>;
   conducting$: Observable<any>;
   months = SacramentSettings.SACRAMENT_MONTHS;
   monthSub: Subscription;
   updated;
   user;
+  list;
 
   constructor(
     private sacramentService: SacramentService,
@@ -33,43 +34,34 @@ export class SacramentCalendarPage implements OnInit, OnDestroy {
     private modal: ModalController,
     private popover: PopoverController,
     private location: Location,
-    private router: Router,
     private auth: AuthService
-  ) {
-    const now = new Date();
-    const year = now.getFullYear().toString();
-    const month = SacramentSettings.SACRAMENT_MONTHS[now.getMonth()].toLowerCase();
-    // if (route.snapshot.data.isEmpty && !localStorage.getItem('lastRoute').includes(month)) {
-    //   router.navigate([year, month], {relativeTo: route});
-    // }
-  }
+  ) { }
 
   ngOnInit() {
     const now = new Date();
-    const selectedYear = this.route.snapshot.paramMap.get('year') || now.getFullYear().toString();
-    const selectedMonth = this.route.snapshot.paramMap.get('month') || SacramentSettings.SACRAMENT_MONTHS[now.getMonth()].toLowerCase();
-    this.sacramentService.selectedMonth.next(selectedMonth);
-    this.sacramentService.selectedYear.next(selectedYear);
-    // this.monthSub = this.sacramentService.selectedMonth.subscribe(month => {
-    //   // this.location.go(`sacrament-calendar/${this.sacramentService.selectedYear.getValue()}/${month}`);
-    //   this.conducting$ = this.sacramentService.getConducting(month);
-    // });
-    this.conducting$ = this.sacramentService.selectedMonth.pipe(
-      switchMap(month => {
-        this.location.go(`sacrament-calendar/${this.sacramentService.selectedYear.getValue()}/${month}`);
-        return this.sacramentService.getConducting(month);
-      })
+    const year = this.route.snapshot.paramMap.get('year') || now.getFullYear().toString();
+    const month = this.route.snapshot.paramMap.get('month') || SacramentSettings.SACRAMENT_MONTHS[now.getMonth()].toLowerCase();
+    this.sacramentService.selectedSacrament.next({month, year});
+    this.conducting$ = this.sacramentService.selectedSacrament.pipe(
+      switchMap(selection => {
+        this.location.go(`sacrament-calendar/${selection.year}/${selection.month}`);
+        return this.sacramentService.getConducting(selection.month);
+      }),
+      shareReplay(1)
     );
-    this.sacraments = this.sacramentService.getSacraments();
+    this.list = this.sacramentService.selectedSacrament.pipe(
+      switchMap(selection => this.sacramentService.getSacraments()),
+      shareReplay(1)
+    );
     this.user = this.auth.user$;
   }
 
-  ngOnDestroy() {
-    // this.monthSub.unsubscribe();
+  get month() {
+    return this.sacramentService.selectedSacrament.getValue().month;
   }
 
-  get month() {
-    return this.sacramentService.selectedMonth.getValue();
+  get year() {
+    return this.sacramentService.selectedSacrament.getValue().year;
   }
 
   trackById(idx, sacrament) {

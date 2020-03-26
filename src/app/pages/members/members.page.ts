@@ -1,20 +1,19 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AlertController, ToastController, Platform } from '@ionic/angular';
 import { MemberService } from '../../services/member.service';
 import { Router } from '@angular/router';
 import { switchMap, shareReplay, take } from 'rxjs/operators';
 import { Storage } from '@ionic/storage';
-// import differenceBy from 'lodash/differenceBy';
 
 @Component({
   selector: 'app-members',
   templateUrl: './members.page.html',
   styleUrls: ['./members.page.scss'],
 })
-export class MembersPage implements OnInit, AfterViewInit {
-  @ViewChild('memberUpload') upload: ElementRef;
+export class MembersPage implements OnInit, OnDestroy, AfterViewInit {
   members: Observable<any[]>;
+  currentMembersSub;
   fileReaded;
   searchText;
   user;
@@ -34,6 +33,10 @@ export class MembersPage implements OnInit, AfterViewInit {
       switchMap(cursor => this.memberService.search(cursor, this.user.unitNumber)),
       shareReplay(1)
     );
+  }
+
+  ngOnDestroy() {
+    this.currentMembersSub.destroy();
   }
 
   ngAfterViewInit() {
@@ -67,7 +70,12 @@ export class MembersPage implements OnInit, AfterViewInit {
   }
 
   async showMultipleUpload() {
-    this.upload.nativeElement.click();
+    const inputElement = document.createElement('input');
+
+    inputElement.type = 'file';
+    inputElement.accept = '.csv';
+    inputElement.addEventListener('change', this.onUploadMembers.bind(this));
+    inputElement.click();
   }
 
   async addMember() {
@@ -212,34 +220,23 @@ export class MembersPage implements OnInit, AfterViewInit {
     const allTextLines = csv.split(/\r|\n|\r/).filter(Boolean);
     const header = allTextLines.shift().split(',');
     const members = allTextLines.map(row => {
-      const record = row.split(',');
+      const record = row.split(/,(?! )/);
       const preferredNameIndex = header.indexOf('Preferred Name');
+      const names = record[preferredNameIndex].split(', ');
       return {
-        givenNames: record[preferredNameIndex + 1].trim(),
-        familyName: record[preferredNameIndex],
+        givenNames: names[1],
+        familyName: names[0],
         mrn: record[header.indexOf('Record Number')],
         birthDate: new Date(record[header.indexOf('Birth Date')]),
         email: record[header.indexOf('Individual E-mail')],
         phone: record[header.indexOf('Individual Phone Number')],
         gender: record[header.indexOf('Sex')],
         unitNumber: this.user.unitNumber,
-        updatedAt: new Date()
+        updatedAt: new Date().valueOf()
       };
     });
 
-    // const toAdd = differenceBy(members, this.dudes, 'mrn');
-    // const toDelete = differenceBy(this.dudes, members, 'mrn');
-
-    // toAdd.forEach(member => {
-    //   setTimeout(() => {
-    //     this.memberService.updateMember(member);
-    //   }, 500);
-    // });
-    // toDelete.forEach(member => {
-    //   setTimeout(() => {
-    //     this.memberService.deleteMember(member.id);
-    //   }, 500);
-    // });
+    this.memberService.updateMember(members);
   }
 
   uploadError(error) {

@@ -29,7 +29,7 @@
             {{todo.content}}
           </ion-label>
           <ion-textarea [color]="todo.color || 'dark'" class="todo" [hidden]="!todo.$$focused" [class.complete]="todo.status === 'complete'" rows="1" [(ngModel)]="todo.content" (ionBlur)="blurTodo(todo, $event)"></ion-textarea>
-          <ion-checkbox slot="end" *ngIf="platform.is('desktop')" style="position: relative; margin-right: 5px;" margin-start (click)="toggleStatus(todo)" [checked]="todo.status === 'complete'" color="success"></ion-checkbox>
+          <ion-checkbox slot="end" *ngIf="platform.is('desktop')" style="position: relative; margin-right: 5px;" margin-start (click)="$event.stopPropagation();toggleStatus(todo)" [checked]="todo.status === 'complete'" color="success"></ion-checkbox>
           <ion-button slot="end" fill="clear" color="dark" (click)="$event.stopPropagation();presentTodoOptions($event, todo)" no-margin>
             <ion-icon slot="icon-only" name="more"></ion-icon>
           </ion-button>

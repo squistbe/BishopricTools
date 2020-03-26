@@ -76,6 +76,34 @@ export class DbService {
   }
 
   /**
+   * @param  {string} collection 'collection'
+   * @param  {object} list new data
+   *
+   * Creates multiple documents at once on a collection.
+   **/
+  createMultiple(collection: string, list: Array<any>): Promise<any> {
+    const batch = this.afs.firestore.batch();
+    list.forEach(data => {
+      batch.set(this.afs.firestore.collection(collection).doc(), data);
+    });
+    return batch.commit();
+  }
+
+  /**
+   * @param  {string} collection 'collection'
+   * @param  {object} docs list of ids to delete
+   *
+   * Deletes multiple documents at once on a collection.
+   **/
+  deleteMultiple(collection: string, docs: Array<string>) {
+    const batch = this.afs.firestore.batch();
+    docs.forEach(id => {
+      batch.delete(this.afs.firestore.collection(collection).doc(id));
+    });
+    return batch.commit();
+  }
+
+  /**
    * @param  {string} path path to document
    *
    * Deletes document from Firestore

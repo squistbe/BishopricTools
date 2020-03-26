@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { Subscription } from 'rxjs';
 import { UserService } from '../../services/user.service';
 import { take } from 'rxjs/operators';
+import { UnitService } from '../../services/unit.service';
 
 @Component({
   selector: 'app-announcements',
@@ -19,7 +20,8 @@ export class AnnouncementsPage implements OnInit {
     private router: Router,
     private announcementsService: AnnouncementsService,
     private auth: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private unitService: UnitService
   ) { }
 
   async ngOnInit() {
@@ -40,7 +42,7 @@ export class AnnouncementsPage implements OnInit {
       };
       await this.userService.updateUser(userData);
     }
-    this.announceSub = this.announcementsService.getUnit(this.unitNumber)
+    this.announceSub = this.unitService.getUnit()
       .subscribe(unit => {
         this.announcementsService.loading.next(false);
         this.router.navigate(['announcements', this.unitNumber, 'add']);

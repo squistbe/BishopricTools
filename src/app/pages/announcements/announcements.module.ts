@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 
 import { AnnouncementsPage } from './announcements.page';
 import { AnnouncementsService } from '../../services/announcements.service';
+import { UnitService } from '../../services/unit.service';
 import { AddAnnouncementComponent } from './add-announcement/add-announcement.component';
 import { AnnouncementsListComponent } from './announcements-list/announcements-list.component';
 import { AnnouncementsPlaceholderComponent } from './announcements-placeholder/announcements-placeholder.component';
@@ -47,6 +48,6 @@ const routes: Routes = [
     AnnouncementsListComponent,
     AnnouncementsPlaceholderComponent
   ],
-  providers: [AnnouncementsService, AuthService]
+  providers: [AnnouncementsService, AuthService, UnitService]
 })
 export class AnnouncementsPageModule {}

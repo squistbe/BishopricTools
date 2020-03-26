@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
 import { AccessDeniedPage } from './access-denied.page';
+import { UnitService } from '../../services/unit.service';
 
 const routes: Routes = [
   {
@@ -18,9 +19,11 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    ReactiveFormsModule,
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [AccessDeniedPage]
+  declarations: [AccessDeniedPage],
+  providers: [UnitService]
 })
 export class AccessDeniedPageModule {}

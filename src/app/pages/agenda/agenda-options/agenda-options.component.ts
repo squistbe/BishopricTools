@@ -65,7 +65,7 @@ export class AgendaOptionsComponent implements OnInit {
         {
           type: 'radio',
           value: 'success:ym',
-          label: 'Young Men',
+          label: 'Aaronic Priesthood',
           checked: todo.color === 'success'
         },
         {

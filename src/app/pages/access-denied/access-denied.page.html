@@ -1,14 +1,42 @@
 <ion-header>
-  <ion-toolbar><ion-title>Access denied</ion-title></ion-toolbar>
+  <ion-toolbar><ion-title>{{title}}</ion-title></ion-toolbar>
 </ion-header>
 <ion-content padding *ngIf="(user$ | async) as user">
   <p *ngIf="user.unitNumber">Please wait for your admin to grant you access.</p>
   <!-- <ion-img src="../../../assets/images/prophet.jpg"></ion-img> -->
   <div *ngIf="!user.unitNumber">
-    <ion-item>
-      <ion-label position="stacked" text-wrap>Looks like you aren't part of a unit (Ward). Do you know your unit number?</ion-label>
-      <ion-input inputmode="numeric" [(ngModel)]="unitNumber"></ion-input>
-    </ion-item>
-    <ion-button margin-top (click)="next()">Next</ion-button>
+    <ion-slides>
+      <ion-slide>
+        <div>
+          <p class="ion-text-left">Looks like you aren't part of a unit (Ward/Branch). Are you the administrator of the Ward (I'm basically asking if you are the clerk)?</p>
+          <ion-button (click)="isOwner = true; slides.slideNext()">Yes</ion-button>
+          <ion-button (click)="isOwner = false; slides.slideTo(2)">No</ion-button>
+        </div>
+      </ion-slide>
+      <ion-slide class="ion-justify-content-start">
+        <div class="ion-text-left">
+          <ion-item>
+            <ion-label position="stacked" text-wrap style="font-size: 18px;">What is your unit number?</ion-label>
+            <ion-input inputmode="numeric" [(ngModel)]="unitNumber"></ion-input>
+          </ion-item>
+          <ion-button margin-top (click)="slides.slidePrev()">Previous</ion-button>
+          <ion-button margin-top (click)="next()" [disabled]="!unitNumber">Next</ion-button>
+        </div>
+      </ion-slide>
+      <ion-slide>
+        <div>
+        <p class="ion-text-left">Your Ward does not exist in our system. Lets create one for you.</p>
+          <form [formGroup]="newWardForm" (ngSubmit)="submitWard()">
+            <ion-item>
+              <ion-input formControlName="unitNumber" disabled></ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input formControlName="name" placeholder="Ward name"></ion-input>
+            </ion-item>
+            <ion-button type="submit">Done</ion-button>
+          </form>
+        </div>
+      </ion-slide>
+    </ion-slides>
   </div>
 </ion-content>

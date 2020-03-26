@@ -2,10 +2,11 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { DbService } from './db.service';
 import { switchMap, shareReplay, map } from 'rxjs/operators';
-import { combineLatest, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 import { Gender } from '../interfaces/member';
 import uniqBy from 'lodash/uniqBy';
 import flattenDeep from 'lodash/flattenDeep';
+import isArray from 'lodash/isArray';
 
 @Injectable({
   providedIn: 'root'
@@ -41,11 +42,17 @@ export class MemberService {
   }
 
   updateMember(data) {
+    if (isArray(data)) {
+      return this.db.createMultiple('members', data);
+    }
     return this.db.updateAt(`members/${data.id || ''}`, data);
   }
 
-  deleteMember(id) {
-    return this.db.delete(`members/${id}`);
+  deleteMember(data) {
+    if (isArray(data)) {
+      return this.db.deleteMultiple('members', data);
+    }
+    return this.db.delete(`members/${data}`);
   }
 
   setAgeLimit(age) {
@@ -68,7 +75,7 @@ export class MemberService {
     const limit = cursor + 25;
     return this.offset.pipe(
       switchMap(offset => {
-        if (offset === 'lastSpoke' || offset === 'lastPrayed' || offset === 'lastInterviewed' || offset === 'willPray') {
+        if (['lastSpoke', 'lastPrayed', 'lastInterviewed', 'willPray'].indexOf(offset) !== -1) {
           if (offset === 'willPray') {
             return this.db.collection$('members', ref =>
               ref

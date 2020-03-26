@@ -13,7 +13,7 @@
   <ion-list>
     <ion-item *ngFor="let hymn of hymns | async" detail (click)="selectHymn(hymn)" class="pointer-highlight">
       <ion-label>
-        #{{hymn.number}} - <span [innerHtml]="hymn.name | highlight : searchText"></span>
+        #<span [innerHtml]="hymn.number | highlight : searchText"></span> - <span [innerHtml]="hymn.name | highlight : searchText"></span>
       </ion-label>
     </ion-item>
   </ion-list>

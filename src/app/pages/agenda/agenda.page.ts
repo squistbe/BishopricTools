@@ -127,7 +127,7 @@ export class AgendaPage implements OnInit, OnDestroy {
   }
 
   focusTodo(todo, e) {
-    if (e.target.tagName === 'ION-ITEM' && this.platform.is('desktop')) {
+    if ((e.target.tagName === 'ION-ITEM' || e.target.tagName === 'TEXTAREA') && this.platform.is('desktop')) {
       todo.$$focused = true;
       const textarea = e.target.querySelector('ion-textarea');
       const input = textarea.getInputElement();
@@ -138,7 +138,7 @@ export class AgendaPage implements OnInit, OnDestroy {
           el.style.paddingLeft = 0;
           el.style.paddingTop = '11px';
           el.style.paddingBottom = '10px';
-        }, 100);
+        }, 1);
       });
     } else {
       this.presentTodoForm(todo.sortIndex, todo);

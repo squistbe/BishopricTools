@@ -12,10 +12,6 @@ export class AnnouncementsService {
     private db: DbService
   ) { }
 
-  getUnit(unitNumber) {
-    return this.db.doc$(`units/${unitNumber}`);
-  }
-
   getAnnouncements(unitNumber) {
     return this.db.collection$('announcements', ref =>
       ref

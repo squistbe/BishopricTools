@@ -1,7 +1,12 @@
 <ion-list lines="full" no-padding>
-  <ion-item (click)="presentMonths()" class="pointer-highlight">
+  <ion-item (click)="presentFilter('month')" class="pointer-highlight">
     <ion-label>
-      Switch Months
+      Switch Month
+    </ion-label>
+  </ion-item>
+  <ion-item (click)="presentFilter('year')" class="pointer-highlight">
+    <ion-label>
+      Switch Year
     </ion-label>
   </ion-item>
   <!-- <ion-item (click)="presentAnnouncements()" class="pointer-highlight">
@@ -14,9 +19,9 @@
       Add Meeting
     </ion-label>
   </ion-item> -->
-  <ion-item (click)="createCalendarYear()" class="pointer-highlight" disabled>
+  <ion-item (click)="createCalendarYear()" class="pointer-highlight">
     <ion-label>
-      Add Calendar
+      Add Calendar Year
     </ion-label>
   </ion-item>
 </ion-list>

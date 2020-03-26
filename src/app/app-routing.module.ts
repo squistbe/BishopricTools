@@ -30,16 +30,6 @@ const routes: Routes = [
     }
   },
   {
-    path: 'sacrament-attendance',
-    loadChildren: './pages/sacrament-attendance/sacrament-attendance.module#SacramentAttendancePageModule',
-    canActivate: [AuthGuard, RolesGuard],
-    data: {
-      expectedRoles: {
-        admin: true
-      }
-    }
-  },
-  {
     path: 'sacrament-calendar',
     loadChildren: './pages/sacrament-calendar/sacrament-calendar.module#SacramentCalendarPageModule',
     canActivate: [AuthGuard, RolesGuard],

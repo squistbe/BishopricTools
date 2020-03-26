@@ -5,12 +5,16 @@ import { BehaviorSubject } from 'rxjs';
 import { shareReplay, switchMap, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
+interface SacramentSelection {
+  month: string;
+  year: string|number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class SacramentService {
-  selectedMonth = new BehaviorSubject('');
-  selectedYear = new BehaviorSubject('');
+  selectedSacrament = new BehaviorSubject<SacramentSelection>({month: '', year: ''});
 
   constructor(
     private db: DbService,
@@ -18,18 +22,23 @@ export class SacramentService {
   ) { }
 
   getSacraments() {
-    return this.selectedMonth.pipe(
-      switchMap(month => {
+    const { month, year } = this.selectedSacrament.getValue();
+    return this.auth.user$.pipe(
+      switchMap(user => {
         return this.db.collection$('sacrament', ref =>
           ref
-            .where('dateTag', '==', `${this.selectedYear.getValue()}-${month}`)
+            .where('unitNumber', '==', user.unitNumber)
+            .where('dateTag', '==', `${year}-${month}`)
             .orderBy('date', 'asc'));
       })
     );
   }
 
-  updateSacrament(sacrament) {
-    this.db.updateAt(`sacrament/${sacrament.id || ''}`, sacrament);
+  async updateSacrament(data, multiple = false) {
+    if (multiple) {
+      return this.db.createMultiple('sacrament', data);
+    }
+    return this.db.updateAt(`sacrament/${data.id || ''}`, data);
   }
 
   isConference(sacrament: Sacrament) {
@@ -47,5 +56,9 @@ export class SacramentService {
 
   updateConducting(id, data) {
     this.db.updateAt(`conducting/${id}`, data);
+  }
+
+  deleteSacrament(id) {
+    this.db.delete(`sacrament/${id}`);
   }
 }

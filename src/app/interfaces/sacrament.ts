@@ -14,7 +14,7 @@ export interface MeetingOptions {
 }
 
 export interface Sacrament {
-    date: string;
+    date: Date;
     dateTag: string;
     id?: string;
     topic?: string;

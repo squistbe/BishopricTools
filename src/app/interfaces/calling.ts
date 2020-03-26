@@ -320,151 +320,144 @@ export const CALLINGS = [
         ageReq: 18
     },
     {
-        name: 'Young Men President',
+        name: 'Aaronic Priesthood President',
         sortIndex: 0,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
-        name: 'Young Men First Counselor',
+        name: 'Aaronic Priesthood First Counselor',
         sortIndex: 1,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
-        name: 'Young Men Second Counselor',
+        name: 'Aaronic Priesthood Second Counselor',
         sortIndex: 2,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
-        name: 'Young Men Secretary',
+        name: 'Priests Quorum President',
         sortIndex: 3,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
-        name: 'Priests Quorum President',
-        sortIndex: 4,
-        orgTag: OrgTag.ym,
-        ageReq: 18,
-        genderReq: Gender.male
-    },
-    {
         name: 'Priests Quorum First Assistant',
-        sortIndex: 5,
+        sortIndex: 4,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Priests Quorum Second Assistant',
-        sortIndex: 6,
+        sortIndex: 5,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Priests Quorum Secretary',
-        sortIndex: 7,
+        sortIndex: 6,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Priests Quorum Adviser',
-        sortIndex: 8,
+        sortIndex: 7,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
         name: 'Priests Quorum Assistant Adviser',
-        sortIndex: 9,
+        sortIndex: 8,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
         name: 'Teachers Quorum President',
-        sortIndex: 10,
+        sortIndex: 9,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Teachers Quorum First Counselor',
-        sortIndex: 11,
+        sortIndex: 10,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Teachers Quorum Second Counselor',
-        sortIndex: 12,
+        sortIndex: 11,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Teachers Quorum Secretary',
-        sortIndex: 13,
+        sortIndex: 12,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Teachers Quorum Adviser',
-        sortIndex: 14,
+        sortIndex: 13,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
         name: 'Teachers Quorum Assistant Adviser',
-        sortIndex: 15,
+        sortIndex: 14,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
         name: 'Deacons Quorum President',
-        sortIndex: 16,
+        sortIndex: 15,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Deacons Quorum First Counselor',
-        sortIndex: 17,
+        sortIndex: 16,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Deacons Quorum Second Counselor',
-        sortIndex: 18,
+        sortIndex: 17,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Deacons Quorum Secretary',
-        sortIndex: 19,
+        sortIndex: 18,
         orgTag: OrgTag.ym,
         genderReq: Gender.male
     },
     {
         name: 'Deacons Quorum Adviser',
-        sortIndex: 20,
+        sortIndex: 19,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
         name: 'Deacons Quorum Assistant Adviser',
-        sortIndex: 21,
+        sortIndex: 20,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
     },
     {
         name: 'Young Men Sports Coach',
-        sortIndex: 22,
+        sortIndex: 21,
         orgTag: OrgTag.ym,
         ageReq: 18,
         genderReq: Gender.male
