@@ -38,7 +38,7 @@
     "@ionic/storage": "^2.2.0",
     "@types/lodash": "^4.14.119",
     "call-number": "1.0.1",
-    "chart.js": "^2.7.3",
+    "chart.js": "^2.9.4",
     "cordova-android": "7.1.4",
     "cordova-ios": "4.5.5",
     "cordova-plugin-device": "^2.0.2",
