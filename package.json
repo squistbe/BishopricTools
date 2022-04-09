@@ -57,7 +57,7 @@
     "core-js": "^2.5.3",
     "firebase": "^5.5.9",
     "lodash": "^4.17.11",
-    "moment": "^2.23.0",
+    "moment": "^2.29.2",
     "mx.ferreyra.callnumber": "0.0.2",
     "phonegap-plugin-multidex": "1.0.0",
     "phonegap-plugin-push": "2.2.3",
